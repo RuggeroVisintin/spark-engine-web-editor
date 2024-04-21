@@ -1,0 +1,111 @@
+name: Continuos Integration
+on:
+    push:
+      branches:
+        - main
+    workflow_dispatch:
+    pull_request:
+
+jobs:
+    build:
+      name: Build
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
+          with:
+            node-version: 20
+  
+        - name: install
+          run: npm ci
+        
+        - name: eslint
+          run: npm run lint
+          
+        - name: build
+          run: npm run build
+    test_unit:
+      name: Unit Tests
+      runs-on: ubuntu-latest
+  
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
+          with:
+            node-version: 20
+  
+        - name: install
+          run: npm ci
+  
+        - name: test
+          run: npm run test:ci
+
+        - name: issue badge
+          run: |
+            mkdir -p .github/pages/badges
+            npx make-coverage-badge --report-path .coverage/coverage-summary.json --output-path .github/pages/badges/coverage.badge.svg
+          
+        - uses: actions/upload-artifact@master
+          with:
+            name: coverage-badge-artifact
+            path: .github/pages/badges/coverage.badge.svg
+    publish:
+      name: Publish
+      timeout-minutes: 2
+      runs-on: ubuntu-latest
+      permissions: 
+        contents: write
+        pull-requests: write
+        pages: write
+        id-token: write
+      steps:
+        - uses: google-github-actions/release-please-action@v4
+          id: release
+          with:
+            # this assumes that you have created a personal access token
+            # (PAT) and configured it as a GitHub action secret named
+            # `MY_RELEASE_PLEASE_TOKEN` (this secret name is not important).
+            token: ${{ secrets.GITHUB_TOKEN }}
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
+          with:
+            node-version: 20
+        - uses: actions/download-artifact@master
+          with:
+            name: coverage-badge-artifact
+            path: .github/pages/badges/coverage.badge.svg
+        - name: install
+          run: npm ci
+        - name: build
+          run: npm run build
+        - name: upload release artifact
+          if: ${{ steps.release.outputs.release_created }}
+          env: 
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          run: |
+            zip -r "${{ steps.release.outputs.tag_name }}.zip" ./dist
+            gh release upload ${{ steps.release.outputs.tag_name }} "${{ steps.release.outputs.tag_name }}.zip"
+        - name: build docs
+          id: docs
+          if: ${{ steps.release.outputs.prs_created != true || steps.release.outputs.releases_created == true }}
+          run: |
+            npm run build:docs
+            mkdir -p .github/pages/
+            cp -r docs/* .github/pages/
+            echo "docs_created=true" >> "$GITHUB_OUTPUT"
+        - name: Setup Pages
+          if: ${{ steps.docs.outputs.docs_created }}
+          uses: actions/configure-pages@v4
+        - name: upload docs artifact
+          if: ${{ steps.docs.outputs.docs_created }}
+          uses: actions/upload-pages-artifact@v2
+          with: 
+            path: ".github/pages/"
+        - name: deploy docs artifact
+          if: ${{ steps.docs.outputs.docs_created }}
+          uses: actions/deploy-pages@v3
+      needs: [test_unit, build]
+      if: github.ref_name == 'main'
+
+        
+        
