@@ -31,5 +31,12 @@
     "commitlint": "^19.2.2",
     "eslint": "^8.57.0",
     "release-please": "^16.10.2"
+  },
+  "dependencies": {
+    "@atlaskit/css-reset": "^6.9.0",
+    "@atlaskit/tokens": "^1.43.1",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "styled-components": "^6.1.8"
   }
 }
