@@ -13,7 +13,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint --fix . --ext .ts"
+    "lint:fix": "eslint --fix . --ext .ts",
+    "license-check": "bash ./scripts/check-licenses.sh"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,7 @@
     "@typescript-eslint/eslint-plugin": "^7.7.0",
     "commitlint": "^19.2.2",
     "eslint": "^8.57.0",
+    "license-checker": "^25.0.1",
     "release-please": "^16.10.2"
   },
   "dependencies": {

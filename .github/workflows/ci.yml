@@ -18,6 +18,9 @@ jobs:
   
         - name: install
           run: npm ci
+
+        - name: check licenses
+          run: npm run license-check
         
         - name: eslint
           run: npm run lint
