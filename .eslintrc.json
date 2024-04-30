@@ -4,15 +4,15 @@
         "es2021": true
     },
     "extends": [
-        "plugin:@atlaskit/design-system/recommended"
+        "react-app",
+        "react-app/jest"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": "latest"
     },
     "plugins": [
-        "@typescript-eslint",
-        "@atlaskit/design-system"
+        "@typescript-eslint"
     ],
     "rules": {
         "camelcase": "error",
