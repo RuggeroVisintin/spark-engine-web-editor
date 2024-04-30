@@ -1,44 +1,38 @@
 {
-  "name": "sparkenginewebeditor",
-  "version": "0.0.1",
-  "engines": {
-    "npm": "^10",
-    "node": "^20"
-  },
-  "maintainers": [
-    "https://github.com/RuggeroVisintin"
-  ],
-  "description": "",
+  "name": "spark-engine-web-editor",
+  "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint --fix . --ext .ts",
-    "license-check": "bash ./scripts/check-licenses.sh"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/RuggeroVisintin/SparkEngineWebEditor.git"
-  },
-  "author": "https://github.com/RuggeroVisintin",
-  "license": "GNU GPL v2",
-  "bugs": {
-    "url": "https://github.com/RuggeroVisintin/SparkEngineWebEditor/issues"
-  },
-  "homepage": "https://github.com/RuggeroVisintin/SparkEngineWebEditor#readme",
-  "devDependencies": {
-    "@commitlint/config-conventional": "^19.2.2",
-    "@typescript-eslint/eslint-plugin": "^7.7.0",
-    "commitlint": "^19.2.2",
-    "eslint": "^8.57.0",
-    "license-checker": "^25.0.1",
-    "release-please": "^16.10.2"
-  },
   "dependencies": {
-    "@atlaskit/css-reset": "^6.9.0",
-    "@atlaskit/tokens": "^1.43.1",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0",
-    "styled-components": "^6.1.8"
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
