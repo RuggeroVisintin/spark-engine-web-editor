@@ -1,7 +1,22 @@
 {
-  "name": "spark-engine-web-editor",
+  "name": "sparkenginewebeditor",
   "version": "0.1.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RuggeroVisintin/spark-engine-web-editor.git"
+  },
+  "author": "https://github.com/RuggeroVisintin",
+  "license": "GNU GPL v2",
+  "bugs": {
+    "url": "https://github.com/RuggeroVisintin/spark-engine-web-editor/issues"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -9,13 +24,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "5.0.1",
+    "styled-components": "^6.1.8",
     "web-vitals": "^2.1.4"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
