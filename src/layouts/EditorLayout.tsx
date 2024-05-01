@@ -1,6 +1,7 @@
-import { FlexBox } from "../components";
+import React from 'react';
+import { FlexBox } from '../components';
 
-function EditorLayout () {
+export const EditorLayout = () => {
     return (
         <FlexBox>
             <h1> Hello World </h1>
@@ -9,4 +10,3 @@ function EditorLayout () {
     )
 }
 
-export default EditorLayout;
