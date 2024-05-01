@@ -77,38 +77,7 @@ jobs:
           with:
             name: coverage-badge-artifact
             path: .github/pages/badges/coverage.badge.svg
-        - name: install
-          run: npm ci
-        - name: build
-          run: npm run build
-        - name: upload release artifact
-          if: ${{ steps.release.outputs.release_created }}
-          env: 
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          run: |
-            zip -r "${{ steps.release.outputs.tag_name }}.zip" ./dist
-            gh release upload ${{ steps.release.outputs.tag_name }} "${{ steps.release.outputs.tag_name }}.zip"
-        - name: build docs
-          id: docs
-          if: ${{ steps.release.outputs.prs_created != true || steps.release.outputs.releases_created == true }}
-          run: |
-            npm run build:docs
-            mkdir -p .github/pages/
-            cp -r docs/* .github/pages/
-            echo "docs_created=true" >> "$GITHUB_OUTPUT"
-        - name: Setup Pages
-          if: ${{ steps.docs.outputs.docs_created }}
-          uses: actions/configure-pages@v4
-        - name: upload docs artifact
-          if: ${{ steps.docs.outputs.docs_created }}
-          uses: actions/upload-pages-artifact@v2
-          with: 
-            path: ".github/pages/"
-        - name: deploy docs artifact
-          if: ${{ steps.docs.outputs.docs_created }}
-          uses: actions/deploy-pages@v3
       needs: [test_unit, build]
       if: github.ref_name == 'main'
-
         
         
