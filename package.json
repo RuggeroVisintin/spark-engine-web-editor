@@ -15,6 +15,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:ci": "bash ./scripts/test-ci.sh",
     "eject": "react-scripts eject",
     "license-check": "bash ./scripts/check-licenses.sh",
     "lint": "eslint . --ext .ts",
