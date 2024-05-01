@@ -17,6 +17,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "license-check": "bash ./scripts/check-licenses.sh",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint --fix . --ext .ts",
     "postinstall": "npm run license-check"
   },
   "dependencies": {
