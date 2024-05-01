@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-success_icon="\xE2\x9C\x94"
-error_icon="\xE2\x9D\x8C"
-info_icon="\xE2\x84\xB9"
+success_icon=""
+error_icon=""
+info_icon=""
 
 # check if this project is actually licensed
 echo "${info_icon} Check project license"
