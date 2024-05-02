@@ -30,7 +30,7 @@
     "react-dom": "^18.3.1",
     "sparkengineweb": "https://github.com/RuggeroVisintin/SparkEngineWeb/releases/download/sparkengineweb-v0.10.6/sparkengineweb-v0.10.6-lib.tar.gz",
     "styled-components": "^6.1.9",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^3.5.2"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
