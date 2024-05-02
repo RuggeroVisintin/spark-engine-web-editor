@@ -1,7 +1,10 @@
 import React from 'react';
-import { Box, FlexBox } from '../components';
+import { Box, EngineView, FlexBox } from '../components';
 
 export const EditorLayout = () => {
+    const onEngineReady = () => {
+    }
+
     return (
         <FlexBox>
             <FlexBox style={{ height: '70px' }}>
@@ -9,9 +12,7 @@ export const EditorLayout = () => {
             </FlexBox>
             <FlexBox $direction='row'>
                 <Box $size={0.25} style={{ backgroundColor: 'red' }}></Box>
-                <Box>
-                    <canvas id="canvas" style={{ width: '100%', height: '100%' }}></canvas>
-                </Box>
+                <EngineView onEngineReady={onEngineReady}></EngineView>
                 <Box $size={0.25} style={{ backgroundColor: 'green' }}></Box>
             </FlexBox>
             <FlexBox style={{ height: '33%' }}>
