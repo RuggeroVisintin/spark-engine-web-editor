@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
+    "jest-canvas-mock": "^2.5.2",
     "react-scripts": "^5.0.1"
   },
   "eslintConfig": {

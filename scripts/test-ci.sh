@@ -8,4 +8,4 @@ npx react-scripts test \
     --watchAll=false \
     --coverageReporters=json \
     --coverageReporters=text \
-    --coverageReporters=json-summary
+    --coverageReporters=json-summary \
