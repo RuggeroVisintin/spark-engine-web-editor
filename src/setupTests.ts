@@ -5,4 +5,9 @@
 import '@testing-library/jest-dom';
 import 'jest-canvas-mock';
 
-jest.mock('sparkengineweb')
+// jest.mock('sparkengineweb')
+
+jest.mock('uuid', () => ({
+    v4: () => 'test-uuid'
+}))
+

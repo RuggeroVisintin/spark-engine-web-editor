@@ -19,7 +19,7 @@ export const EngineView = ({ onEngineReady }: EngineViewProps) => {
 
             onEngineReady(engine);
         }
-    })
+    }, [onEngineReady])
 
     return (
         <Box>

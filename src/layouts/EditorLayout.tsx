@@ -1,9 +1,13 @@
-import React from 'react';
-import { Box, EngineView, FlexBox } from '../components';
+import React, { useCallback, useState } from 'react';
+import { Box, EngineView, EntityFactoryPanel, FlexBox } from '../components';
+import { GameEngine, Scene } from 'sparkengineweb';
 
 export const EditorLayout = () => {
-    const onEngineReady = () => {
-    }
+    const [scene, setScene] = useState<Scene>();
+
+    const onEngineReady = useCallback((engine: GameEngine) => {
+        setScene(engine.createScene());
+    }, [])
 
     return (
         <FlexBox>
@@ -11,7 +15,7 @@ export const EditorLayout = () => {
                 <Box style={{ backgroundColor: 'blue' }}></Box>
             </FlexBox>
             <FlexBox $direction='row'>
-                <Box $size={0.25} style={{ backgroundColor: 'red' }}></Box>
+                <EntityFactoryPanel scene={scene}></EntityFactoryPanel>
                 <EngineView onEngineReady={onEngineReady}></EngineView>
                 <Box $size={0.25} style={{ backgroundColor: 'green' }}></Box>
             </FlexBox>
