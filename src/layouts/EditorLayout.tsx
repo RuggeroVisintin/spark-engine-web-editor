@@ -6,6 +6,7 @@ export const EditorLayout = () => {
     const [scene, setScene] = useState<Scene>();
 
     const onEngineReady = useCallback((engine: GameEngine) => {
+        engine.run();
         setScene(engine.createScene());
     }, [])
 
