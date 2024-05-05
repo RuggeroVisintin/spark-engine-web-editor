@@ -21,7 +21,7 @@ describe('EntityFactoryPanel', () => {
 
             render(<EntityFactoryPanel scene={scene} />);
             
-            fireEvent.click(screen.getByTestId('EntityFactoryPanel'));
+            fireEvent.click(screen.getByTestId('AddGameObjectButton'));
 
             expect(scene.entities[0]).toBeInstanceOf(GameObject);
         })
