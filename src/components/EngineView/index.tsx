@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Box } from './primitives';
+import { Box } from '../primitives';
 import * as SparkEngine from 'sparkengineweb';
 
 interface EngineViewProps {
