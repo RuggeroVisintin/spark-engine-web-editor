@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '../primitives';
-import { GameObject, Rgb, StaticObject, TriggerEntity, Vec2 } from 'sparkengineweb';
+import { GameObject, Rgb, StaticObject, Vec2 } from 'sparkengineweb';
 
 interface EntityFactoryPanelProps {
     onAddEntity: Function
