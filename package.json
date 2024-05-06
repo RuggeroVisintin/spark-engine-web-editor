@@ -18,8 +18,8 @@
     "test:ci": "bash ./scripts/test-ci.sh",
     "eject": "react-scripts eject",
     "license-check": "bash ./scripts/check-licenses.sh",
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint --fix . --ext .ts",
+    "lint": "eslint . --ext .tsx",
+    "lint:fix": "eslint --fix . --ext .tsx",
     "postinstall": "npm run license-check"
   },
   "dependencies": {
