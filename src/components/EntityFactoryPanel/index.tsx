@@ -1,20 +1,40 @@
 import React from 'react';
 import { Box } from '../primitives';
-import { GameObject, Rgb, Scene, Vec2 } from 'sparkengineweb';
+import { GameObject, Rgb, StaticObject, TriggerEntity, Vec2 } from 'sparkengineweb';
 
 interface EntityFactoryPanelProps {
     onAddEntity: Function
 }
 
-const newGameObject = () => new GameObject({
+const defaultTransformProps = {
     transform: {
         size: { width: 30, height: 30 },
         position: new Vec2(55, 55)
-    },
+    }
+}
+
+const defaultMaterialProps = {
     material: {
         diffuseColor: new Rgb(255, 0, 0)
     }
-})
+}
+
+const newGameObject = () => new GameObject({
+    ...defaultTransformProps,
+    ...defaultMaterialProps
+});
+
+const newStaticObject = () => new StaticObject({
+    ...defaultTransformProps,
+    ...defaultMaterialProps
+});
+
+const entityTypes = {
+    'GameObject': newGameObject,
+    'StaticObject': newStaticObject,
+    // TODO: implement optional target in SparkEngineWeb
+    // 'TriggerEntity': newTriggerEntity
+}
 
 export const EntityFactoryPanel = ({ onAddEntity }: EntityFactoryPanelProps) => {
     return (
@@ -23,7 +43,13 @@ export const EntityFactoryPanel = ({ onAddEntity }: EntityFactoryPanelProps) => 
             style={{ borderRight: '2px solid black' }}
             data-testid="EntityFactoryPanel"
         >
-            <Box onClick={() => onAddEntity(newGameObject())} data-testid="AddGameObjectButton" style={{padding: '20px'}}>Add Game Object</Box>
+            {Object.entries(entityTypes).map(([entityType, entityFactoryFn]) => (
+                <Box
+                    key={entityType}
+                    onClick={() => onAddEntity(entityFactoryFn())}
+                    data-testid={`Add${entityType}Button`}
+                    style={{ padding: '20px' }}>Add { entityType }</Box>
+            ))}
         </Box>
     )
 }
