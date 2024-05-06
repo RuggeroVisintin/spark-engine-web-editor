@@ -4,10 +4,6 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { EntityFactoryPanel } from '.';
 import { GameObject } from 'sparkengineweb';
 
-jest.mock('uuid', () => ({
-    v4: () => 'test-uuid'
-}))
-
 describe('EntityFactoryPanel', () => {
     describe("Add Game Object", () => {
         it('Should create a new GameObject when triggered', () => {            
