@@ -2,7 +2,7 @@ import React from 'react';
 
 import { render, screen, fireEvent } from '@testing-library/react';
 import { EntityFactoryPanel } from '.';
-import { GameEngine, GameObject } from 'sparkengineweb';
+import { GameObject } from 'sparkengineweb';
 
 jest.mock('uuid', () => ({
     v4: () => 'test-uuid'
@@ -10,20 +10,14 @@ jest.mock('uuid', () => ({
 
 describe('EntityFactoryPanel', () => {
     describe("Add Game Object", () => {
-        it('Should create a new GameObject when triggered', () => {
-            const gameEngine = new GameEngine({
-                context: new CanvasRenderingContext2D(),
-                resolution: { width: 1920, height: 1080 },
-                framerate: 60
-            });
-            
-            const scene = gameEngine.createScene();
+        it('Should create a new GameObject when triggered', () => {            
+            const cb = jest.fn();
 
-            render(<EntityFactoryPanel scene={scene} />);
+            render(<EntityFactoryPanel onAddEntity={(entity: GameObject) => cb(entity)} />);
             
             fireEvent.click(screen.getByTestId('AddGameObjectButton'));
 
-            expect(scene.entities[0]).toBeInstanceOf(GameObject);
+            expect(cb).toHaveBeenCalledWith(expect.any(GameObject));
         })
     })
 })

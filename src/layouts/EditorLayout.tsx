@@ -1,14 +1,25 @@
 import React, { useCallback, useState } from 'react';
-import { Box, EngineView, EntityFactoryPanel, FlexBox } from '../components';
-import { GameEngine, Scene } from 'sparkengineweb';
+import { Box, EngineView, EntityFactoryPanel, FlexBox, ScenePanel } from '../components';
+import { GameEngine, IEntity, Scene } from 'sparkengineweb';
 
 export const EditorLayout = () => {
     const [scene, setScene] = useState<Scene>();
+    const [entities, setEntities] = useState<IEntity[]>([])
 
     const onEngineReady = useCallback((engine: GameEngine) => {
-        engine.run();
         setScene(engine.createScene());
-    }, [])
+
+        engine.run();
+    }, []);
+
+    const onAddEntity = useCallback((entity: IEntity) => {
+        if (!scene) return;
+
+        console.log('ADD NEW')
+
+        scene?.registerEntity(entity);
+        setEntities([...scene?.entities ?? []]);
+    }, [scene])
 
     return (
         <FlexBox>
@@ -16,9 +27,9 @@ export const EditorLayout = () => {
                 <Box style={{ backgroundColor: 'blue' }}></Box>
             </FlexBox>
             <FlexBox $direction='row'>
-                <EntityFactoryPanel scene={scene}></EntityFactoryPanel>
+                <EntityFactoryPanel onAddEntity={onAddEntity}></EntityFactoryPanel>
                 <EngineView onEngineReady={onEngineReady}></EngineView>
-                <Box $size={0.25} style={{ backgroundColor: 'green' }}></Box>
+                <ScenePanel entities={entities}></ScenePanel>
             </FlexBox>
             <FlexBox style={{ height: '33%' }}>
                 <Box style={{ backgroundColor: 'grey' }}></Box>
