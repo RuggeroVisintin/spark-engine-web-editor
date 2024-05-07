@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Box } from './primitives';
+import { Box } from '../primitives';
 import * as SparkEngine from 'sparkengineweb';
 
 interface EngineViewProps {
@@ -19,7 +19,7 @@ export const EngineView = ({ onEngineReady }: EngineViewProps) => {
 
             onEngineReady(engine);
         }
-    })
+    }, [onEngineReady]);
 
     return (
         <Box>

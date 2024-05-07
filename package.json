@@ -18,8 +18,8 @@
     "test:ci": "bash ./scripts/test-ci.sh",
     "eject": "react-scripts eject",
     "license-check": "bash ./scripts/check-licenses.sh",
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint --fix . --ext .ts",
+    "lint": "eslint . --ext .tsx",
+    "lint:fix": "eslint --fix . --ext .tsx",
     "postinstall": "npm run license-check"
   },
   "dependencies": {
@@ -30,10 +30,12 @@
     "react-dom": "^18.3.1",
     "sparkengineweb": "https://github.com/RuggeroVisintin/SparkEngineWeb/releases/download/sparkengineweb-v0.10.6/sparkengineweb-v0.10.6-lib.tar.gz",
     "styled-components": "^6.1.9",
+    "uuid": "^9.0.1",
     "web-vitals": "^3.5.2"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
+    "@types/uuid": "^9.0.8",
     "jest-canvas-mock": "^2.5.2",
     "react-scripts": "^5.0.1"
   },
