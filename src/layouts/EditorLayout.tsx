@@ -8,14 +8,11 @@ export const EditorLayout = () => {
 
     const onEngineReady = useCallback((engine: GameEngine) => {
         setScene(engine.createScene());
-
         engine.run();
     }, []);
 
     const onAddEntity = useCallback((entity: IEntity) => {
         if (!scene) return;
-
-        console.log('ADD NEW')
 
         scene?.registerEntity(entity);
         setEntities([...scene?.entities ?? []]);
