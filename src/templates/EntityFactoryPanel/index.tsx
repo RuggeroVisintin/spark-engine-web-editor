@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box } from '../../primitives';
 import { GameObject, Rgb, StaticObject, Vec2 } from 'sparkengineweb';
+import { ListItem } from '../../components';
 
 interface EntityFactoryPanelProps {
     onAddEntity: Function
@@ -43,11 +44,11 @@ export const EntityFactoryPanel = ({ onAddEntity }: EntityFactoryPanelProps) => 
             data-testid="EntityFactoryPanel"
         >
             {Object.entries(entityTypes).map(([entityType, entityFactoryFn]) => (
-                <Box
+                <ListItem
                     key={entityType}
+                    text={`Add ${entityType}`}
                     onClick={() => onAddEntity(entityFactoryFn())}
-                    data-testid={`Add${entityType}Button`}
-                    style={{ padding: '20px' }}>Add { entityType }</Box>
+                    data-testid={`Add${entityType}Button`}/>
             ))}
         </Box>
     )

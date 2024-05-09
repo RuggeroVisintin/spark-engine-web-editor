@@ -1,6 +1,8 @@
 import React, { useCallback, useState } from 'react';
-import { Box, EngineView, EntityFactoryPanel, FlexBox, ScenePanel } from '../components';
 import { GameEngine, IEntity, Scene } from 'sparkengineweb';
+import { Box, FlexBox } from '../primitives';
+import { EntityFactoryPanel, ScenePanel } from '../templates';
+import { EngineView } from '../components';
 
 export const EditorLayout = () => {
     const [scene, setScene] = useState<Scene>();
