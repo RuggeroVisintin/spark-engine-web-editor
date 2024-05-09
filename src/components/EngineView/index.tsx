@@ -1,10 +1,17 @@
 import React, { useEffect, useRef } from 'react';
 import { Box } from '../primitives';
 import * as SparkEngine from 'sparkengineweb';
+import styled from 'styled-components';
 
 interface EngineViewProps {
     onEngineReady: Function
 }
+
+
+const RenderingCanvas = styled.canvas({
+    width: '100%',
+    height: '100%'
+})
 
 export const EngineView = ({ onEngineReady }: EngineViewProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -23,7 +30,7 @@ export const EngineView = ({ onEngineReady }: EngineViewProps) => {
 
     return (
         <Box>
-            <canvas ref={canvasRef} id="canvas" style={{ width: '100%', height: '100%' }}></canvas>
+            <RenderingCanvas ref={canvasRef} id="canvas"></RenderingCanvas>
         </Box>
     )
 }
