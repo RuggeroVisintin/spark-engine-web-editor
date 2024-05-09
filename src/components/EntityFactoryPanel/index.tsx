@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '../primitives';
+import { Box } from '../../primitives';
 import { GameObject, Rgb, StaticObject, Vec2 } from 'sparkengineweb';
 
 interface EntityFactoryPanelProps {
@@ -40,7 +40,6 @@ export const EntityFactoryPanel = ({ onAddEntity }: EntityFactoryPanelProps) => 
     return (
         <Box
             $size={0.25}
-            style={{ borderRight: '2px solid black' }}
             data-testid="EntityFactoryPanel"
         >
             {Object.entries(entityTypes).map(([entityType, entityFactoryFn]) => (

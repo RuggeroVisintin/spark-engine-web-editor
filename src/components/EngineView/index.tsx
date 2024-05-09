@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Box } from '../primitives';
+import { Box } from '../../primitives';
 import * as SparkEngine from 'sparkengineweb';
 import styled from 'styled-components';
 
@@ -7,10 +7,10 @@ interface EngineViewProps {
     onEngineReady: Function
 }
 
-
 const RenderingCanvas = styled.canvas({
     width: '100%',
-    height: '100%'
+    height: '100%',
+    background: 'black'
 })
 
 export const EngineView = ({ onEngineReady }: EngineViewProps) => {
