@@ -4,7 +4,7 @@ import { GameEngine, IEntity, Scene } from 'sparkengineweb';
 
 export const EditorLayout = () => {
     const [scene, setScene] = useState<Scene>();
-    const [entities, setEntities] = useState<IEntity[]>([])
+    const [entities, setEntities] = useState<IEntity[]>([]); 
 
     const onEngineReady = useCallback((engine: GameEngine) => {
         setScene(engine.createScene());
@@ -14,8 +14,15 @@ export const EditorLayout = () => {
     const onAddEntity = useCallback((entity: IEntity) => {
         if (!scene) return;
 
-        scene?.registerEntity(entity);
-        setEntities([...scene?.entities ?? []]);
+        scene.registerEntity(entity);
+        setEntities([...scene.entities ?? []]);
+    }, [scene])
+
+    const onRemoveEntity = useCallback((entity: IEntity) => {
+        if (!scene) return; 
+
+        scene.unregisterEntity(entity.uuid);
+        setEntities([...scene.entities ?? []]);
     }, [scene])
 
     return (
@@ -26,7 +33,7 @@ export const EditorLayout = () => {
             <FlexBox $direction='row'>
                 <EntityFactoryPanel onAddEntity={onAddEntity}></EntityFactoryPanel>
                 <EngineView onEngineReady={onEngineReady}></EngineView>
-                <ScenePanel entities={entities}></ScenePanel>
+                <ScenePanel entities={entities} onRemoveEntity={onRemoveEntity}></ScenePanel>
             </FlexBox>
             <FlexBox style={{ height: '33%' }}>
                 <Box style={{ backgroundColor: 'grey' }}></Box>

@@ -1,7 +1,7 @@
 import React from "react"
 import { GameObject, StaticObject } from "sparkengineweb"
 import { ScenePanel } from "."
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 describe('ScenePanel', () => {
     it('Should render the given entities', () => {
@@ -11,12 +11,23 @@ describe('ScenePanel', () => {
             new GameObject()
         ]
 
-        render(<ScenePanel entities={entityList}></ScenePanel>)
+        render(<ScenePanel entities={entityList} onRemoveEntity={() => {}}></ScenePanel>)
         expect(screen.getAllByTestId('ScenePanel.EntityEntry').length).toBe(3);
     });
 
     describe('onRemove', () => {
-        it.todo('Should remove the entity from the list');
-        it.todo('Should invoke the onEntityRemoved callback');
+        it('Should invoke the onEntityRemoved callback', () => {
+            const entityList = [
+                new GameObject(),
+                new StaticObject(),
+                new GameObject()
+            ]
+
+            const cb = jest.fn();
+            render(<ScenePanel entities={entityList} onRemoveEntity={cb}></ScenePanel>);
+
+            fireEvent.click(screen.getByTestId(`RemoveEntityButton.${entityList[0].uuid}`));
+            expect(cb).toHaveBeenCalledWith(entityList[0]);
+        });
     });
 })
