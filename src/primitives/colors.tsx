@@ -8,7 +8,7 @@ interface ColorScheme {
 
 export const BackgroundColor: ColorScheme = {
     Primary: '#38485d',
-    Secondary: '#bbbbdf',
+    Secondary: '#707a89',
     Accents: '#de7650'
 }
 
