@@ -1,10 +1,12 @@
 import React, { MouseEventHandler } from "react";
 import { BackgroundColor, Box, FlexBox } from "../../primitives";
 import styled from "styled-components";
+import { WithDataTestId } from "../../common";
 
-interface ListItemProps {
+interface ListItemProps extends WithDataTestId {
     text?: string;
     onClick?: MouseEventHandler<HTMLElement>;
+    imgSrc?: string;
 }
 
 const ItemWrapper = styled(Box)`
@@ -30,13 +32,19 @@ const Text = styled.span`
     margin-left: 15px;
 `
 
-export const ListItem = ({ text, onClick }: ListItemProps) => {
+export const ListItem = ({
+    text,
+    onClick,
+    imgSrc,
+    'data-testid': dataTestId
+}: ListItemProps) => {
     return (
         <ItemWrapper
             onClick={(mouseEvent) => onClick && onClick(mouseEvent)}
+            data-testid={dataTestId}
         >
             <FlexBox $direction="row" $centerItems>
-                <ImageBox />
+                {imgSrc && <ImageBox />}
                 <Text>{text}</Text>
             </FlexBox>
         </ItemWrapper>

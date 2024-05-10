@@ -48,6 +48,7 @@ export const EntityFactoryPanel = ({ onAddEntity }: EntityFactoryPanelProps) => 
                     key={entityType}
                     text={`Add ${entityType}`}
                     onClick={() => onAddEntity(entityFactoryFn())}
+                    imgSrc='placeholder.png'
                     data-testid={`Add${entityType}Button`}/>
             ))}
         </Box>
