@@ -3,10 +3,16 @@ import { BackgroundColor, Box, FlexBox } from "../../primitives";
 import styled from "styled-components";
 import { WithDataTestId } from "../../common";
 
+interface ListButton extends WithDataTestId {
+    text?: string,
+    onClick?: CallableFunction
+}
+
 interface ListItemProps extends WithDataTestId {
     text?: string;
     onClick?: MouseEventHandler<HTMLElement>;
     imgSrc?: string;
+    button?: ListButton
 }
 
 const ItemWrapper = styled(Box)`
@@ -30,13 +36,18 @@ const Text = styled.span`
     line-height: 1;
     vertical-align: middle;
     margin-left: 15px;
+    flex: 1;
 `
+
+const ActionButton = styled.button`
+`;
 
 export const ListItem = ({
     text,
     onClick,
     imgSrc,
-    'data-testid': dataTestId
+    'data-testid': dataTestId,
+    button
 }: ListItemProps) => {
     return (
         <ItemWrapper
@@ -46,6 +57,14 @@ export const ListItem = ({
             <FlexBox $direction="row" $centerItems>
                 {imgSrc && <ImageBox />}
                 <Text>{text}</Text>
+                {button &&
+                    <ActionButton
+                        onClick={() => button.onClick && button.onClick()}
+                        data-testid={button["data-testid"]}
+                    >
+                        {button.text}
+                    </ActionButton>
+                }
             </FlexBox>
         </ItemWrapper>
     );
