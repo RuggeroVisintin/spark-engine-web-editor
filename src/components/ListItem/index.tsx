@@ -3,21 +3,9 @@ import { BackgroundColor, Box, FlexBox } from "../../primitives";
 import styled from "styled-components";
 import { WithDataTestId } from "../../common";
 
-interface ListButton extends WithDataTestId {
-    text?: string,
-    onClick?: CallableFunction
-}
-
-interface ListItemProps extends WithDataTestId {
-    text?: string;
-    onClick?: MouseEventHandler<HTMLElement>;
-    imgSrc?: string;
-    button?: ListButton
-}
-
 const ItemWrapper = styled(Box)`
     padding: 10px 10px;
-    margin: 2px 10px;
+    margin: 2px 0px;
     border-radius: 5px;
     
     &:hover {
@@ -28,6 +16,7 @@ const ItemWrapper = styled(Box)`
 const ImageBox = styled(Box)`
     max-width: 40px;
     height: 40px;
+    margin-right: 15px;
 
     background: ${BackgroundColor.Secondary}
 `
@@ -35,12 +24,22 @@ const ImageBox = styled(Box)`
 const Text = styled.span`
     line-height: 1;
     vertical-align: middle;
-    margin-left: 15px;
     flex: 1;
 `
 
 const ActionButton = styled.button`
 `;
+
+interface ListButton extends WithDataTestId {
+    text?: string,
+    onClick?: CallableFunction
+}
+interface ListItemProps extends WithDataTestId {
+    text?: string;
+    onClick?: MouseEventHandler<HTMLElement>;
+    imgSrc?: string;
+    button?: ListButton
+}
 
 export const ListItem = ({
     text,

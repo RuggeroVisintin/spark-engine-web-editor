@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '../../primitives';
+import { Box, Spacing } from '../../primitives';
 import { IEntity } from 'sparkengineweb';
 import { v4 as uuid } from 'uuid';
 import { ListItem } from '../../components';
@@ -11,7 +11,7 @@ interface ScenePanelProps {
 
 export const ScenePanel = ({ entities = [], onRemoveEntity }: ScenePanelProps) => {
     return (
-        <Box $size={0.25} data-testid="ScenePanel">
+        <Box $size={1} $spacing={Spacing.small} data-testid="ScenePanel">
                 {entities.map((entity) => 
                     <ListItem
                         key={uuid()}
