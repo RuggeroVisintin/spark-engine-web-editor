@@ -1,8 +1,9 @@
 import React, { useCallback, useState } from 'react';
 import { GameEngine, IEntity, Scene } from 'sparkengineweb';
-import { Box, FlexBox } from '../primitives';
-import { EntityFactoryPanel, ScenePanel } from '../templates';
-import { EngineView } from '../components';
+import { Box, FlexBox } from '../../primitives';
+import { EntityFactoryPanel, ScenePanel } from '../../templates';
+import { EngineView } from '../../components';
+import { EntityPropsPanel } from '../../templates/EntityPropsPanel';
 
 export const EditorLayout = () => {
     const [scene, setScene] = useState<Scene>();
@@ -28,14 +29,19 @@ export const EditorLayout = () => {
     }, [scene])
 
     return (
-        <FlexBox>
+        <FlexBox $fill={true}>
             <FlexBox style={{ height: '70px' }}>
                 <Box style={{ backgroundColor: 'blue' }}></Box>
             </FlexBox>
             <FlexBox $direction='row'>
                 <EntityFactoryPanel onAddEntity={onAddEntity}></EntityFactoryPanel>
                 <EngineView onEngineReady={onEngineReady}></EngineView>
-                <ScenePanel entities={entities} onRemoveEntity={onRemoveEntity}></ScenePanel>
+                    <Box $size={0.25}>
+                    <FlexBox $fill={true}>
+                            <ScenePanel entities={entities} onRemoveEntity={onRemoveEntity}></ScenePanel>
+                            <EntityPropsPanel></EntityPropsPanel>
+                        </FlexBox>
+                    </Box>
             </FlexBox>
             <FlexBox style={{ height: '33%' }}>
                 <Box style={{ backgroundColor: 'grey' }}></Box>
