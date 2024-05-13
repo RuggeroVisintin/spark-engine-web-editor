@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components"
 import { BackgroundColor, FlexBox } from "../../primitives";
 import { v4 as uuid } from 'uuid';
@@ -23,10 +23,19 @@ interface FormInputProps {
 export const FormInput = ({ label, onChange, defaultValue }: FormInputProps = {}) => {
     const id = uuid();
 
+    const [value, setValue] = useState<number>(defaultValue ?? 0);
+
+    const onValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = parseInt(event.target.value);
+
+        setValue(newValue);
+        onChange?.(newValue);
+    }
+
     return (
         <FlexBox $direction="row" $fill $fillMethod="flex">
             {label && <Label htmlFor={id}>{label}</Label>}
-            <Input type="number" defaultValue={defaultValue} id={id} onChange={({target}) => onChange?.(target.value)}></Input>
+            <Input type="number" id={id} value={value} onChange={onValueChange}></Input>
         </FlexBox>
     )
 }
