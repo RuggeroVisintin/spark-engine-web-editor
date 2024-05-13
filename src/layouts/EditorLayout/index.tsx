@@ -30,7 +30,7 @@ export const EditorLayout = () => {
 
     return (
         <FlexBox $fill={true}>
-            <FlexBox style={{ height: '70px' }}>
+            <FlexBox style={{ height: '70px' }} $direction='row'>
                 <Box style={{ backgroundColor: 'blue' }}></Box>
             </FlexBox>
             <FlexBox $direction='row'>
