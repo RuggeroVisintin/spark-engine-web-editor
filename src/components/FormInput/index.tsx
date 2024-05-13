@@ -16,15 +16,17 @@ const Label = styled.label`
 
 interface FormInputProps {
     label?: string;
+    onChange?: CallableFunction,
+    defaultValue?: number 
 }
 
-export const FormInput = ({ label }: FormInputProps = {}) => {
+export const FormInput = ({ label, onChange, defaultValue }: FormInputProps = {}) => {
     const id = uuid();
 
     return (
         <FlexBox $direction="row" $fill $fillMethod="flex">
             {label && <Label htmlFor={id}>{label}</Label>}
-            <Input type="number" value={0} id={id}></Input>
+            <Input type="number" defaultValue={defaultValue} id={id} onChange={({target}) => onChange?.(target.value)}></Input>
         </FlexBox>
     )
 }

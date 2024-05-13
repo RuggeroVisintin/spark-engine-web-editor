@@ -38,7 +38,8 @@ interface ListItemProps extends WithDataTestId {
     text?: string;
     onClick?: MouseEventHandler<HTMLElement>;
     imgSrc?: string;
-    button?: ListButton
+    button?: ListButton;
+    isAcitve?: boolean;
 }
 
 export const ListItem = ({
@@ -46,10 +47,12 @@ export const ListItem = ({
     onClick,
     imgSrc,
     'data-testid': dataTestId,
-    button
+    button,
+    isAcitve
 }: ListItemProps) => {
     return (
         <ItemWrapper
+            $background={isAcitve ? BackgroundColor.Secondary : undefined}
             onClick={(mouseEvent) => onClick && onClick(mouseEvent)}
             data-testid={dataTestId}
         >
@@ -58,10 +61,10 @@ export const ListItem = ({
                 <Text>{text}</Text>
                 {button &&
                     <ActionButton
-                        onClick={() => button.onClick && button.onClick()}
-                        data-testid={button["data-testid"]}
+                    	onClick={() => button.onClick?.()}
+                    	data-testid={button["data-testid"]}
                     >
-                        {button.text}
+                    	{button.text}
                     </ActionButton>
                 }
             </FlexBox>

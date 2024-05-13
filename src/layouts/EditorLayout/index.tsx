@@ -8,6 +8,7 @@ import { EntityPropsPanel } from '../../templates/EntityPropsPanel';
 export const EditorLayout = () => {
     const [scene, setScene] = useState<Scene>();
     const [entities, setEntities] = useState<IEntity[]>([]); 
+    const [currentEntity, setCurrentEntity] = useState<IEntity>();
 
     const onEngineReady = useCallback((engine: GameEngine) => {
         setScene(engine.createScene());
@@ -19,14 +20,15 @@ export const EditorLayout = () => {
 
         scene.registerEntity(entity);
         setEntities([...scene.entities ?? []]);
-    }, [scene])
+    }, [scene]);
 
     const onRemoveEntity = useCallback((entity: IEntity) => {
-        if (!scene) return; 
+        if (!scene) return;
 
         scene.unregisterEntity(entity.uuid);
         setEntities([...scene.entities ?? []]);
-    }, [scene])
+    }, [scene]);
+
 
     return (
         <FlexBox $fill={true}>
@@ -36,12 +38,17 @@ export const EditorLayout = () => {
             <FlexBox $direction='row'>
                 <EntityFactoryPanel onAddEntity={onAddEntity}></EntityFactoryPanel>
                 <EngineView onEngineReady={onEngineReady}></EngineView>
-                    <Box $size={0.25}>
+                <Box $size={0.25}>
                     <FlexBox $fill={true}>
-                            <ScenePanel entities={entities} onRemoveEntity={onRemoveEntity}></ScenePanel>
-                            <EntityPropsPanel></EntityPropsPanel>
-                        </FlexBox>
-                    </Box>
+                        <ScenePanel
+                            entities={entities}
+                            onRemoveEntity={onRemoveEntity}
+                            onFocusEntity={(entity: IEntity) => setCurrentEntity(entity)}
+                            currentEntity={currentEntity}
+                        ></ScenePanel>
+                        {currentEntity && <EntityPropsPanel entity={currentEntity}></EntityPropsPanel>}
+                    </FlexBox>
+                </Box>
             </FlexBox>
             <FlexBox style={{ height: '33%' }}>
                 <Box style={{ backgroundColor: 'grey' }}></Box>
