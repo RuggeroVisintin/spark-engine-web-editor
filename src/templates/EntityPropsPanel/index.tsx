@@ -1,4 +1,4 @@
-import React, { useEffect, useId } from "react";
+import React, { useId } from "react";
 import { Box, FlexBox, Spacing } from "../../primitives";
 import { FormInput } from "../../components";
 import { IEntity, TransformComponent, Vec2 } from "sparkengineweb";
