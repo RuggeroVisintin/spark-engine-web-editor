@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useState } from "react";
+import React, { useId } from "react";
 import styled from "styled-components"
 import { BackgroundColor, FlexBox } from "../../primitives";
 import { WithDataTestId } from "../../common";
@@ -20,6 +20,11 @@ interface FormInputProps extends WithDataTestId {
     defaultValue?: number 
 }
 
+const typesMap: Record<string, string> = {
+    'number': 'number',
+    'string': 'text'
+}
+
 export const FormInput = ({ label, onChange, defaultValue, "data-testid": dataTestId }: FormInputProps = {}) => {
     const id = useId();
 
@@ -32,7 +37,7 @@ export const FormInput = ({ label, onChange, defaultValue, "data-testid": dataTe
         <FlexBox $direction="row" $fill $fillMethod="flex">
             {label && <Label htmlFor={id}>{label}</Label>}
             <Input
-                type="number"
+                type={typesMap[typeof defaultValue] ?? 'text'}
                 id={id}
                 defaultValue={defaultValue}
                 onChange={onValueChange}

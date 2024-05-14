@@ -32,8 +32,15 @@ export const EditorLayout = () => {
     const onPositionUpdate = ({ newPosition }: {newPosition: Vec2}) => {
         const transform = currentEntity?.getComponent<TransformComponent>('TransformComponent');
         if (!transform) return;
-        
+
         transform.position = newPosition;
+    }
+
+    const onSizeUpdate = ({ newSize }: { newSize: { width: number, height: number } }) => {
+        const transform = currentEntity?.getComponent<TransformComponent>('TransformComponent');
+        if (!transform) return;
+
+        transform.size = newSize;
     }
 
 
@@ -53,7 +60,12 @@ export const EditorLayout = () => {
                             onFocusEntity={(entity: IEntity) => setCurrentEntity(entity)}
                             currentEntity={currentEntity}
                         ></ScenePanel>
-                        {currentEntity && <EntityPropsPanel entity={currentEntity} onUpdatePosition={onPositionUpdate}></EntityPropsPanel>}
+                        {currentEntity &&
+                            <EntityPropsPanel
+                                entity={currentEntity}
+                                onUpdatePosition={onPositionUpdate}
+                                onUpdateSize={onSizeUpdate}
+                            ></EntityPropsPanel>}
                     </FlexBox>
                 </Box>
             </FlexBox>
