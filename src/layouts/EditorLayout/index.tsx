@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { GameEngine, IEntity, Scene } from 'sparkengineweb';
+import { GameEngine, IEntity, Scene, TransformComponent, Vec2 } from 'sparkengineweb';
 import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
 import { EngineView } from '../../components';
@@ -29,6 +29,13 @@ export const EditorLayout = () => {
         setEntities([...scene.entities ?? []]);
     }, [scene]);
 
+    const onPositionUpdate = ({ newPosition }: {newPosition: Vec2}) => {
+        const transform = currentEntity?.getComponent<TransformComponent>('TransformComponent');
+        if (!transform) return;
+        
+        transform.position = newPosition;
+    }
+
 
     return (
         <FlexBox $fill={true}>
@@ -46,7 +53,7 @@ export const EditorLayout = () => {
                             onFocusEntity={(entity: IEntity) => setCurrentEntity(entity)}
                             currentEntity={currentEntity}
                         ></ScenePanel>
-                        {currentEntity && <EntityPropsPanel entity={currentEntity}></EntityPropsPanel>}
+                        {currentEntity && <EntityPropsPanel entity={currentEntity} onUpdatePosition={onPositionUpdate}></EntityPropsPanel>}
                     </FlexBox>
                 </Box>
             </FlexBox>
