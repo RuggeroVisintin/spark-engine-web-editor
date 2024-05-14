@@ -3,47 +3,56 @@ import { GameObject, Vec2 } from "sparkengineweb";
 import { EntityPropsPanel } from ".";
 import { fireEvent, render, screen } from "@testing-library/react";
 
+
 describe('EntityPropsPanel', () => {
-    it('Should initialize the position input props to the same value as the selected entity', () => {
-        const entity = new GameObject();
-        entity.transform.position.x = 1;
-        entity.transform.position.y = 2;
+    describe('Transform', () => {
+        const positionProps: ('x' | 'y')[] = ['x', 'y'];
 
-        render(<EntityPropsPanel entity={entity} />);
+        it.each(positionProps)('Should initialize the position input props to the same value as the selected entity', () => {
+            const entity = new GameObject();
+            entity.transform.position.x = 1;
+            entity.transform.position.y = 2;
 
-        const inputField = screen.getByTestId('EntityPropsPanel.Position.x.InputField');
+            render(<EntityPropsPanel entity={entity} />);
 
-        expect(inputField).toHaveValue(entity.transform.position.x);
-    });
+            const inputFieldX = screen.getByTestId('EntityPropsPanel.Position.x.InputField');
+            const inputFieldY = screen.getByTestId('EntityPropsPanel.Position.y.InputField')
 
-    it('Should update the default value when entity is changed', () => {
-        const entity = new GameObject();
-        entity.transform.position.x = 1;
-        entity.transform.position.y = 2;
+            expect(inputFieldX).toHaveValue(entity.transform.position.x);
+            expect(inputFieldY).toHaveValue(entity.transform.position.y);
+        });
 
-        const { rerender } = render(<EntityPropsPanel entity={entity} />);
+        it.each(positionProps)('Should update the default transform.position.%s value when entity is changed', (prop) => {
+            const entity = new GameObject();
+            entity.transform.position[prop] = 1;
 
-        const newEntity = new GameObject();
+            const { rerender } = render(<EntityPropsPanel entity={entity} />);
 
-        rerender(<EntityPropsPanel entity={newEntity} />);
+            const newEntity = new GameObject();
 
-        const inputField = screen.getByTestId('EntityPropsPanel.Position.x.InputField');
-        expect(inputField).toHaveValue(newEntity.transform.position.x);
-    });
+            rerender(<EntityPropsPanel entity={newEntity} />);
 
-    it.each([
-        ['EntityPropsPanel.Position.x.InputField', new Vec2(23, 0)],
-        ['EntityPropsPanel.Position.y.InputField', new Vec2(0, 23)]
-    ])('Should invoke the entityPropsUpdate callback when the %s input changes', (testId, expectedResult) => {
-        const entity = new GameObject();
+            const inputField = screen.getByTestId(`EntityPropsPanel.Position.${prop}.InputField`);
+            expect(inputField).toHaveValue(newEntity.transform.position[prop]);
+        });
 
-        const cb = jest.fn();
+        it.each(positionProps)('Should invoke the entityPropsUpdate callback when the %s input changes', (prop) => {
+            const entity = new GameObject();
 
-        render(<EntityPropsPanel entity={entity} onUpdatePosition={cb} />);
+            const result = new Vec2();
+            result[prop] = 23;
 
-        const inputField = screen.getByTestId(testId);
-        fireEvent.change(inputField, {target: {value: '23'}})
+            const cb = jest.fn();
 
-        expect(cb).toHaveBeenCalledWith({newPosition: expectedResult});
+            render(<EntityPropsPanel entity={entity} onUpdatePosition={cb} />);
+
+            const inputField = screen.getByTestId(`EntityPropsPanel.Position.${prop}.InputField`);
+            fireEvent.change(inputField, {target: {value: '23'}})
+
+            expect(cb).toHaveBeenCalledWith({newPosition: result});
+        })
+
     })
+
+   
 })
