@@ -48,7 +48,7 @@ export const EntityPropsPanel = ({ entity, onUpdatePosition, onUpdateSize }: Ent
             label="H"
             key={`${entity.uuid}${useId()}`}
             defaultValue={transform.size.height}
-            onChange={(newValue: number) => onUpdateSize?.({ newSize: {width: transform.size.height, height: newValue} })}
+            onChange={(newValue: number) => onUpdateSize?.({ newSize: {width: transform.size.width, height: newValue} })}
             data-testid="EntityPropsPanel.Size.height"
         ></FormInput>
     ];

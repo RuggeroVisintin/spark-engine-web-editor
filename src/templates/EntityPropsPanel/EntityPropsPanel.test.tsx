@@ -82,8 +82,9 @@ describe('EntityPropsPanel', () => {
 
             it.each(sizeProps)('Should invoke the onUpdateSize callback when size.%s input changes', (prop) => {
                 const entity = new GameObject();
+                entity.transform.size = {width: 15, height: 10}
 
-                const result = {width: 0, height: 0};
+                const result = { ...entity.transform.size };
                 result[prop] = 23;
 
                 const cb = jest.fn();
