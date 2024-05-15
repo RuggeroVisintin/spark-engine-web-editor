@@ -12,7 +12,7 @@ interface ScenePanelProps {
 
 export const ScenePanel = ({ entities = [], currentEntity, onRemoveEntity, onFocusEntity }: ScenePanelProps) => {
     return (
-        <Box $size={1} $spacing={Spacing.small} data-testid="ScenePanel">
+        <Box $size={0.5} $spacing={Spacing.small} $scroll data-testid="ScenePanel">
             {entities.map((entity) =>
                 <ListItem
                     isAcitve={currentEntity?.uuid === entity.uuid}
