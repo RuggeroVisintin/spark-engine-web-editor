@@ -23,7 +23,10 @@ export const ScenePanel = ({ entities = [], currentEntity, onRemoveEntity, onFoc
                     button={{
                         "data-testid": `RemoveEntityButton.${entity.uuid}`,
                         text: 'X',
-                        onClick: () => onRemoveEntity(entity)
+                        onClick: (e) => {
+                            e.stopPropagation();
+                            onRemoveEntity(entity);
+                        }
                     }}
                 ></ListItem>
             )}

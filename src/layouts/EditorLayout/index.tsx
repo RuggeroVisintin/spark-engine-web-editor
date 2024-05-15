@@ -8,7 +8,7 @@ import { EntityPropsPanel } from '../../templates/EntityPropsPanel';
 export const EditorLayout = () => {
     const [scene, setScene] = useState<Scene>();
     const [entities, setEntities] = useState<IEntity[]>([]); 
-    const [currentEntity, setCurrentEntity] = useState<IEntity>();
+    const [currentEntity, setCurrentEntity] = useState<IEntity | undefined>(undefined);
 
     const onEngineReady = useCallback((engine: GameEngine) => {
         setScene(engine.createScene());
@@ -27,6 +27,7 @@ export const EditorLayout = () => {
 
         scene.unregisterEntity(entity.uuid);
         setEntities([...scene.entities ?? []]);
+        setCurrentEntity(undefined);
     }, [scene]);
 
     const onPositionUpdate = ({ newPosition }: {newPosition: Vec2}) => {
@@ -43,7 +44,6 @@ export const EditorLayout = () => {
         transform.size = newSize;
     }
 
-
     return (
         <FlexBox $fill={true}>
             <FlexBox style={{ height: '70px' }} $direction='row'>
@@ -57,7 +57,7 @@ export const EditorLayout = () => {
                         <ScenePanel
                             entities={entities}
                             onRemoveEntity={onRemoveEntity}
-                            onFocusEntity={(entity: IEntity) => setCurrentEntity(entity)}
+                            onFocusEntity={setCurrentEntity}
                             currentEntity={currentEntity}
                         ></ScenePanel>
                         {currentEntity &&

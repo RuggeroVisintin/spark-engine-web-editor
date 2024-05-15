@@ -32,7 +32,7 @@ const ActionButton = styled.button`
 
 interface ListButton extends WithDataTestId {
     text?: string,
-    onClick?: CallableFunction
+    onClick?: MouseEventHandler<HTMLElement>
 }
 interface ListItemProps extends WithDataTestId {
     text?: string;
@@ -53,7 +53,7 @@ export const ListItem = ({
     return (
         <ItemWrapper
             $background={isAcitve ? BackgroundColor.Secondary : undefined}
-            onClick={(mouseEvent) => onClick && onClick(mouseEvent)}
+            onClick={(e) => onClick?.(e)}
             data-testid={dataTestId}
         >
             <FlexBox $direction="row" $centerItems>
@@ -61,7 +61,9 @@ export const ListItem = ({
                 <Text>{text}</Text>
                 {button &&
                     <ActionButton
-                    	onClick={() => button.onClick?.()}
+                        onClick={(e) => {
+                            button.onClick?.(e);
+                        }}
                     	data-testid={button["data-testid"]}
                     >
                     	{button.text}
