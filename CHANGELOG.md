@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.0.4](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.3...sparkenginewebeditor-v0.0.4) (2024-05-15)
+
+
+### Features
+
+* **entity-panel:** minor restyle ([2896cd1](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/2896cd1d0edc02e48504867cbe389cde3264d721))
+* improve editor ui ([e98f9f6](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/e98f9f6d8b44aa8a6ef9b0e829d161f5631a8255))
+* improve style ([5ef631c](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/5ef631cb7c2aaab7686209b81326c3f5185f2f2b))
+
 ## [0.0.3](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.2...sparkenginewebeditor-v0.0.3) (2024-05-09)
 
 
