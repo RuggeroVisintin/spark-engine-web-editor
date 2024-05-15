@@ -31,7 +31,7 @@
     "sparkengineweb": "https://github.com/RuggeroVisintin/SparkEngineWeb/releases/download/sparkengineweb-v0.10.7/sparkengineweb-v0.10.7-lib.tar.gz",
     "styled-components": "^6.1.11",
     "uuid": "^9.0.1",
-    "web-vitals": "^3.5.2"
+    "web-vitals": "^4.0.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
