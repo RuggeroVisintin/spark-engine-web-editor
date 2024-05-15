@@ -46,10 +46,10 @@ export const EditorLayout = () => {
 
     return (
         <FlexBox $fill={true}>
-            <FlexBox style={{ height: '70px' }} $direction='row'>
+            <FlexBox style={{ height: '40px' }} $direction='row'>
                 <Box style={{ backgroundColor: 'blue' }}></Box>
             </FlexBox>
-            <FlexBox $direction='row'>
+            <FlexBox $direction='row' $fill style={{overflow: 'hidden'}}>
                 <EntityFactoryPanel onAddEntity={onAddEntity}></EntityFactoryPanel>
                 <EngineView onEngineReady={onEngineReady}></EngineView>
                 <Box $size={0.25}>

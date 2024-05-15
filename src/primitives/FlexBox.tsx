@@ -7,7 +7,7 @@ const getFillProp = ($fillMethod: FillMethod = ''): string => {
     }
 
     return `
-        fill: auto;
+        flex: auto;
         height: 100%;
     `;
 }
