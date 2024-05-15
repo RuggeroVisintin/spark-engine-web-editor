@@ -54,7 +54,7 @@ export const EntityPropsPanel = ({ entity, onUpdatePosition, onUpdateSize }: Ent
     ];
 
     return (
-        <Box $size={0.5} $scroll $divide $spacing={Spacing.large}>
+        <Box $size={1} $scroll $divide $spacing={Spacing.large}>
             {transform &&
                 <>
                     <InputRow $direction="row" $fill={false} $wrap={true} $fillMethod="flex">
