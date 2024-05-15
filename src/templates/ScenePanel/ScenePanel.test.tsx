@@ -11,23 +11,35 @@ describe('ScenePanel', () => {
             new GameObject()
         ]
 
-        render(<ScenePanel entities={entityList} onRemoveEntity={() => {}}></ScenePanel>)
-        expect(screen.getAllByTestId('ScenePanel.EntityEntry').length).toBe(3);
+        render(<ScenePanel entities={entityList} onRemoveEntity={() => { }} onFocusEntity={() => {}}></ScenePanel>)
+        expect(screen.getAllByTestId(`ScenePanel.EntityEntry`, {exact: false}).length).toBe(3);
     });
 
-    describe('onRemove', () => {
-        it('Should invoke the onEntityRemoved callback', () => {
-            const entityList = [
-                new GameObject(),
-                new StaticObject(),
-                new GameObject()
-            ]
+    it('Should invoke the onRemoveEntity callback when the entity remove button is clicked', () => {
+        const entityList = [
+            new GameObject(),
+            new StaticObject(),
+            new GameObject()
+        ]
 
-            const cb = jest.fn();
-            render(<ScenePanel entities={entityList} onRemoveEntity={cb}></ScenePanel>);
+        const cb = jest.fn();
+        render(<ScenePanel entities={entityList} onRemoveEntity={cb} onFocusEntity={() => {}}></ScenePanel>);
 
-            fireEvent.click(screen.getByTestId(`RemoveEntityButton.${entityList[0].uuid}`));
-            expect(cb).toHaveBeenCalledWith(entityList[0]);
-        });
+        fireEvent.click(screen.getByTestId(`RemoveEntityButton.${entityList[0].uuid}`));
+        expect(cb).toHaveBeenCalledWith(entityList[0]);
     });
+
+    it('Should invoke the onEntityFocused callback when the entity item is clicked', () => {
+        const entityList = [
+            new GameObject(),
+            new StaticObject(),
+            new GameObject()
+        ]
+
+        const cb = jest.fn();
+        render(<ScenePanel entities={entityList} onRemoveEntity={() => {}} onFocusEntity={cb}></ScenePanel>);
+
+        fireEvent.click(screen.getByTestId(`ScenePanel.EntityEntry.${entityList[1].uuid}`));
+        expect(cb).toHaveBeenCalledWith(entityList[1]);
+    })
 })

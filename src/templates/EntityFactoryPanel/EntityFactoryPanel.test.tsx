@@ -5,7 +5,7 @@ import { EntityFactoryPanel } from '.';
 import { GameObject, IEntity, StaticObject } from 'sparkengineweb';
 
 describe('EntityFactoryPanel', () => {
-    describe("Add Game Object", () => {
+    describe("Add new entity", () => {
         it.each([[
             'GameObject',
             GameObject

@@ -6,5 +6,5 @@ import { App } from './App';
 jest.mock('sparkengineweb');
 
 test('renders learn react link', () => {
-  render(<App />);
+    render(<App />);
 });

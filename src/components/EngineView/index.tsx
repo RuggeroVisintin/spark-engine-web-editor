@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { memo, useEffect, useRef } from 'react';
 import { Box } from '../../primitives';
 import * as SparkEngine from 'sparkengineweb';
 import styled from 'styled-components';
@@ -13,8 +13,10 @@ const RenderingCanvas = styled.canvas({
     background: 'black'
 })
 
-export const EngineView = ({ onEngineReady }: EngineViewProps) => {
+export const EngineView = memo(({ onEngineReady }: EngineViewProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    console.log('RENDER ENGINE VIEW');
 
     useEffect(() => {
         if (canvasRef.current !== null) {
@@ -33,4 +35,4 @@ export const EngineView = ({ onEngineReady }: EngineViewProps) => {
             <RenderingCanvas ref={canvasRef} id="canvas"></RenderingCanvas>
         </Box>
     )
-}
+});
