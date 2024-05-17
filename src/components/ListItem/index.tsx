@@ -13,10 +13,12 @@ const ItemWrapper = styled(Box)`
     }
 `
 
-const ImageBox = styled(Box)`
+const ImageBox = styled.img`
     max-width: 40px;
-    height: 40px;
+    max-height: 40px;
     margin-right: 15px;
+
+    border-radius: 5px;
 
     background: ${BackgroundColor.Secondary}
 `
@@ -57,7 +59,7 @@ export const ListItem = ({
             data-testid={dataTestId}
         >
             <FlexBox $direction="row" $centerItems>
-                {imgSrc && <ImageBox />}
+                {imgSrc && <ImageBox src={require(`../../assets/images/${imgSrc}`)} alt="img"/>}
                 <Text>{text}</Text>
                 {button &&
                     <ActionButton

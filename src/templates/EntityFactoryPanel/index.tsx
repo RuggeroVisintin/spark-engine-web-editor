@@ -30,9 +30,20 @@ const newStaticObject = () => new StaticObject({
     ...defaultMaterialProps
 });
 
-const entityTypes = {
-    'GameObject': newGameObject,
-    'StaticObject': newStaticObject,
+interface EntityDictEntry {
+    factory: CallableFunction,
+    icon: string
+}
+
+const entityDict: Record<string, EntityDictEntry> = {
+    'GameObject': {
+        factory: newGameObject,
+        icon: 'game_object_icon.jpeg'
+    },
+    'StaticObject': {
+        factory: newStaticObject,
+        icon: 'static_object_icon.jpeg'
+    },
     // TODO: implement optional target in SparkEngineWeb
     // 'TriggerEntity': newTriggerEntity
 }
@@ -44,12 +55,12 @@ export const EntityFactoryPanel = ({ onAddEntity }: EntityFactoryPanelProps) => 
             $spacing={Spacing.small}
             data-testid="EntityFactoryPanel"
         >
-            {Object.entries(entityTypes).map(([entityType, entityFactoryFn]) => (
+            {Object.entries(entityDict).map(([entityType, {factory, icon}]) => (
                 <ListItem
                     key={entityType}
                     text={`Add ${entityType}`}
-                    onClick={() => onAddEntity(entityFactoryFn())}
-                    imgSrc='placeholder.png'
+                    onClick={() => onAddEntity(factory())}
+                    imgSrc={icon}
                     data-testid={`Add${entityType}Button`}/>
             ))}
         </Box>

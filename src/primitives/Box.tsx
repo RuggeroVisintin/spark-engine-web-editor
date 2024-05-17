@@ -16,7 +16,7 @@ export const Box = styled.div<BoxProps>`
     background: ${props => props.$background ?? BackgroundColor.Primary};
 
     ${props => props.$spacing && `padding: ${props.$spacing};`}
-    ${props => props.$scroll && 'overflow: scroll;'}
+    ${props => props.$scroll && 'overflow: auto;'}
 
     ${props => props.$divide && 'border-top: 1px solid;'}
 `;

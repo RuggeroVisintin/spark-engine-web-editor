@@ -1,0 +1,9 @@
+Description: 
+3D isometric render of a {{subject}} icon with sparks and with #38485d as primary color, #707a89 as secondary color and  #de7650 as accents color, 3D app icon, clean isometric design, beautiful design, soft gradient background, soft colors, centered, 3D blender render, masterpiece, best quality, high resolution, 8k octane render, soft smooth lighting, physically based rendering, square image, high polycount (seed:::65801193)
+
+Anti-Description: 
+, low quality, terrible design, glitchy compression artefacts, deformed, blurry compression artefacts, text
+
+
+
+https://perchance.org/ai-icon-generator
