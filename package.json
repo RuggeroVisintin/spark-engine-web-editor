@@ -28,7 +28,7 @@
     "@testing-library/user-event": "^14.5.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "sparkengineweb": "https://github.com/RuggeroVisintin/SparkEngineWeb/releases/download/sparkengineweb-v0.10.7/sparkengineweb-v0.10.7-lib.tar.gz",
+    "sparkengineweb": "https://github.com/RuggeroVisintin/SparkEngineWeb/releases/download/sparkengineweb-v0.10.9/sparkengineweb-v0.10.9-lib.tar.gz",
     "styled-components": "^6.1.11",
     "uuid": "^9.0.1",
     "web-vitals": "^3.5.2"
