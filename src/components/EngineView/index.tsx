@@ -16,8 +16,6 @@ const RenderingCanvas = styled.canvas({
 export const EngineView = memo(({ onEngineReady }: EngineViewProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    console.log('RENDER ENGINE VIEW');
-
     useEffect(() => {
         if (canvasRef.current !== null) {
             const engine = new SparkEngine.GameEngine({

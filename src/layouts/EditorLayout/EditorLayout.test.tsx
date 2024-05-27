@@ -11,4 +11,9 @@ describe('EditorLayout', () => {
     describe('onRemoveEntity', () => {
         it.todo('Should remove the entity from current scene');
     })
+
+    describe('onEntityFocus', () => {
+        it.todo('Should open the entity props panel');
+        it.todo('Should highlight the focused entity in the engine view');
+    }) 
 })
