@@ -14,8 +14,8 @@ const ItemWrapper = styled(Box)`
 `
 
 const ImageBox = styled.img`
-    max-width: 40px;
-    max-height: 40px;
+    max-width: 45px;
+    max-height: 45px;
     margin-right: 15px;
 
     border-radius: 5px;

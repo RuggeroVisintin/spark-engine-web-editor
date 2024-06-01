@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Spacing } from '../../primitives';
-import { GameObject, Rgb, StaticObject, Vec2 } from 'sparkengineweb';
+import { GameObject, Rgb, StaticObject, TriggerEntity, Vec2 } from 'sparkengineweb';
 import { ListItem } from '../../components';
 
 interface EntityFactoryPanelProps {
@@ -44,6 +44,10 @@ const entityDict: Record<string, EntityDictEntry> = {
         factory: newStaticObject,
         icon: 'static_object_icon.jpeg'
     },
+    'TriggerObject': {
+        factory: () => new TriggerEntity(),
+        icon: 'trigger_icon.jpeg'
+    }
     // TODO: implement optional target in SparkEngineWeb
     // 'TriggerEntity': newTriggerEntity
 }

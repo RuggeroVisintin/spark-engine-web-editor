@@ -1,17 +1,44 @@
 import React, { useCallback, useState } from 'react';
-import { GameEngine, IEntity, Scene, TransformComponent, Vec2 } from 'sparkengineweb';
+import { GameEngine, GameObject, IEntity, Rgb, Scene, TransformComponent, Vec2 } from 'sparkengineweb';
 import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
 import { EngineView } from '../../components';
 import { EntityPropsPanel } from '../../templates/EntityPropsPanel';
 
+const setDebuggerEntity = (target: IEntity, debuggerEntity: IEntity) => {
+    const debuggerTransform = debuggerEntity.getComponent<TransformComponent>('TransformComponent');
+    const targetTransform = target.getComponent<TransformComponent>('TransformComponent');
+
+    if (!targetTransform || !debuggerTransform) {
+        return;
+    }
+
+    debuggerTransform.position = targetTransform.position;
+    debuggerTransform.size = targetTransform.size;
+}
+
+const debuggerEntity = new GameObject({
+    material: {
+        diffuseColor: new Rgb(255, 255, 0)
+    },
+    shape: {
+        isWireframe: true
+    },
+    transform: {
+        depthIndex: 0
+    }
+});
+
 export const EditorLayout = () => {
     const [scene, setScene] = useState<Scene>();
+    const [debuggerScene, setDebuggerScene] = useState<Scene>();
     const [entities, setEntities] = useState<IEntity[]>([]); 
     const [currentEntity, setCurrentEntity] = useState<IEntity | undefined>(undefined);
 
     const onEngineReady = useCallback((engine: GameEngine) => {
+        engine.renderer.defaultWireframeThickness = 3;
         setScene(engine.createScene());
+        setDebuggerScene(engine.createScene());
         engine.run();
     }, []);
 
@@ -23,18 +50,20 @@ export const EditorLayout = () => {
     }, [scene]);
 
     const onRemoveEntity = useCallback((entity: IEntity) => {
-        if (!scene) return;
+        if (!scene || !debuggerScene) return;
 
         scene.unregisterEntity(entity.uuid);
+        debuggerScene.unregisterEntity(debuggerEntity.uuid);
         setEntities([...scene.entities ?? []]);
         setCurrentEntity(undefined);
-    }, [scene]);
+    }, [scene, debuggerScene]);
 
     const onPositionUpdate = ({ newPosition }: {newPosition: Vec2}) => {
         const transform = currentEntity?.getComponent<TransformComponent>('TransformComponent');
         if (!transform) return;
 
         transform.position = newPosition;
+        setDebuggerEntity(currentEntity!, debuggerEntity);
     }
 
     const onSizeUpdate = ({ newSize }: { newSize: { width: number, height: number } }) => {
@@ -42,6 +71,14 @@ export const EditorLayout = () => {
         if (!transform) return;
 
         transform.size = newSize;
+        setDebuggerEntity(currentEntity!, debuggerEntity);
+    }
+
+    const onEntityFocus = (target: IEntity) => {
+        setCurrentEntity(target);
+
+        setDebuggerEntity(target, debuggerEntity);
+        debuggerScene?.registerEntity(debuggerEntity);
     }
 
     return (
@@ -57,7 +94,7 @@ export const EditorLayout = () => {
                         <ScenePanel
                             entities={entities}
                             onRemoveEntity={onRemoveEntity}
-                            onFocusEntity={setCurrentEntity}
+                            onFocusEntity={onEntityFocus}
                             currentEntity={currentEntity}
                         ></ScenePanel>
                         {currentEntity &&

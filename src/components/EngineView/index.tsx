@@ -9,14 +9,11 @@ interface EngineViewProps {
 
 const RenderingCanvas = styled.canvas({
     width: '100%',
-    height: '100%',
     background: 'black'
 })
 
 export const EngineView = memo(({ onEngineReady }: EngineViewProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-
-    console.log('RENDER ENGINE VIEW');
 
     useEffect(() => {
         if (canvasRef.current !== null) {
