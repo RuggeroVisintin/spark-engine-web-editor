@@ -9,7 +9,6 @@ interface EngineViewProps {
 
 const RenderingCanvas = styled.canvas({
     width: '100%',
-    height: '100%',
     background: 'black'
 })
 

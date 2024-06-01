@@ -19,10 +19,13 @@ const setDebuggerEntity = (target: IEntity, debuggerEntity: IEntity) => {
 
 const debuggerEntity = new GameObject({
     material: {
-        diffuseColor: new Rgb(0, 255, 0)
+        diffuseColor: new Rgb(255, 255, 0)
     },
     shape: {
         isWireframe: true
+    },
+    transform: {
+        depthIndex: 0
     }
 });
 
@@ -32,6 +35,7 @@ export const EditorLayout = () => {
     const [currentEntity, setCurrentEntity] = useState<IEntity | undefined>(undefined);
 
     const onEngineReady = useCallback((engine: GameEngine) => {
+        engine.renderer.defaultWireframeThickness = 3;
         setScene(engine.createScene());
         engine.run();
     }, []);
