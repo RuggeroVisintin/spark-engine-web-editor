@@ -31,12 +31,14 @@ const debuggerEntity = new GameObject({
 
 export const EditorLayout = () => {
     const [scene, setScene] = useState<Scene>();
+    const [debuggerScene, setDebuggerScene] = useState<Scene>();
     const [entities, setEntities] = useState<IEntity[]>([]); 
     const [currentEntity, setCurrentEntity] = useState<IEntity | undefined>(undefined);
 
     const onEngineReady = useCallback((engine: GameEngine) => {
         engine.renderer.defaultWireframeThickness = 3;
         setScene(engine.createScene());
+        setDebuggerScene(engine.createScene());
         engine.run();
     }, []);
 
@@ -48,13 +50,13 @@ export const EditorLayout = () => {
     }, [scene]);
 
     const onRemoveEntity = useCallback((entity: IEntity) => {
-        if (!scene) return;
+        if (!scene || !debuggerScene) return;
 
         scene.unregisterEntity(entity.uuid);
-        scene.unregisterEntity(debuggerEntity.uuid);
+        debuggerScene.unregisterEntity(debuggerEntity.uuid);
         setEntities([...scene.entities ?? []]);
         setCurrentEntity(undefined);
-    }, [scene]);
+    }, [scene, debuggerScene]);
 
     const onPositionUpdate = ({ newPosition }: {newPosition: Vec2}) => {
         const transform = currentEntity?.getComponent<TransformComponent>('TransformComponent');
@@ -76,7 +78,7 @@ export const EditorLayout = () => {
         setCurrentEntity(target);
 
         setDebuggerEntity(target, debuggerEntity);
-        scene?.registerEntity(debuggerEntity);
+        debuggerScene?.registerEntity(debuggerEntity);
     }
 
     return (
