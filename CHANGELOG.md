@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.5](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.4...sparkenginewebeditor-v0.0.5) (2024-06-19)
+
+
+### Features
+
+* **engine-view:** highlight selected entity in engine view ([#32](https://github.com/RuggeroVisintin/spark-engine-web-editor/issues/32)) ([b750cd3](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/b750cd3e0c13efadf9265246ba1a497761dbbc4f))
+* **EntityFactory:** improve UI and add icons ([362546d](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/362546dc88cff7e68cbcdf61ef1268d4e5196c4d))
+
 ## [0.0.4](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.3...sparkenginewebeditor-v0.0.4) (2024-05-15)
 
 
