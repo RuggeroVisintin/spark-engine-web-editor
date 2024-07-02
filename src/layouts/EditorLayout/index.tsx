@@ -1,8 +1,9 @@
 import React, { useCallback, useState } from 'react';
 import { GameEngine, GameObject, IEntity, Rgb, Scene, TransformComponent, Vec2 } from 'sparkengineweb';
+import { EngineView } from '../../components';
 import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
-import { EngineView } from '../../components';
+import { ActionMenu } from '../../templates/ActionMenu';
 import { EntityPropsPanel } from '../../templates/EntityPropsPanel';
 
 const setDebuggerEntity = (target: IEntity, debuggerEntity: IEntity) => {
@@ -83,9 +84,7 @@ export const EditorLayout = () => {
 
     return (
         <FlexBox $fill={true}>
-            <FlexBox style={{ height: '40px' }} $direction='row'>
-                <Box style={{ backgroundColor: 'blue' }}></Box>
-            </FlexBox>
+            <ActionMenu></ActionMenu>
             <FlexBox $direction='row' $fill style={{overflow: 'hidden'}}>
                 <EntityFactoryPanel onAddEntity={onAddEntity}></EntityFactoryPanel>
                 <EngineView onEngineReady={onEngineReady}></EngineView>
