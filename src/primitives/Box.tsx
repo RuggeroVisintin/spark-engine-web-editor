@@ -8,6 +8,7 @@ interface BoxProps {
     $background?: string;
     $scroll?: boolean;
     $divide?: boolean;
+    $clickable?: boolean;
 }
 
 export const Box = styled.div<BoxProps>`
@@ -19,4 +20,12 @@ export const Box = styled.div<BoxProps>`
     ${props => props.$scroll && 'overflow: auto;'}
 
     ${props => props.$divide && 'border-top: 1px solid;'}
+
+    ${props => props.$clickable && `
+        &:hover {
+            background: ${BackgroundColor.Accents};
+        }
+
+        cursor: pointer;
+    `}
 `;

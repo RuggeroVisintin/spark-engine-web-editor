@@ -1,16 +1,12 @@
 import React, { MouseEventHandler } from "react";
-import { BackgroundColor, Box, FlexBox } from "../../primitives";
 import styled from "styled-components";
 import { WithDataTestId } from "../../common";
+import { BackgroundColor, Box, Button, FlexBox } from "../../primitives";
 
 const ItemWrapper = styled(Box)`
     padding: 10px 10px;
     margin: 2px 0px;
     border-radius: 5px;
-    
-    &:hover {
-        background: ${BackgroundColor.Accents};
-    }
 `
 
 const ImageBox = styled.img`
@@ -29,9 +25,6 @@ const Text = styled.span`
     flex: 1;
 `
 
-const ActionButton = styled.button`
-`;
-
 interface ListButton extends WithDataTestId {
     text?: string,
     onClick?: MouseEventHandler<HTMLElement>
@@ -42,6 +35,7 @@ interface ListItemProps extends WithDataTestId {
     imgSrc?: string;
     button?: ListButton;
     isAcitve?: boolean;
+    flex?: boolean;
 }
 
 export const ListItem = ({
@@ -50,26 +44,29 @@ export const ListItem = ({
     imgSrc,
     'data-testid': dataTestId,
     button,
-    isAcitve
+    isAcitve,
+    flex = true
 }: ListItemProps) => {
     return (
         <ItemWrapper
             $background={isAcitve ? BackgroundColor.Secondary : undefined}
             onClick={(e) => onClick?.(e)}
             data-testid={dataTestId}
+            $size={flex ? 1 : 0}
+            $clickable={!!onClick}
         >
             <FlexBox $direction="row" $centerItems>
                 {imgSrc && <ImageBox src={require(`../../assets/images/${imgSrc}`)} alt="img"/>}
                 <Text>{text}</Text>
                 {button &&
-                    <ActionButton
+                    <Button
                         onClick={(e) => {
                             button.onClick?.(e);
                         }}
                     	data-testid={button["data-testid"]}
                     >
                     	{button.text}
-                    </ActionButton>
+                    </Button>
                 }
             </FlexBox>
         </ItemWrapper>
