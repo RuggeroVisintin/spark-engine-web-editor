@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { GameEngine, GameObject, IEntity, Rgb, Scene, TransformComponent, Vec2 } from 'sparkengineweb';
+import { EngineView } from '../../components';
 import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
-import { EngineView } from '../../components';
 import { EntityPropsPanel } from '../../templates/EntityPropsPanel';
 
 const setDebuggerEntity = (target: IEntity, debuggerEntity: IEntity) => {
@@ -76,6 +76,10 @@ export const EditorLayout = () => {
 
     const onEntityFocus = (target: IEntity) => {
         setCurrentEntity(target);
+
+        if (debuggerEntity) {
+            debuggerScene?.unregisterEntity(debuggerEntity.uuid);
+        }
 
         setDebuggerEntity(target, debuggerEntity);
         debuggerScene?.registerEntity(debuggerEntity);
