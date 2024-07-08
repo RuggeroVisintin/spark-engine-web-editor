@@ -78,6 +78,10 @@ export const EditorLayout = () => {
     const onEntityFocus = (target: IEntity) => {
         setCurrentEntity(target);
 
+        if (debuggerEntity) {
+            debuggerScene?.unregisterEntity(debuggerEntity.uuid);
+        }
+
         setDebuggerEntity(target, debuggerEntity);
         debuggerScene?.registerEntity(debuggerEntity);
     }
