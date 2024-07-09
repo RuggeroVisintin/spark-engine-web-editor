@@ -1,7 +1,7 @@
 import React from 'react';
-import { Box, Spacing } from '../../primitives';
 import { IEntity } from 'sparkengineweb';
 import { ListItem } from '../../components';
+import { Box, Spacing } from '../../primitives';
 
 interface ScenePanelProps {
     entities?: IEntity[];
@@ -12,7 +12,7 @@ interface ScenePanelProps {
 
 export const ScenePanel = ({ entities = [], currentEntity, onRemoveEntity, onFocusEntity }: ScenePanelProps) => {
     return (
-        <Box $size={1} $spacing={Spacing.small} $scroll data-testid="ScenePanel">
+        <Box $size={1} $spacing={Spacing.sm} $scroll data-testid="ScenePanel">
             {entities.map((entity) =>
                 <ListItem
                     isAcitve={currentEntity?.uuid === entity.uuid}

@@ -1,5 +1,7 @@
 export const enum Spacing {
-    small = '10px',
-    medium = '15px',
-    large = '20px'
+    xxs = '3px',
+    xs = '5px',
+    sm = '8px',
+    md = '13px',
+    lg = '21px'
 } 

@@ -1,8 +1,8 @@
 import React, { useId } from "react";
-import { Box, FlexBox, Spacing } from "../../primitives";
-import { FormInput } from "../../components";
 import { IEntity, TransformComponent, Vec2 } from "sparkengineweb";
 import styled from "styled-components";
+import { FormInput } from "../../components";
+import { Box, FlexBox, Spacing } from "../../primitives";
 interface EntityPropsPanelProps {
     entity: IEntity;
     onUpdatePosition?: CallableFunction,
@@ -54,7 +54,7 @@ export const EntityPropsPanel = ({ entity, onUpdatePosition, onUpdateSize }: Ent
     ];
 
     return (
-        <Box $size={1} $scroll $divide $spacing={Spacing.large}>
+        <Box $size={1} $scroll $divide $spacing={Spacing.lg}>
             {transform &&
                 <>
                     <InputRow $direction="row" $fill={false} $wrap={true} $fillMethod="flex">

@@ -1,18 +1,18 @@
 import React, { MouseEventHandler } from "react";
 import styled from "styled-components";
 import { WithDataTestId } from "../../common";
-import { BackgroundColor, Box, Button, FlexBox } from "../../primitives";
+import { BackgroundColor, Box, Button, FlexBox, Spacing } from "../../primitives";
 
 const ItemWrapper = styled(Box)`
-    padding: 10px 10px;
-    margin: 2px 0px;
+    padding: ${Spacing.sm};
+    margin: ${Spacing.xxs} 0px;
     border-radius: 5px;
 `
 
 const ImageBox = styled.img`
     max-width: 45px;
     max-height: 45px;
-    margin-right: 15px;
+    margin-right: ${Spacing.md};
 
     border-radius: 5px;
 
