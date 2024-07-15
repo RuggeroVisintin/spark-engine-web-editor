@@ -33,6 +33,7 @@ export const ActionMenu = (props: ActionMenuProps) => {
                     }
                 }]
             });
+            props.onFileSave(saveFileHandle);
         } catch (err) {
         }
     }
