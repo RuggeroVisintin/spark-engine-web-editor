@@ -20,9 +20,9 @@ describe('PopupMenu', () => {
         }]}></PopupMenu>;
 
         render(popupMenu);
-
         expect(screen.queryAllByTestId(`test-popup-menu-file.item`)).toEqual([]);
-    })
+    });
+
     it('Should open the child submenu when children property is defined', () => {
         const popupMenu = <PopupMenu data-testid='test-popup-menu-file' label="File" items={[{
             label: 'Open'
@@ -37,5 +37,21 @@ describe('PopupMenu', () => {
 
         expect(items[0]).toHaveTextContent('Open');
         expect(items[1]).toHaveTextContent('Save');
+    });
+
+    it('Should close the menu if an action is clicked', () => {
+        const popupMenu = <PopupMenu data-testid='test-popup-menu-file' label="File" items={[{
+            label: 'Open'
+        }, {
+            label: 'Save'
+        }]}></PopupMenu>;
+
+        render(popupMenu);
+        fireEvent.click(screen.getByTestId(`test-popup-menu-file.trigger`));
+
+        const items = screen.queryAllByTestId(`test-popup-menu-file.item`);
+
+        fireEvent.click(items[0])
+        expect(screen.queryAllByTestId(`test-popup-menu-file.item`)).toEqual([]);
     });
 })

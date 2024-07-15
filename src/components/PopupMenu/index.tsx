@@ -28,11 +28,23 @@ export const PopupMenu = (props: PopupMenuProps) => {
 
     return (
         <>
-            <ListItem text={props.label} flex={false} data-testid={`${props["data-testid"]}.trigger`} onClick={() => setIsOpen(!isOpen)}/>
+            <ListItem
+                text={props.label}
+                flex={false}
+                data-testid={`${props["data-testid"]}.trigger`}
+                onClick={() => setIsOpen(!isOpen)}
+                isAcitve={isOpen} />
             {isOpen && props.items &&
                 <PopupMenuBody $direction="column">
                     {
-                        props.items.map((item, idx) => <ListItem text={item.label} onClick={() => { }} key={`${id}.item.${idx}`} data-testid={`${props["data-testid"]}.item`}/>)
+                        props.items.map((item, idx) =>
+                            <ListItem
+                                text={item.label}
+                                onClick={() => { setIsOpen(false); item.action?.() }}
+                                key={`${id}.item.${idx}`}
+                                data-testid={`${props["data-testid"]}.item`}
+                            />
+                        )
                     }
                 </PopupMenuBody>
             }

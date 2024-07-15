@@ -4,6 +4,7 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
 import 'jest-canvas-mock';
+import './__mocks__/fs-api.mock';
 
 // jest.mock('sparkengineweb')
 
