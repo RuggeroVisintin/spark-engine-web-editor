@@ -1,14 +1,15 @@
 import React from "react";
 import { PopupMenu } from "../../components/PopupMenu";
 import { BackgroundColor, FlexBox, TextColor } from "../../primitives";
+import { Function } from "../../common";
 
 export interface ActionMenuProps {
-    onFileOpen: CallableFunction;
-    onFileSave: CallableFunction;
+    onProjectFileOpen: Function<FileSystemHandle>;
+    onProjectFileSave: Function<FileSystemHandle>;
 }
 
 export const ActionMenu = (props: ActionMenuProps) => {
-    const readSceneFile = async () => {
+    const onOpenProjectFile = async () => {
         try {
             const [openFileHandle] = await window.showOpenFilePicker({
                 multiple: false,
@@ -19,12 +20,12 @@ export const ActionMenu = (props: ActionMenuProps) => {
                 }]
             });
 
-            props.onFileOpen(openFileHandle);
+            props.onProjectFileOpen(openFileHandle);
         } catch (err) {
         }
     }
 
-    const saveSceneFile = async () => {
+    const onSaveProjectFile = async () => {
         try {
             const saveFileHandle = await window.showSaveFilePicker({
                 types: [{
@@ -33,7 +34,7 @@ export const ActionMenu = (props: ActionMenuProps) => {
                     }
                 }]
             });
-            props.onFileSave(saveFileHandle);
+            props.onProjectFileSave(saveFileHandle);
         } catch (err) {
         }
     }
@@ -46,10 +47,10 @@ export const ActionMenu = (props: ActionMenuProps) => {
                 label="File"
                 items={[{
                     label: 'Open',
-                    action: () => readSceneFile()
+                    action: () => onOpenProjectFile()
                 }, {
                     label: 'Save',
-                    action: () => saveSceneFile()
+                    action: () => onSaveProjectFile()
                 }]}
             />
         </FlexBox>

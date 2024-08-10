@@ -86,9 +86,20 @@ export const EditorLayout = () => {
         debuggerScene?.registerEntity(debuggerEntity);
     }
 
+    const onProjectFileOpen = (fileHandle: FileSystemHandle) => {
+        return;
+    };
+
+    const onProjectFileSave = (fileHandle: FileSystemHandle) => {
+        // TODO - save on file.
+        // See: https://github.com/RuggeroVisintin/SparkEngineWeb/issues/348
+
+        return;
+    };
+
     return (
         <FlexBox $fill={true}>
-            <ActionMenu></ActionMenu>
+            <ActionMenu onProjectFileOpen={onProjectFileOpen} onProjectFileSave={onProjectFileSave}></ActionMenu>
             <FlexBox $direction='row' $fill style={{overflow: 'hidden'}}>
                 <EntityFactoryPanel onAddEntity={onAddEntity}></EntityFactoryPanel>
                 <EngineView onEngineReady={onEngineReady}></EngineView>

@@ -8,7 +8,7 @@ describe('ActionMenu', () => {
             const onFileOpen = jest.fn();
             const onFileSave = jest.fn();
 
-            const actionMenu = <ActionMenu onFileOpen={onFileOpen} onFileSave={onFileSave}></ActionMenu>;
+            const actionMenu = <ActionMenu onProjectFileOpen={onFileOpen} onProjectFileSave={onFileSave}></ActionMenu>;
 
             render(actionMenu);
 
@@ -24,7 +24,7 @@ describe('ActionMenu', () => {
             const onFileOpen = jest.fn();
             const onFileSave = jest.fn();
 
-            const actionMenu = <ActionMenu onFileOpen={onFileOpen} onFileSave={onFileSave}></ActionMenu>;
+            const actionMenu = <ActionMenu onProjectFileOpen={onFileOpen} onProjectFileSave={onFileSave}></ActionMenu>;
 
             render(actionMenu);
 
