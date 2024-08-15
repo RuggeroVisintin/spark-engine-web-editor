@@ -33,7 +33,7 @@ const debuggerEntity = new GameObject({
 export const EditorLayout = () => {
     const [scene, setScene] = useState<Scene>();
     const [debuggerScene, setDebuggerScene] = useState<Scene>();
-    const [entities, setEntities] = useState<IEntity[]>([]); 
+    const [entities, setEntities] = useState<IEntity[]>([]);
     const [currentEntity, setCurrentEntity] = useState<IEntity | undefined>(undefined);
 
     const onEngineReady = useCallback((engine: GameEngine) => {
@@ -59,7 +59,7 @@ export const EditorLayout = () => {
         setCurrentEntity(undefined);
     }, [scene, debuggerScene]);
 
-    const onPositionUpdate = ({ newPosition }: {newPosition: Vec2}) => {
+    const onPositionUpdate = ({ newPosition }: { newPosition: Vec2 }) => {
         const transform = currentEntity?.getComponent<TransformComponent>('TransformComponent');
         if (!transform) return;
 
@@ -86,21 +86,30 @@ export const EditorLayout = () => {
         debuggerScene?.registerEntity(debuggerEntity);
     }
 
-    const onProjectFileOpen = (fileHandle: FileSystemHandle) => {
-        return;
+    const onProjectFileOpen = async (fileHandle: FileSystemFileHandle) => {
+        const sceneJson = await fileHandle.getFile();
+
+        scene?.loadFromJson(JSON.parse(await sceneJson.text()));
+
+        setEntities(scene?.entities || []);
+
+        if (debuggerEntity) {
+            debuggerScene?.unregisterEntity(debuggerEntity.uuid);
+        }
     };
 
-    const onProjectFileSave = (fileHandle: FileSystemHandle) => {
-        // TODO - save on file.
-        // See: https://github.com/RuggeroVisintin/SparkEngineWeb/issues/348
+    const onProjectFileSave = async (fileHandle: FileSystemFileHandle) => {
+        const writable = await fileHandle.createWritable();
 
-        return;
+        await writable.write(JSON.stringify(scene?.toJson()));
+
+        await writable.close();
     };
 
     return (
         <FlexBox $fill={true}>
             <ActionMenu onProjectFileOpen={onProjectFileOpen} onProjectFileSave={onProjectFileSave}></ActionMenu>
-            <FlexBox $direction='row' $fill style={{overflow: 'hidden'}}>
+            <FlexBox $direction='row' $fill style={{ overflow: 'hidden' }}>
                 <EntityFactoryPanel onAddEntity={onAddEntity}></EntityFactoryPanel>
                 <EngineView onEngineReady={onEngineReady}></EngineView>
                 <Box $size={0.25}>

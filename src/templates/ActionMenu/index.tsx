@@ -4,8 +4,8 @@ import { BackgroundColor, FlexBox, TextColor } from "../../primitives";
 import { Function } from "../../common";
 
 export interface ActionMenuProps {
-    onProjectFileOpen: Function<FileSystemHandle>;
-    onProjectFileSave: Function<FileSystemHandle>;
+    onProjectFileOpen: Function<FileSystemFileHandle>;
+    onProjectFileSave: Function<FileSystemFileHandle>;
 }
 
 export const ActionMenu = (props: ActionMenuProps) => {
@@ -15,7 +15,7 @@ export const ActionMenu = (props: ActionMenuProps) => {
                 multiple: false,
                 types: [{
                     accept: {
-                        'application/json': ['.json']
+                        'application/json': ['.spark.json']
                     }
                 }]
             });
@@ -30,7 +30,7 @@ export const ActionMenu = (props: ActionMenuProps) => {
             const saveFileHandle = await window.showSaveFilePicker({
                 types: [{
                     accept: {
-                        'application/json': ['.json']
+                        'application/json': ['.spark.json']
                     }
                 }]
             });
