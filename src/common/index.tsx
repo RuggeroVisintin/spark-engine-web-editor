@@ -1,2 +1,1 @@
-export * from './testing';
-export * from './function';
+export * from './utils';
