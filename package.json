@@ -36,7 +36,6 @@
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/uuid": "^9.0.8",
-    "@types/wicg-file-system-access": "^2023.10.5",
     "jest-canvas-mock": "^2.5.2",
     "react-scripts": "^5.0.1"
   },
