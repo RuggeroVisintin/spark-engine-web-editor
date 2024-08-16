@@ -92,7 +92,7 @@ export const EditorLayout = () => {
 
         scene?.loadFromJson(JSON.parse(await sceneJson.text()));
 
-        setEntities(scene?.entities || []);
+        setEntities([...scene?.entities || []]);
 
         if (debuggerEntity) {
             debuggerScene?.unregisterEntity(debuggerEntity.uuid);
