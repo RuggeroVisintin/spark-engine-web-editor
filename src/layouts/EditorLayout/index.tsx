@@ -19,6 +19,7 @@ const setDebuggerEntity = (target: IEntity, debuggerEntity: IEntity) => {
 }
 
 const debuggerEntity = new GameObject({
+    name: 'DebuggerEntity',
     material: {
         diffuseColor: new Rgb(255, 255, 0)
     },
