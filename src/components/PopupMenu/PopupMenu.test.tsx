@@ -9,10 +9,8 @@ describe('PopupMenu', () => {
         render(popupMenu);
         expect(screen.getByTestId(`test-popup-menu.trigger`)).toHaveTextContent('File');
     })
-    
-    it.todo('Should invoke the given callback when item is clicked if action is defined');
-    
-    it('Should open without any child menu at screen', () => {
+
+    it('Should not show children menu by default', () => {
         const popupMenu = <PopupMenu data-testid='test-popup-menu-file' label="File" items={[{
             label: 'Open'
         }, {
@@ -53,5 +51,24 @@ describe('PopupMenu', () => {
 
         fireEvent.click(items[0])
         expect(screen.queryAllByTestId(`test-popup-menu-file.item`)).toEqual([]);
+    });
+
+    it('Should invoke a children\'s action if defined ', () => {
+        const testAction = jest.fn();
+        const popupMenu = <PopupMenu data-testid='test-popup-menu-file' label="File" items={[{
+            label: 'Open',
+            action: testAction
+        }, {
+            label: 'Save'
+        }]}></PopupMenu>;
+
+        render(popupMenu);
+        fireEvent.click(screen.getByTestId(`test-popup-menu-file.trigger`));
+
+        const items = screen.queryAllByTestId(`test-popup-menu-file.item`);
+
+        fireEvent.click(items[0])
+
+        expect(testAction).toHaveBeenCalled();
     });
 })
