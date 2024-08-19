@@ -15,5 +15,14 @@ describe('EditorLayout', () => {
     describe('onEntityFocus', () => {
         it.todo('Should open the entity props panel');
         it.todo('Should highlight the focused entity in the engine view');
-    }) 
+    })
+
+    // TODO - have to introduce port and adapters to improve testability
+    describe('actions > file > save', () => {
+        it.todo('Should save the current scene');
+    });
+
+    describe('actions > file > open', () => {
+        it.todo('Should open a scene file');
+    });
 })
