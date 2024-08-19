@@ -1,0 +1,1 @@
+export type Function<I = void, R = void> = (args: I) => R;

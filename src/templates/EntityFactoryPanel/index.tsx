@@ -1,7 +1,7 @@
 import React from 'react';
-import { Box, Spacing } from '../../primitives';
 import { GameObject, Rgb, StaticObject, TriggerEntity, Vec2 } from 'sparkengineweb';
 import { ListItem } from '../../components';
+import { Box, Spacing } from '../../primitives';
 
 interface EntityFactoryPanelProps {
     onAddEntity: Function
@@ -56,7 +56,7 @@ export const EntityFactoryPanel = ({ onAddEntity }: EntityFactoryPanelProps) => 
     return (
         <Box
             $size={0.25}
-            $spacing={Spacing.small}
+            $spacing={Spacing.sm}
             data-testid="EntityFactoryPanel"
         >
             {Object.entries(entityDict).map(([entityType, {factory, icon}]) => (
