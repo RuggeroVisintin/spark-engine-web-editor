@@ -20,7 +20,7 @@ interface PopupMenuItem {
     items?: PopupMenuItem[];
 }
 
-export interface PopupMenuProps extends WithDataTestId, PopupMenuItem {}
+export interface PopupMenuProps extends WithDataTestId, PopupMenuItem { }
 
 export const PopupMenu = (props: PopupMenuProps) => {
     const [isOpen, setIsOpen] = useState(false);
