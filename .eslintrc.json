@@ -29,6 +29,6 @@
             "error",
             4
         ],
-        "jest/no-mocks"
+        "jest/no-mocks-import": "off"
     }
 }
