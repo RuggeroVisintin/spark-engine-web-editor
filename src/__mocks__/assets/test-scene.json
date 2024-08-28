@@ -1,0 +1,165 @@
+{
+    "entities": {
+        "GameObject1": {
+            "__type": "GameObject",
+            "name": "GameObject1",
+            "transform": {
+                "__type": "TransformComponent",
+                "position": {
+                    "x": 55,
+                    "y": 55
+                },
+                "size": {
+                    "width": 30,
+                    "height": 30
+                },
+                "depthIndex": 0,
+                "velocity": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "shape": {
+                "__type": "ShapeComponent",
+                "transform": {
+                    "__type": "TransformComponent",
+                    "position": {
+                        "x": 55,
+                        "y": 55
+                    },
+                    "size": {
+                        "width": 30,
+                        "height": 30
+                    },
+                    "depthIndex": 0,
+                    "velocity": {
+                        "x": 0,
+                        "y": 0
+                    }
+                },
+                "shapeType": 0,
+                "isWireframe": false
+            },
+            "material": {
+                "__type": "MaterialComponent",
+                "diffuseColor": {
+                    "r": 255,
+                    "g": 0,
+                    "b": 0
+                },
+                "opacity": 100
+            }
+        },
+        "GameObject2": {
+            "__type": "GameObject",
+            "name": "GameObject2",
+            "transform": {
+                "__type": "TransformComponent",
+                "position": {
+                    "x": 255,
+                    "y": 255
+                },
+                "size": {
+                    "width": 230,
+                    "height": 230
+                },
+                "depthIndex": 0,
+                "velocity": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "shape": {
+                "__type": "ShapeComponent",
+                "transform": {
+                    "__type": "TransformComponent",
+                    "position": {
+                        "x": 255,
+                        "y": 255
+                    },
+                    "size": {
+                        "width": 230,
+                        "height": 230
+                    },
+                    "depthIndex": 0,
+                    "velocity": {
+                        "x": 0,
+                        "y": 0
+                    }
+                },
+                "shapeType": 0,
+                "isWireframe": false
+            },
+            "material": {
+                "__type": "MaterialComponent",
+                "diffuseColor": {
+                    "r": 255,
+                    "g": 0,
+                    "b": 0
+                },
+                "opacity": 100
+            }
+        },
+        "TriggerEntity": {
+            "__type": "TriggerEntity",
+            "name": "TriggerEntity",
+            "transform": {
+                "__type": "TransformComponent",
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "size": {
+                    "width": 0,
+                    "height": 0
+                },
+                "depthIndex": 0,
+                "velocity": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "shape": {
+                "__type": "ShapeComponent",
+                "transform": {
+                    "__type": "TransformComponent",
+                    "position": {
+                        "x": 0,
+                        "y": 0
+                    },
+                    "size": {
+                        "width": 0,
+                        "height": 0
+                    },
+                    "depthIndex": 0,
+                    "velocity": {
+                        "x": 0,
+                        "y": 0
+                    }
+                },
+                "shapeType": 0,
+                "isWireframe": false
+            },
+            "material": {
+                "__type": "MaterialComponent",
+                "diffuseColor": {
+                    "r": 209,
+                    "g": 108,
+                    "b": 216
+                },
+                "opacity": 100
+            },
+            "boundingBox": {
+                "__type": "BoundingBoxComponent",
+                "aabb": {
+                    "x": 0,
+                    "y": 0,
+                    "width": 0,
+                    "height": 0
+                },
+                "isContainer": false,
+                "matchContainerTransform": false
+            }
+        }
+    }
+}

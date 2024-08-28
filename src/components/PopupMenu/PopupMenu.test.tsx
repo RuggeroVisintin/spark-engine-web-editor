@@ -53,7 +53,7 @@ describe('PopupMenu', () => {
         expect(screen.queryAllByTestId(`test-popup-menu-file.item`)).toEqual([]);
     });
 
-    it('Should invoke a children\'s action if defined ', () => {
+    it('Should invoke a children\'s action if defined', () => {
         const testAction = jest.fn();
         const popupMenu = <PopupMenu data-testid='test-popup-menu-file' label="File" items={[{
             label: 'Open',

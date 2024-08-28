@@ -1,10 +1,12 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { GameEngine, GameObject, IEntity, Rgb, Scene, TransformComponent, Vec2 } from 'sparkengineweb';
 import { EngineView } from '../../components';
 import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
 import { ActionMenu } from '../../templates/ActionMenu';
 import { EntityPropsPanel } from '../../templates/EntityPropsPanel';
+import { sceneRepo } from '../../config';
+import { LoadSceneUseCase } from '../../core/scene/usecases/LoadSceneUseCase';
 
 const setDebuggerEntity = (target: IEntity, debuggerEntity: IEntity) => {
     const debuggerTransform = debuggerEntity.getComponent<TransformComponent>('TransformComponent');
@@ -36,12 +38,15 @@ export const EditorLayout = () => {
     const [debuggerScene, setDebuggerScene] = useState<Scene>();
     const [entities, setEntities] = useState<IEntity[]>([]);
     const [currentEntity, setCurrentEntity] = useState<IEntity | undefined>(undefined);
+    const engine = useRef<GameEngine>();
 
-    const onEngineReady = useCallback((engine: GameEngine) => {
-        engine.renderer.defaultWireframeThickness = 3;
-        setScene(engine.createScene());
-        setDebuggerScene(engine.createScene());
-        engine.run();
+    const onEngineReady = useCallback((newEngine: GameEngine) => {
+        newEngine.renderer.defaultWireframeThickness = 3;
+        setScene(newEngine.createScene());
+        setDebuggerScene(newEngine.createScene());
+        newEngine.run();
+
+        engine.current = newEngine;
     }, []);
 
     const onAddEntity = useCallback((entity: IEntity) => {
@@ -87,10 +92,11 @@ export const EditorLayout = () => {
         debuggerScene?.registerEntity(debuggerEntity);
     }
 
-    const onProjectFileOpen = async (fileHandle: FileSystemFileHandle) => {
-        const sceneJson = await fileHandle.getFile();
+    const onProjectFileOpen = async () => {
+        if (!engine.current || !scene) return;
 
-        scene?.loadFromJson(JSON.parse(await sceneJson.text()));
+        await new LoadSceneUseCase(sceneRepo)
+            .execute(scene);
 
         setEntities([...scene?.entities || []]);
 

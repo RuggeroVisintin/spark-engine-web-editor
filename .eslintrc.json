@@ -28,6 +28,7 @@
         "indent": [
             "error",
             4
-        ]
+        ],
+        "jest/no-mocks-import": "off"
     }
 }
