@@ -19,7 +19,7 @@ class MockSceneRepository implements SceneRepository {
 describe('shared/scene/usecases/LoadSceneUseCase', () => {
     it('Should return the loaded scene', async () => {
         const loadedScene = await new LoadSceneUseCase(engine, new MockSceneRepository())
-            .execute('test-scene.spark.json');
+            .execute();
 
         const groundTruthScene = engine.createScene();
         groundTruthScene.loadFromJson(testSceneJson);

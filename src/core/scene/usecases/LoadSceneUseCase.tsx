@@ -7,10 +7,10 @@ export class LoadSceneUseCase {
         private readonly sceneRepository: SceneRepository
     ) { }
 
-    public async execute(filePath: string): Promise<Scene> {
+    public async execute(): Promise<Scene> {
         const newScene = this.engine.createScene();
 
-        newScene.loadFromJson(await this.sceneRepository.read(filePath));
+        newScene.loadFromJson(await this.sceneRepository.read());
 
         return newScene;
     }
