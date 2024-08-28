@@ -93,10 +93,10 @@ export const EditorLayout = () => {
     }
 
     const onProjectFileOpen = async () => {
-        if (!engine.current) return;
+        if (!engine.current || !scene) return;
 
-        new LoadSceneUseCase(engine.current, sceneRepo)
-            .execute();
+        await new LoadSceneUseCase(sceneRepo)
+            .execute(scene);
 
         setEntities([...scene?.entities || []]);
 

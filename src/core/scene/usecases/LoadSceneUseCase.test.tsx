@@ -18,12 +18,14 @@ class MockSceneRepository implements SceneRepository {
 
 describe('shared/scene/usecases/LoadSceneUseCase', () => {
     it('Should return the loaded scene', async () => {
-        const loadedScene = await new LoadSceneUseCase(engine, new MockSceneRepository())
-            .execute();
+        const sceneToLoad = engine.createScene();
+
+        await new LoadSceneUseCase(new MockSceneRepository())
+            .execute(sceneToLoad);
 
         const groundTruthScene = engine.createScene();
         groundTruthScene.loadFromJson(testSceneJson);
 
-        expect(groundTruthScene.toJson()).toEqual(loadedScene.toJson());
+        expect(groundTruthScene.toJson()).toEqual(sceneToLoad.toJson());
     })
 })
