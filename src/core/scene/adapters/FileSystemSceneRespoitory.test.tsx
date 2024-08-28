@@ -1,6 +1,6 @@
 import { FileSystemSceneRepository } from "./FileSystemSceneRepository";
 import testSceneJson from '../../../__mocks__/assets/test-scene.json';
-import { setMockedFile } from "../../../__mocks__/fs-api.mock";
+import { FileSystemWritableFileStreamMock, setMockedFile } from "../../../__mocks__/fs-api.mock";
 
 
 describe('core/scene/adapters/FileSystemSceneRepository', () => {
@@ -10,4 +10,13 @@ describe('core/scene/adapters/FileSystemSceneRepository', () => {
         const sceneRepo = new FileSystemSceneRepository();
         expect(await sceneRepo.read()).toEqual(testSceneJson);
     });
+
+    it('Should use FileSystem web APIS to save a scene file at given filePath', async () => {
+        const writableSpy = jest.spyOn(FileSystemWritableFileStreamMock, 'write');
+
+        const sceneRepo = new FileSystemSceneRepository();
+        await sceneRepo.save(testSceneJson)
+
+        expect(writableSpy).toHaveBeenCalledWith(JSON.stringify(testSceneJson))
+    })
 })
