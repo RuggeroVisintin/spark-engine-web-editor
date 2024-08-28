@@ -7,6 +7,7 @@ import { ActionMenu } from '../../templates/ActionMenu';
 import { EntityPropsPanel } from '../../templates/EntityPropsPanel';
 import { sceneRepo } from '../../config';
 import { LoadSceneUseCase } from '../../core/scene/usecases/LoadSceneUseCase';
+import { SaveSceneUseCase } from '../../core/scene/usecases';
 
 const setDebuggerEntity = (target: IEntity, debuggerEntity: IEntity) => {
     const debuggerTransform = debuggerEntity.getComponent<TransformComponent>('TransformComponent');
@@ -105,12 +106,10 @@ export const EditorLayout = () => {
         }
     };
 
-    const onProjectFileSave = async (fileHandle: FileSystemFileHandle) => {
-        const writable = await fileHandle.createWritable();
+    const onProjectFileSave = async () => {
+        if (!scene) return;
 
-        await writable.write(JSON.stringify(scene?.toJson()));
-
-        await writable.close();
+        await new SaveSceneUseCase(sceneRepo).execute(scene);
     };
 
     return (
