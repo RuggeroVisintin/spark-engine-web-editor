@@ -7,19 +7,7 @@ import { ActionMenu } from '../../templates/ActionMenu';
 import { EntityPropsPanel } from '../../templates/EntityPropsPanel';
 import { sceneRepo } from '../../config';
 import { LoadSceneUseCase } from '../../core/scene/usecases/LoadSceneUseCase';
-import { SaveSceneUseCase } from '../../core/scene/usecases';
-
-const setDebuggerEntity = (target: IEntity, debuggerEntity: IEntity) => {
-    const debuggerTransform = debuggerEntity.getComponent<TransformComponent>('TransformComponent');
-    const targetTransform = target.getComponent<TransformComponent>('TransformComponent');
-
-    if (!targetTransform || !debuggerTransform) {
-        return;
-    }
-
-    debuggerTransform.position = targetTransform.position;
-    debuggerTransform.size = targetTransform.size;
-}
+import { SaveSceneUseCase, SetDebuggerEntityUseCase } from '../../core/scene/usecases';
 
 const debuggerEntity = new GameObject({
     name: 'DebuggerEntity',
@@ -45,6 +33,7 @@ export const EditorLayout = () => {
         newEngine.renderer.defaultWireframeThickness = 3;
         setScene(newEngine.createScene());
         setDebuggerScene(newEngine.createScene());
+
         newEngine.run();
 
         engine.current = newEngine;
@@ -71,7 +60,7 @@ export const EditorLayout = () => {
         if (!transform) return;
 
         transform.position = newPosition;
-        setDebuggerEntity(currentEntity!, debuggerEntity);
+        new SetDebuggerEntityUseCase(debuggerScene).execute(currentEntity!, debuggerEntity);
     }
 
     const onSizeUpdate = ({ newSize }: { newSize: { width: number, height: number } }) => {
@@ -79,18 +68,12 @@ export const EditorLayout = () => {
         if (!transform) return;
 
         transform.size = newSize;
-        setDebuggerEntity(currentEntity!, debuggerEntity);
+        new SetDebuggerEntityUseCase(debuggerScene).execute(currentEntity!, debuggerEntity);
     }
 
     const onEntityFocus = (target: IEntity) => {
         setCurrentEntity(target);
-
-        if (debuggerEntity) {
-            debuggerScene?.unregisterEntity(debuggerEntity.uuid);
-        }
-
-        setDebuggerEntity(target, debuggerEntity);
-        debuggerScene?.registerEntity(debuggerEntity);
+        new SetDebuggerEntityUseCase(debuggerScene).execute(target, debuggerEntity, true);
     }
 
     const onProjectFileOpen = async () => {

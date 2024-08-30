@@ -1,5 +1,4 @@
 import { GameEngine } from "sparkengineweb";
-import { LoadSceneUseCase } from "./LoadSceneUseCase";
 import testSceneJson from '../../../__mocks__/assets/test-scene.json';
 import { SceneRepository } from "../ports";
 import { SaveSceneUseCase } from "./SaveSceneUseCase";
@@ -18,7 +17,7 @@ class MockSceneRepository implements SceneRepository {
     save = jest.fn();
 }
 
-describe('shared/scene/usecases/SaveSceneUseCase', () => {
+describe('core/scene/usecases/SaveSceneUseCase', () => {
     it('Should save the given scene json props in the scene repository', async () => {
         const sceneToSave = engine.createScene();
         const mockRepo = new MockSceneRepository();

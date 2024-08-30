@@ -17,7 +17,7 @@ class MockSceneRepository implements SceneRepository {
     read = jest.fn().mockResolvedValue(testSceneJson);
     save = jest.fn();
 }
-describe('shared/scene/usecases/LoadSceneUseCase', () => {
+describe('core/scene/usecases/LoadSceneUseCase', () => {
     it('Should return the loaded scene', async () => {
         const sceneToLoad = engine.createScene();
 
