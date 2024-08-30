@@ -5,24 +5,10 @@ import { Function } from "../../common";
 
 export interface ActionMenuProps {
     onProjectFileOpen: Function;
-    onProjectFileSave: Function<FileSystemFileHandle>;
+    onProjectFileSave: Function;
 }
 
 export const ActionMenu = (props: ActionMenuProps) => {
-    const onSaveProjectFile = async () => {
-        try {
-            const saveFileHandle = await window.showSaveFilePicker({
-                types: [{
-                    accept: {
-                        'application/json': ['.spark.json']
-                    }
-                }]
-            });
-            props.onProjectFileSave(saveFileHandle);
-        } catch (err) {
-        }
-    }
-
     return (
         <FlexBox style={{ height: '40px', background: BackgroundColor.Primary, borderBottom: `1px solid ${TextColor.Primary}` }}
             $direction='row'>
@@ -34,7 +20,7 @@ export const ActionMenu = (props: ActionMenuProps) => {
                     action: props.onProjectFileOpen
                 }, {
                     label: 'Save',
-                    action: () => onSaveProjectFile()
+                    action: props.onProjectFileSave
                 }]}
             />
         </FlexBox>

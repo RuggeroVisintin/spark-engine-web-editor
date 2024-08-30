@@ -4,6 +4,11 @@ export function setMockedFile(mockedFileBody: string) {
     __mockedFileBody = mockedFileBody;
 };
 
+export const FileSystemWritableFileStreamMock = {
+    write: jest.fn(),
+    close: jest.fn()
+}
+
 beforeEach(() => {
     setMockedFile('{}');
 
@@ -12,6 +17,6 @@ beforeEach(() => {
     ]);
 
     global.showSaveFilePicker = jest.fn().mockResolvedValue({
-        kind: 'file', name: 'save-test'
+        kind: 'file', name: 'save-test', createWritable: jest.fn().mockResolvedValue(FileSystemWritableFileStreamMock)
     })
 }) 

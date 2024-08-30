@@ -14,4 +14,18 @@ export class FileSystemSceneRepository implements SceneRepository {
 
         return JSON.parse(await (await fileHandle.getFile()).text());
     }
+
+    public async save(sceneProps: SceneJsonProps): Promise<void> {
+        const fileHandle = await window.showSaveFilePicker({
+            types: [{
+                accept: {
+                    'application/json': ['.spark.json']
+                }
+            }]
+        });
+
+        const writable = await fileHandle.createWritable();
+        await writable.write(JSON.stringify(sceneProps));
+        await writable.close();
+    }
 }
