@@ -1,5 +1,5 @@
 import React from "react";
-import { GameObject, Vec2 } from "sparkengineweb";
+import { GameObject, Rgb, Vec2 } from "sparkengineweb";
 import { EntityPropsPanel } from ".";
 import { fireEvent, render, screen } from "@testing-library/react";
 
@@ -50,7 +50,7 @@ describe('EntityPropsPanel', () => {
                 expect(cb).toHaveBeenCalledWith({ newPosition: result });
             });
         })
-       
+
         describe('.size', () => {
             const sizeProps: ('width' | 'height')[] = ['width', 'height'];
 
@@ -60,7 +60,7 @@ describe('EntityPropsPanel', () => {
 
                 render(<EntityPropsPanel entity={entity} />);
 
-                const inputField= screen.getByTestId(`EntityPropsPanel.Size.${prop}.InputField`);
+                const inputField = screen.getByTestId(`EntityPropsPanel.Size.${prop}.InputField`);
 
                 expect(inputField).toHaveValue(entity.transform.size[prop]);
             });
@@ -82,7 +82,7 @@ describe('EntityPropsPanel', () => {
 
             it.each(sizeProps)('Should invoke the onUpdateSize callback when size.%s input changes', (prop) => {
                 const entity = new GameObject();
-                entity.transform.size = {width: 15, height: 10}
+                entity.transform.size = { width: 15, height: 10 }
 
                 const result = { ...entity.transform.size };
                 result[prop] = 23;
@@ -99,5 +99,39 @@ describe('EntityPropsPanel', () => {
         })
     })
 
-   
+    describe('Material', () => {
+        describe('.diffuseColor', () => {
+            const diffuseColorProps: ('r' | 'g' | 'b')[] = ['r', 'g', 'b'];
+
+            it.each(diffuseColorProps)('Should initialize the material diffuse color props with the same value as the selected entity', (prop) => {
+                const entity = new GameObject();
+                entity.material.diffuseColor = new Rgb(123, 233, 111);
+
+                render(<EntityPropsPanel entity={entity} />);
+
+                const inputFieldX = screen.getByTestId(`EntityPropsPanel.DiffuseColor.${prop}.InputField`);
+
+                expect(inputFieldX).toHaveValue(entity.material.diffuseColor[prop]);
+            })
+
+            it.each(diffuseColorProps)('Should update the default material.diffuseColor.%s value when entity is changed', (prop) => {
+                const entity = new GameObject();
+                entity.material.diffuseColor = new Rgb(123, 233, 111);
+
+                const { rerender } = render(<EntityPropsPanel entity={entity} />);
+
+                const newEntity = new GameObject();
+                newEntity.material.diffuseColor = new Rgb(222, 111, 121);
+
+                rerender(<EntityPropsPanel entity={newEntity} />);
+
+                const inputField = screen.getByTestId(`EntityPropsPanel.DiffuseColor.${prop}.InputField`);
+                expect(inputField).toHaveValue(newEntity.material.diffuseColor[prop]);
+            });
+
+            it.todo('Should invoke the onDiffuseColorUpdate callback when the %s input changes')
+        })
+    })
+
+
 })
