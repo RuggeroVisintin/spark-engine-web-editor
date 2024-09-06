@@ -1,5 +1,5 @@
 import React, { useId } from "react";
-import { IEntity, MaterialComponent, TransformComponent, Vec2 } from "sparkengineweb";
+import { IEntity, MaterialComponent, Rgb, TransformComponent, Vec2 } from "sparkengineweb";
 import styled from "styled-components";
 import { FormInput } from "../../components";
 import { Box, FlexBox, Spacing } from "../../primitives";
@@ -7,6 +7,7 @@ interface EntityPropsPanelProps {
     entity: IEntity;
     onUpdatePosition?: CallableFunction,
     onUpdateSize?: CallableFunction
+    onUpdateDiffuseColor?: CallableFunction
 }
 
 const InputRow = styled(FlexBox)`
@@ -75,26 +76,30 @@ const TransformPropsGroup = ({ transform, parentUuid, onUpdateSize, onUpdatePosi
 
 interface MaterialPropsGroupProps {
     material: MaterialComponent,
-    parentUuid: string
+    parentUuid: string,
+    onUpdateDiffuseColor?: CallableFunction
 }
 
-const MaterialPropsGroup = ({ material, parentUuid }: MaterialPropsGroupProps) => {
+const MaterialPropsGroup = ({ material, parentUuid, onUpdateDiffuseColor }: MaterialPropsGroupProps) => {
     const materialDiffuseColorGroup = [
         <FormInput
             label="R"
             key={`${parentUuid}${useId()}`}
+            onChange={(newValue: number) => onUpdateDiffuseColor?.({ newDiffuseColor: new Rgb(newValue, material.diffuseColor?.g, material.diffuseColor?.b) })}
             defaultValue={material.diffuseColor?.r}
             data-testid="EntityPropsPanel.DiffuseColor.r"
         ></FormInput>,
         <FormInput
             label="G"
             key={`${parentUuid}${useId()}`}
+            onChange={(newValue: number) => onUpdateDiffuseColor?.({ newDiffuseColor: new Rgb(material.diffuseColor?.r, newValue, material.diffuseColor?.b) })}
             defaultValue={material.diffuseColor?.g}
             data-testid="EntityPropsPanel.DiffuseColor.g"
         ></FormInput>,
         <FormInput
             label="B"
             key={`${parentUuid}${useId()}`}
+            onChange={(newValue: number) => onUpdateDiffuseColor?.({ newDiffuseColor: new Rgb(material.diffuseColor?.r, material.diffuseColor?.g, newValue) })}
             defaultValue={material.diffuseColor?.b}
             data-testid="EntityPropsPanel.DiffuseColor.b"
         ></FormInput>
@@ -110,7 +115,7 @@ const MaterialPropsGroup = ({ material, parentUuid }: MaterialPropsGroupProps) =
     )
 }
 
-export const EntityPropsPanel = ({ entity, onUpdatePosition, onUpdateSize }: EntityPropsPanelProps) => {
+export const EntityPropsPanel = ({ entity, onUpdatePosition, onUpdateSize, onUpdateDiffuseColor }: EntityPropsPanelProps) => {
     const transform = entity.getComponent<TransformComponent>('TransformComponent');
     const material = entity.getComponent<MaterialComponent>('MaterialComponent');
 
@@ -118,7 +123,7 @@ export const EntityPropsPanel = ({ entity, onUpdatePosition, onUpdateSize }: Ent
         <Box $size={1} $scroll $divide $spacing={Spacing.lg}>
             {transform && <TransformPropsGroup parentUuid={entity.uuid} transform={transform} onUpdatePosition={onUpdatePosition} onUpdateSize={onUpdateSize}></TransformPropsGroup>}
             <hr />
-            {material && <MaterialPropsGroup material={material} parentUuid={entity.uuid}></MaterialPropsGroup>}
+            {material && <MaterialPropsGroup material={material} parentUuid={entity.uuid} onUpdateDiffuseColor={onUpdateDiffuseColor}></MaterialPropsGroup>}
         </Box>
     )
 }

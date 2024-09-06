@@ -129,9 +129,22 @@ describe('EntityPropsPanel', () => {
                 expect(inputField).toHaveValue(newEntity.material.diffuseColor[prop]);
             });
 
-            it.todo('Should invoke the onDiffuseColorUpdate callback when the %s input changes')
+            it.each(diffuseColorProps)('Should invoke the onDiffuseColorUpdate callback when the %s input changes', (prop) => {
+                const entity = new GameObject();
+                entity.material.diffuseColor = new Rgb(123, 233, 111);
+
+                const result = Rgb.fromRgb(entity.material.diffuseColor);
+                result[prop] = 125
+
+                const cb = jest.fn();
+
+                render(<EntityPropsPanel entity={entity} onUpdateDiffuseColor={cb} />);
+
+                const inputField = screen.getByTestId(`EntityPropsPanel.DiffuseColor.${prop}.InputField`);
+                fireEvent.change(inputField, { target: { value: '125' } })
+
+                expect(cb).toHaveBeenCalledWith({ newDiffuseColor: result });
+            })
         })
     })
-
-
 })
