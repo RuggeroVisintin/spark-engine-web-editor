@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { GameEngine, GameObject, IEntity, Rgb, Scene, TransformComponent, Vec2 } from 'sparkengineweb';
+import { GameEngine, GameObject, IEntity, MaterialComponent, Rgb, Scene, TransformComponent, Vec2 } from 'sparkengineweb';
 import { EngineView } from '../../components';
 import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
@@ -71,6 +71,14 @@ export const EditorLayout = () => {
         new SetDebuggerEntityUseCase(debuggerScene).execute(currentEntity!, debuggerEntity);
     }
 
+    const onDiffuseColorUpdate = ({ newDiffuseColor }: { newDiffuseColor: Rgb }) => {
+        const material = currentEntity?.getComponent<MaterialComponent>('MaterialComponent');
+
+        if (!material) return;
+
+        material.diffuseColor = newDiffuseColor;
+    }
+
     const onEntityFocus = (target: IEntity) => {
         setCurrentEntity(target);
         new SetDebuggerEntityUseCase(debuggerScene).execute(target, debuggerEntity, true);
@@ -114,6 +122,7 @@ export const EditorLayout = () => {
                                 entity={currentEntity}
                                 onUpdatePosition={onPositionUpdate}
                                 onUpdateSize={onSizeUpdate}
+                                onUpdateDiffuseColor={onDiffuseColorUpdate}
                             ></EntityPropsPanel>}
                     </FlexBox>
                 </Box>
