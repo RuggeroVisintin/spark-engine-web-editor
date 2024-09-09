@@ -1,0 +1,1 @@
+export * from '../templates/EntityPropsPanel/components/MaterialPropsGroup';

@@ -71,12 +71,13 @@ export const EditorLayout = () => {
         new SetDebuggerEntityUseCase(debuggerScene).execute(currentEntity!, debuggerEntity);
     }
 
-    const onDiffuseColorUpdate = ({ newDiffuseColor }: { newDiffuseColor: Rgb }) => {
+    const onMaterialUpdate = ({ newDiffuseColor, newOpacity }: { newDiffuseColor: Rgb, newOpacity: number }) => {
         const material = currentEntity?.getComponent<MaterialComponent>('MaterialComponent');
 
         if (!material) return;
 
-        material.diffuseColor = newDiffuseColor;
+        material.diffuseColor = newDiffuseColor ?? material.diffuseColor;
+        material.opacity = newOpacity ?? material.opacity;
     }
 
     const onEntityFocus = (target: IEntity) => {
@@ -122,7 +123,7 @@ export const EditorLayout = () => {
                                 entity={currentEntity}
                                 onUpdatePosition={onPositionUpdate}
                                 onUpdateSize={onSizeUpdate}
-                                onUpdateDiffuseColor={onDiffuseColorUpdate}
+                                onMaterialUpdate={onMaterialUpdate}
                             ></EntityPropsPanel>}
                     </FlexBox>
                 </Box>
