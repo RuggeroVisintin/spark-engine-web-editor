@@ -129,7 +129,7 @@ describe('EntityPropsPanel', () => {
                 expect(inputField).toHaveValue(newEntity.material.diffuseColor[prop]);
             });
 
-            it.each(diffuseColorProps)('Should invoke the onDiffuseColorUpdate callback when the %s input changes', (prop) => {
+            it.each(diffuseColorProps)('Should invoke the onMaterialUpdate callback when the %s input changes', (prop) => {
                 const entity = new GameObject();
                 entity.material.diffuseColor = new Rgb(123, 233, 111);
 
@@ -138,12 +138,54 @@ describe('EntityPropsPanel', () => {
 
                 const cb = jest.fn();
 
-                render(<EntityPropsPanel entity={entity} onUpdateDiffuseColor={cb} />);
+                render(<EntityPropsPanel entity={entity} onMaterialUpdate={cb} />);
 
                 const inputField = screen.getByTestId(`EntityPropsPanel.DiffuseColor.${prop}.InputField`);
                 fireEvent.change(inputField, { target: { value: '125' } })
 
                 expect(cb).toHaveBeenCalledWith({ newDiffuseColor: result });
+            })
+        });
+
+        describe('.opacity', () => {
+            it('Should initialize the material.opacity value with the same value as the selected entity', () => {
+                const entity = new GameObject();
+                entity.material.opacity = 0.5;
+
+                render(<EntityPropsPanel entity={entity} />);
+
+                const inputField = screen.getByTestId(`EntityPropsPanel.Opacity.InputField`);
+
+                expect(inputField).toHaveValue(entity.material.opacity);
+            });
+
+            it('Should update the default material.opacity value when entity is changed', () => {
+                const entity = new GameObject();
+                entity.material.opacity = 0.5;
+
+                const { rerender } = render(<EntityPropsPanel entity={entity} />);
+
+                const newEntity = new GameObject();
+                newEntity.material.opacity = 50;
+
+                rerender(<EntityPropsPanel entity={newEntity} />);
+
+                const inputField = screen.getByTestId(`EntityPropsPanel.Opacity.InputField`);
+                expect(inputField).toHaveValue(newEntity.material.opacity);
+            });
+
+            it('Should invoke the onMaterialUpdate callback when the opacity input changes', () => {
+                const entity = new GameObject();
+                entity.material.opacity = 0.5;
+
+                const cb = jest.fn();
+
+                render(<EntityPropsPanel entity={entity} onMaterialUpdate={cb} />);
+                const inputField = screen.getByTestId(`EntityPropsPanel.Opacity.InputField`);
+
+                expect(inputField).toHaveValue(entity.material.opacity);
+                fireEvent.change(inputField, { target: { value: '75' } })
+                expect(cb).toHaveBeenCalledWith({ newOpacity: 75 });
             })
         })
     })

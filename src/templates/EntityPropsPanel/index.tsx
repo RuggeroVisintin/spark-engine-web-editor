@@ -7,8 +7,8 @@ import { MaterialPropsGroup } from "./components/MaterialPropsGroup";
 interface EntityPropsPanelProps {
     entity: IEntity;
     onUpdatePosition?: CallableFunction,
-    onUpdateSize?: CallableFunction
-    onUpdateDiffuseColor?: CallableFunction
+    onUpdateSize?: CallableFunction,
+    onMaterialUpdate?: CallableFunction
 }
 
 interface TransformPropsGroupProps {
@@ -68,9 +68,7 @@ const TransformPropsGroup = ({ transform, parentUuid, onUpdateSize, onUpdatePosi
     )
 };
 
-
-
-export const EntityPropsPanel = ({ entity, onUpdatePosition, onUpdateSize, onUpdateDiffuseColor }: EntityPropsPanelProps) => {
+export const EntityPropsPanel = ({ entity, onUpdatePosition, onUpdateSize, onMaterialUpdate }: EntityPropsPanelProps) => {
     const transform = entity.getComponent<TransformComponent>('TransformComponent');
     const material = entity.getComponent<MaterialComponent>('MaterialComponent');
 
@@ -78,7 +76,11 @@ export const EntityPropsPanel = ({ entity, onUpdatePosition, onUpdateSize, onUpd
         <Box $size={1} $scroll $divide $spacing={Spacing.lg}>
             {transform && <TransformPropsGroup parentUuid={entity.uuid} transform={transform} onUpdatePosition={onUpdatePosition} onUpdateSize={onUpdateSize}></TransformPropsGroup>}
             <hr />
-            {material && <MaterialPropsGroup material={material} parentUuid={entity.uuid} onUpdateDiffuseColor={onUpdateDiffuseColor}></MaterialPropsGroup>}
+            {material && <MaterialPropsGroup
+                material={material}
+                parentUuid={entity.uuid}
+                onMaterialUpdate={onMaterialUpdate}
+            />}
         </Box>
     )
 }
