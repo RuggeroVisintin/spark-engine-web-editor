@@ -3,7 +3,7 @@ import { IEntity, MaterialComponent, TransformComponent, Vec2 } from "sparkengin
 import { FormInput } from "../../components";
 import { Box, Spacing } from "../../primitives";
 import { InputRow } from "../../primitives/InputRow";
-import { MaterialPropsGroup } from "../../patterns/MaterialPropsGroup";
+import { MaterialPropsGroup } from "./components/MaterialPropsGroup";
 interface EntityPropsPanelProps {
     entity: IEntity;
     onUpdatePosition?: CallableFunction,

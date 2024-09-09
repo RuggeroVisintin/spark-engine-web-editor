@@ -1,8 +1,8 @@
 import React, { useId } from "react";
 import { MaterialComponent, Rgb } from "sparkengineweb";
-import { FormInput } from "../../components";
-import { InputRow } from "../../primitives/InputRow";
-import { Box } from "../../primitives";
+import { FormInput } from "../../../../components";
+import { InputRow } from "../../../../primitives/InputRow";
+import { Box } from "../../../../primitives";
 
 export interface MaterialPropsGroupProps {
     material: MaterialComponent,
