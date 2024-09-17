@@ -44,6 +44,15 @@ export const MaterialPropsGroup = ({ material, parentUuid, onMaterialUpdate }: M
         ></FormInput>
     ]
 
+    const meterialDiffuseTextureGroup = [
+        <FormInput
+            key={`${parentUuid}${useId()}`}
+            data-testid="EntityPropsPanel.DiffuseTexture"
+            type="image"
+            defaultValue={material.diffuseTexturePath}
+        ></FormInput>
+    ]
+
     return (
         <>
             <InputRow $direction="row" $fill={false} $wrap={true} $fillMethod="flex">
@@ -53,6 +62,10 @@ export const MaterialPropsGroup = ({ material, parentUuid, onMaterialUpdate }: M
             <InputRow $direction="row" $fill={false} $wrap={true} $fillMethod="flex">
                 <Box>Opacity</Box>
                 {matierialOpacityGroup}
+            </InputRow>
+            <InputRow $direction="row" $fill={false} $wrap={true} $fillMethod="flex">
+                <Box>Texture</Box>
+                {meterialDiffuseTextureGroup}
             </InputRow>
         </>
     )

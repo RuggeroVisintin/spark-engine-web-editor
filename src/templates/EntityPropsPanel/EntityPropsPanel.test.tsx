@@ -1,5 +1,5 @@
 import React from "react";
-import { GameObject, Rgb, Vec2 } from "sparkengineweb";
+import { GameObject, ImageAsset, Rgb, Vec2 } from "sparkengineweb";
 import { EntityPropsPanel } from ".";
 import { fireEvent, render, screen } from "@testing-library/react";
 
@@ -187,6 +187,19 @@ describe('EntityPropsPanel', () => {
                 fireEvent.change(inputField, { target: { value: '75' } })
                 expect(cb).toHaveBeenCalledWith({ newOpacity: 75 });
             })
+        });
+
+        describe.skip('.diffuseTexture', () => {
+            it('Should initialize the material.diffuseTexture value with the same value as the selected entity', () => {
+                const entity = new GameObject();
+                entity.material.diffuseTexturePath = 'test.png';
+
+                render(<EntityPropsPanel entity={entity} />);
+
+                const inputField = screen.getByTestId(`EntityPropsPanel.DiffuseTexture.InputField`);
+
+                expect(inputField).toHaveValue(entity.material.diffuseTexturePath);
+            });
         })
     })
 })
