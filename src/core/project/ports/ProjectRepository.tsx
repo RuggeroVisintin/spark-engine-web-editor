@@ -1,9 +1,6 @@
-export interface ProjectJsonProps {
-    name: string;
-    scenes: string[];
-}
+import { Project } from "../models";
 
 export interface ProjectRepository {
-    read(): Promise<ProjectJsonProps>;
-    save(sceneJson: ProjectJsonProps): Promise<void>;
+    read(): Promise<Project>;
+    save(sceneJson: Project): Promise<void>;
 }
