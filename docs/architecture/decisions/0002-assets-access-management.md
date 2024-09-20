@@ -4,7 +4,7 @@ Date: 2024-09-20
 
 ## Status
 
-Draft
+Accepted
 
 ## Context
 
@@ -137,4 +137,10 @@ This solution is therefore excluded without further analaysis.
 
 ## Consequences
 
-TBD
+👍 Getting access to the project's directory automatically provides access to every subdir
+
+👍 Enforcing a directory structure ensures assets are always under reach
+
+👎 Introducing an opinionated project file format / directory structure increases the risk of future breaking changes and potentially introduces the need of managing versions migrations
+
+👎 Introducing an opinionated project file format / directory structure requires additional validation overhead
