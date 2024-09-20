@@ -4,7 +4,6 @@
 .DS_Store
 .idea
 
-docs/
 .benchmark
 .coverage
 .github/pages
