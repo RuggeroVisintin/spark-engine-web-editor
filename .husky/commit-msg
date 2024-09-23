@@ -1,4 +1,4 @@
 set -e
 
 npx commitlint --edit
-npm run spellcheck -- $1
+npx cspell $1 --show-suggestions
