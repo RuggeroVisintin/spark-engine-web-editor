@@ -20,7 +20,9 @@
     "license-check": "bash ./scripts/check-licenses.sh",
     "lint": "eslint . --ext .tsx",
     "lint:fix": "eslint --fix . --ext .tsx",
-    "postinstall": "npm run license-check"
+    "postinstall": "npm run license-check",
+    "spellcheck:git": "bash ./scripts/spellcheck-git-commit.sh",
+    "prepare": "husky"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^6.5.0",
@@ -29,14 +31,18 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "sparkengineweb": "https://github.com/RuggeroVisintin/SparkEngineWeb/releases/download/sparkengineweb-v0.11.5/sparkengineweb-v0.11.5-lib.tar.gz",
+    "spellchecker-cli": "^6.2.0",
     "styled-components": "^6.1.13",
     "uuid": "^10.0.0",
     "web-vitals": "^3.5.2"
   },
   "devDependencies": {
+    "@commitlint/config-conventional": "^19.5.0",
     "@types/jest": "^29.5.13",
     "@types/uuid": "^9.0.8",
     "@types/wicg-file-system-access": "^2023.10.5",
+    "cspell": "^8.14.4",
+    "husky": "^9.1.6",
     "jest-canvas-mock": "^2.5.2",
     "react-scripts": "^5.0.1"
   },
