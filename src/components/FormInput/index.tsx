@@ -17,32 +17,45 @@ const Label = styled.label`
 interface FormInputProps extends WithDataTestId {
     label?: string;
     onChange?: CallableFunction,
-    defaultValue?: number 
+    defaultValue?: number | string,
+    type?: string;
 }
 
 const typesMap: Record<string, string> = {
     'number': 'number',
-    'string': 'text'
+    'string': 'text',
+    'image': 'file'
 }
 
-export const FormInput = ({ label, onChange, defaultValue, "data-testid": dataTestId }: FormInputProps = {}) => {
+export const FormInput = ({ label, onChange, defaultValue, "data-testid": dataTestId, type }: FormInputProps = {}) => {
     const id = useId();
+    const inputType = type ? typesMap[type] : typesMap[typeof defaultValue] ?? 'text';
 
     const onValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = parseInt(event.target.value);
         onChange?.(newValue);
     }
 
-    return (
-        <FlexBox $direction="row" $fill $fillMethod="flex">
+    if (type === 'image') {
+        return <FlexBox $direction="row" $fill $fillMethod="flex">
+            {defaultValue && <img src={defaultValue as string} alt={defaultValue as string}></img>}
             {label && <Label htmlFor={id}>{label}</Label>}
             <Input
-                type={typesMap[typeof defaultValue] ?? 'text'}
+                type={inputType}
                 id={id}
-                defaultValue={defaultValue}
-                onChange={onValueChange}
-                data-testid={`${dataTestId}.InputField`}
-            ></Input>
+                hidden={true}
+            />
         </FlexBox>
-    )
+    }
+
+    return <FlexBox $direction="row" $fill $fillMethod="flex">
+        {label && <Label htmlFor={id}>{label}</Label>}
+        <Input
+            type={inputType}
+            id={id}
+            defaultValue={defaultValue}
+            onChange={onValueChange}
+            data-testid={`${dataTestId}.InputField`}
+        />
+    </FlexBox>
 }
