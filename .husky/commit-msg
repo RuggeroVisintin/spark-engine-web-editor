@@ -1,5 +1,4 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+set -e
 
 npx commitlint --edit
-npx spellchecker -f $1
+npm run spellcheck -- $1

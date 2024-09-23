@@ -21,7 +21,7 @@
     "lint": "eslint . --ext .tsx",
     "lint:fix": "eslint --fix . --ext .tsx",
     "postinstall": "npm run license-check",
-    "spellcheck:git": "bash ./scripts/spellcheck-git-commit.sh",
+    "spellcheck": "bash ./scripts/spellcheck.sh",
     "prepare": "husky"
   },
   "dependencies": {
