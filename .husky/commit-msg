@@ -9,12 +9,12 @@ if (( "${#warnings[@]}" > 0 )); then
   printf "%s\n" "[commit-msg hook] Possible spelling errors found in commit message:" "${warnings[@]}"
 fi
 
-f [ -t 1 ]; then
+if [[ -t 1 ]]; then
   exec < /dev/tty
 
   while true; do
     read -p "[commit-msg hook] Proceed anyway? (y/n) " yn
-    if [ "$yn" = "" ]; then
+    if [[ "$yn" = "" ]]; then
       yn='y'
     fi
     case $yn in
