@@ -5,6 +5,6 @@ export class OpenProjectUseCase {
     constructor(private readonly projectRepository: ProjectRepository) { }
 
     public async execute(): Promise<Project> {
-        return await this.projectRepository.read();
+        return this.projectRepository.read();
     }
 }
