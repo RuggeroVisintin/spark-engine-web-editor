@@ -33,7 +33,7 @@ If you encounter any bugs or have suggestions for improvements, please open an i
 
 ### Git Conventions
 
-To know more about any checks running inside git hooks please refer to [.husky/README.md](.husky/README.md)
+To know more about any checks running inside git hooks please refer to [docs/git-conventions.md](docs/git-conventions.md)
 
 ## License
 

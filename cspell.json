@@ -1,0 +1,10 @@
+{
+    "dictionaries": [],
+    "dictionaryDefinitions": [
+        {
+            "name": "git-dictionary",
+            "path": "./git-dictionary.txt",
+            "addWords": true
+        }
+    ]
+}
