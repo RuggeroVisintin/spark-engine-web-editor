@@ -1,0 +1,6 @@
+{
+    "name": "My Test Project",
+    "scenes": [
+        "/scenes/test-scene.json"
+    ]
+}

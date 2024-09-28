@@ -1,6 +1,10 @@
+import { Project } from "../models";
+import { ProjectRepository } from "../ports";
+
 export class OpenProjectUseCase {
-    public async execute(): Promise<void> {
-        // TODO - use fs api to prompt the user to select the project directory
-        // once the directory is loaded load 
+    constructor(private readonly projectRepository: ProjectRepository) { }
+
+    public async execute(): Promise<Project> {
+        return await this.projectRepository.read();
     }
 }
