@@ -11,7 +11,7 @@ describe('core/scene/adapters/FileSystemSceneRepository', () => {
         expect(await sceneRepo.read()).toEqual(testSceneJson);
     });
 
-    it('Should use FileSystem web APIS to save a scene file at given filePath', async () => {
+    it('Should use FileSystem web APIs to save a scene file at given filePath', async () => {
         const writableSpy = jest.spyOn(FileSystemWritableFileStreamMock, 'write');
 
         const sceneRepo = new FileSystemSceneRepository();
