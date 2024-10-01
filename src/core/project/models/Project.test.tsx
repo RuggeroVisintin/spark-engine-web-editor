@@ -8,7 +8,8 @@ describe('core/project/models/Project', () => {
                 scenes: ['scenes/test.scene.spark.json']
             })).toEqual({
                 name: 'test-project',
-                scenes: ['scenes/test.scene.spark.json']
+                scenePaths: ['scenes/test.scene.spark.json'],
+                scenes: []
             })
         })
     })
