@@ -3,13 +3,12 @@ import { ProjectRepository } from "../ports";
 
 export class FileSystemProjectRepository implements ProjectRepository {
     public async read(): Promise<Project> {
-        const [fileHandle] = await window.showOpenFilePicker({
-            multiple: false,
-            types: [{
-                accept: {
-                    'application/json': ['.proj.spark.json']
-                }
-            }]
+        const directoryHandle = await window.showDirectoryPicker({
+            mode: 'readwrite'
+        })
+
+        const fileHandle = await directoryHandle.getFileHandle('.proj.spark.json', {
+            create: false
         });
 
         return JSON.parse(await (await fileHandle.getFile()).text());
