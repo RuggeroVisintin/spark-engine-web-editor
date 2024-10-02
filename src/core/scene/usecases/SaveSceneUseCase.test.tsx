@@ -25,6 +25,6 @@ describe('core/scene/usecases/SaveSceneUseCase', () => {
         await new SaveSceneUseCase(mockRepo)
             .execute(sceneToSave);
 
-        expect(mockRepo.save).toHaveBeenCalledWith(sceneToSave.toJson());
+        expect(mockRepo.save).toHaveBeenCalledWith(sceneToSave);
     })
 })

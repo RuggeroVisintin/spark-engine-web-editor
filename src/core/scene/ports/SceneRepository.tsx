@@ -1,6 +1,6 @@
-import { SceneJsonProps } from "sparkengineweb";
+import { Scene } from "sparkengineweb";
 
 export interface SceneRepository {
-    read(): Promise<SceneJsonProps>;
-    save(sceneJson: SceneJsonProps): Promise<void>;
+    read(): Promise<Scene>;
+    save(sceneJson: Scene): Promise<void>;
 }

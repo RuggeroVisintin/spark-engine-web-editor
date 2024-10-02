@@ -6,7 +6,7 @@ export class LoadSceneUseCase {
         private readonly sceneRepository: SceneRepository
     ) { }
 
-    public async execute(scene: Scene): Promise<void> {
-        scene.loadFromJson(await this.sceneRepository.read());
+    public async execute(): Promise<Scene> {
+        return this.sceneRepository.read();
     }
 }

@@ -14,19 +14,23 @@ const engine = new GameEngine({
 
 
 class MockSceneRepository implements SceneRepository {
-    read = jest.fn().mockResolvedValue(testSceneJson);
+    read = jest.fn().mockImplementation(() => {
+        const result = engine.createScene();
+        result.loadFromJson(testSceneJson);
+
+        return result;
+    });
     save = jest.fn();
 }
+
 describe('core/scene/usecases/LoadSceneUseCase', () => {
     it('Should return the loaded scene', async () => {
-        const sceneToLoad = engine.createScene();
-
-        await new LoadSceneUseCase(new MockSceneRepository())
-            .execute(sceneToLoad);
+        const loadedScene = await new LoadSceneUseCase(new MockSceneRepository())
+            .execute();
 
         const groundTruthScene = engine.createScene();
         groundTruthScene.loadFromJson(testSceneJson);
 
-        expect(groundTruthScene.toJson()).toEqual(sceneToLoad.toJson());
+        expect(groundTruthScene.toJson()).toEqual(loadedScene.toJson());
     })
 })

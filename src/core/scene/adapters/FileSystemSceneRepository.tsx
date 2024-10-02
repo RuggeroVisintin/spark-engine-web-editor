@@ -1,8 +1,10 @@
-import { SceneJsonProps } from "sparkengineweb";
+import { GameEngine, Scene, SceneJsonProps } from "sparkengineweb";
 import { SceneRepository } from "../ports";
 
 export class FileSystemSceneRepository implements SceneRepository {
-    public async read(): Promise<SceneJsonProps> {
+    constructor(private readonly factory: GameEngine) { }
+
+    public async read(): Promise<Scene> {
         const [fileHandle] = await window.showOpenFilePicker({
             multiple: false,
             types: [{
@@ -12,10 +14,12 @@ export class FileSystemSceneRepository implements SceneRepository {
             }]
         });
 
-        return JSON.parse(await (await fileHandle.getFile()).text());
+        const result = this.factory.createScene();
+        result.loadFromJson(JSON.parse(await (await fileHandle.getFile()).text()));
+        return result;
     }
 
-    public async save(sceneProps: SceneJsonProps): Promise<void> {
+    public async save(scene: Scene): Promise<void> {
         const fileHandle = await window.showSaveFilePicker({
             types: [{
                 accept: {
@@ -25,7 +29,7 @@ export class FileSystemSceneRepository implements SceneRepository {
         });
 
         const writable = await fileHandle.createWritable();
-        await writable.write(JSON.stringify(sceneProps));
+        await writable.write(JSON.stringify(scene.toJson()));
         await writable.close();
     }
 }
