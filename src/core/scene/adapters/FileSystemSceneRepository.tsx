@@ -1,4 +1,4 @@
-import { GameEngine, Scene, SceneJsonProps } from "sparkengineweb";
+import { GameEngine, Scene } from "sparkengineweb";
 import { SceneRepository } from "../ports";
 
 export class FileSystemSceneRepository implements SceneRepository {
