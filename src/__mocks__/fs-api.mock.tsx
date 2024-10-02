@@ -9,14 +9,16 @@ export const FileSystemWritableFileStreamMock = {
     close: jest.fn()
 }
 
+export const createDirectoryHandleMock = () => ({
+    kind: 'directory',
+    name: 'test-dir',
+    getFileHandle: jest.fn().mockResolvedValue({ kind: 'file', name: 'open-test', getFile: jest.fn().mockResolvedValue({ text: jest.fn(() => Promise.resolve(__mockedFileBody)) }) })
+})
+
 beforeEach(() => {
     setMockedFile('{}');
 
-    global.showDirectoryPicker = jest.fn().mockResolvedValue({
-        kind: 'directory',
-        name: 'test-dir',
-        getFileHandle: jest.fn().mockResolvedValue({ kind: 'file', name: 'open-test', getFile: jest.fn().mockResolvedValue({ text: jest.fn(() => Promise.resolve(__mockedFileBody)) }) })
-    })
+    global.showDirectoryPicker = jest.fn().mockResolvedValue(createDirectoryHandleMock())
 
     global.showOpenFilePicker = jest.fn().mockResolvedValue([
         { kind: 'file', name: 'open-test', getFile: jest.fn().mockResolvedValue({ text: jest.fn(() => Promise.resolve(__mockedFileBody)) }) }
