@@ -36,8 +36,9 @@ export const EditorLayout = () => {
         newEngine.renderer.defaultWireframeThickness = 3;
         sceneRepo = new FileSystemSceneRepository(newEngine);
 
-        setScene(newEngine.createScene());
-        setDebuggerScene(newEngine.createScene());
+
+        setScene(newEngine.createScene(true));
+        setDebuggerScene(newEngine.createScene(true));
 
         newEngine.run();
 
@@ -94,7 +95,10 @@ export const EditorLayout = () => {
         if (!sceneRepo) return;
 
         const newScene = await new LoadSceneUseCase(sceneRepo)
-            .execute()
+            .execute();
+
+        scene?.dispose();
+        newScene.draw();
 
         setScene(newScene);
         setEntities([...newScene?.entities || []]);
