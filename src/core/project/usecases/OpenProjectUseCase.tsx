@@ -9,10 +9,10 @@ export class OpenProjectUseCase {
     ) { }
 
     public async execute(): Promise<Project> {
-        const result = await this.projectRepository.read();
+        const lodedProject = await this.projectRepository.read();
 
-        // TODO -- load scenes data
+        lodedProject.loadScenes(this.sceneRepository);
 
-        return result;
+        return lodedProject;
     }
 }

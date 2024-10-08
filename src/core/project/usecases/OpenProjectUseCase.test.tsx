@@ -5,6 +5,7 @@ import { Project } from "../models";
 import { SceneRepository } from "../../scene/ports";
 import testSceneJson from '../../../__mocks__/assets/test-scene.json';
 import { GameEngine } from "sparkengineweb";
+import { WeakRef } from "../../../common";
 
 class MockProjectRepository implements ProjectRepository {
     read = jest.fn().mockResolvedValue(new Project(testProjectJson));
@@ -36,7 +37,8 @@ describe('core/project/usecases/OpenProjectUseCase', () => {
                 const result = gameEngine.createScene();
                 result.loadFromJson(testSceneJson);
             }),
-            scenePaths: testProjectJson.scenes
+            scenePaths: testProjectJson.scenes,
+            scopeRef: expect.any(WeakRef)
         });
     });
 })

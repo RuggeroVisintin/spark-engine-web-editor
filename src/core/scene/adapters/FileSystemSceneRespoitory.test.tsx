@@ -21,7 +21,6 @@ describe('core/scene/adapters/FileSystemSceneRepository', () => {
 
     it('Should use FileSystem Web APIs to prompt the user to pick a scene file', async () => {
         setMockedFile(JSON.stringify(testSceneJson));
-        const filePickerSpy = jest.spyOn(window, 'showOpenFilePicker');
 
         const sceneRepo = new FileSystemSceneRepository(gameEngine);
         expect((await sceneRepo.read()).toJson()).toEqual(testSceneJson);
@@ -50,6 +49,6 @@ describe('core/scene/adapters/FileSystemSceneRepository', () => {
         })
 
         expect(filePickerSpy).not.toHaveBeenCalled();
-        expect(result).toEqual(testSceneJson);
+        expect(result.toJson()).toEqual(testSceneJson);
     })
 })

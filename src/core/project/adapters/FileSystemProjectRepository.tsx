@@ -1,3 +1,4 @@
+import { WeakRef } from "../../../common";
 import { Project } from "../models";
 import { ProjectRepository } from "../ports";
 
@@ -11,7 +12,7 @@ export class FileSystemProjectRepository implements ProjectRepository {
             create: false
         });
 
-        return JSON.parse(await (await fileHandle.getFile()).text());
+        return new Project(JSON.parse(await (await fileHandle.getFile()).text()), new WeakRef(directoryHandle));
     }
 
     public async save(): Promise<void> {

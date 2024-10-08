@@ -1,8 +1,21 @@
+import { GameEngine } from "sparkengineweb";
 import { FileSystemSceneRepository } from "../../scene"
 import { Project } from "./Project"
+import { WeakRef } from "../../../common";
+import { createDirectoryHandleMock, setMockedFile } from "../../../__mocks__/fs-api.mock";
+import testSceneJson from '../../../__mocks__/assets/test-scene.json';
+
+const gameEngine = new GameEngine({
+    framerate: 60,
+    context: new CanvasRenderingContext2D(),
+    resolution: {
+        width: 800,
+        height: 600
+    }
+})
 
 describe('core/project/models/Project', () => {
-    const sceneRepo = new FileSystemSceneRepository();
+    const sceneRepo = new FileSystemSceneRepository(gameEngine);
 
     describe('.constructor()', () => {
         it('should create a new instance of Project with the given props', () => {
@@ -12,23 +25,26 @@ describe('core/project/models/Project', () => {
             })).toEqual({
                 name: 'test-project',
                 scenePaths: ['scenes/test.scene.spark.json'],
-                scenes: []
+                scenes: [],
+                scopeRef: expect.any(WeakRef)
             })
         })
     })
 
     describe('.loadScenes()', () => {
+        beforeEach(() => {
+            setMockedFile(JSON.stringify(testSceneJson));
+        })
+
         it('Should load the scene files based on the given paths', async () => {
             const project = new Project({
                 name: 'test-project',
-                scenes: ['scenes/test.scene.spark.json']
-            });
+                scenes: ['scenes/test.scene.spark.json'],
+            }, new WeakRef<FileSystemDirectoryHandle>(createDirectoryHandleMock() as unknown as FileSystemDirectoryHandle));
 
             await project.loadScenes(sceneRepo);
 
-            expect(project.scenes).toEqual([
-                expect.objectContaining({ name: 'test-scene' })
-            ])
+            expect(project.scenes[0].toJson()).toEqual(testSceneJson)
         })
     })
 })

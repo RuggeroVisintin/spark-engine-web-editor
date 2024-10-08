@@ -10,11 +10,11 @@ interface RefConfigParams {
 export class FileSystemSceneRepository implements SceneRepository {
     constructor(private readonly factory: GameEngine) { }
 
-    public async read(refScope?: RefConfigParams): Promise<Scene> {
+    public async read(scopeRef?: RefConfigParams): Promise<Scene> {
         let fileHandle;
 
-        if (refScope) {
-            fileHandle = await refScope.accessScope.get().getFileHandle(refScope.path, {
+        if (scopeRef) {
+            fileHandle = await scopeRef.accessScope.get().getFileHandle(scopeRef.path, {
                 create: false
             })
         } else {
@@ -30,6 +30,7 @@ export class FileSystemSceneRepository implements SceneRepository {
 
         const result = this.factory.createScene();
         result.loadFromJson(JSON.parse(await (await fileHandle.getFile()).text()));
+
         return result;
     }
 
