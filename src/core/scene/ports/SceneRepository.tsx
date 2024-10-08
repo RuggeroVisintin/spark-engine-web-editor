@@ -5,6 +5,7 @@ interface RefConfigParams {
     accessScope: WeakRef;
     path: string;
 }
+
 export interface SceneRepository {
     read(refConfig?: RefConfigParams): Promise<Scene>;
     save(sceneJson: Scene): Promise<void>;
