@@ -1,3 +1,7 @@
+import { Scene } from "sparkengineweb";
+import { SceneRepository } from "../../scene";
+import { WeakRef } from "../../../common";
+
 export interface ProjectJsonProps {
     name: string;
     scenes: string[];
@@ -5,10 +9,25 @@ export interface ProjectJsonProps {
 
 export class Project {
     public readonly name: string;
-    public readonly scenes: string[];
+    public readonly scenePaths: string[];
+    public scenes: Scene[] = [];
 
-    constructor(props: ProjectJsonProps) {
+    constructor(
+        props: ProjectJsonProps,
+        private readonly scopeRef: WeakRef = new WeakRef<null>(null)
+    ) {
         this.name = props.name;
-        this.scenes = props.scenes;
+        this.scenePaths = props.scenes;
+    }
+
+    public async loadScenes(sceneRepository: SceneRepository): Promise<void> {
+        for (const scenePath of this.scenePaths) {
+            const scene = await sceneRepository.read({
+                accessScope: this.scopeRef,
+                path: scenePath
+            });
+
+            this.scenes.push(scene);
+        }
     }
 };
