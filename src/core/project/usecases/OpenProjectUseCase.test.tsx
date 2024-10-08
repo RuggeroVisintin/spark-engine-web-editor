@@ -4,8 +4,16 @@ import { OpenProjectUseCase } from "./OpenProjectUseCase";
 import { Project } from "../models";
 import { SceneRepository } from "../../scene/ports";
 import testSceneJson from '../../../__mocks__/assets/test-scene.json';
-import { GameEngine } from "sparkengineweb";
-import { WeakRef } from "../../../common";
+import { GameEngine, Scene } from "sparkengineweb";
+
+const gameEngine = new GameEngine({
+    framerate: 60,
+    resolution: {
+        width: 800,
+        height: 600
+    },
+    context: new CanvasRenderingContext2D()
+});
 
 class MockProjectRepository implements ProjectRepository {
     read = jest.fn().mockResolvedValue(new Project(testProjectJson));
@@ -13,32 +21,26 @@ class MockProjectRepository implements ProjectRepository {
 }
 
 class MockSceneRepository implements SceneRepository {
-    read = jest.fn().mockResolvedValue(testSceneJson);
+    read = jest.fn().mockImplementation(async (): Promise<Scene> => {
+        return new Promise((resolve) => {
+            const scene = gameEngine.createScene();
+            scene.loadFromJson(testSceneJson);
+            resolve(scene);
+        });
+    });
     save = jest.fn();
 }
 
 describe('core/project/usecases/OpenProjectUseCase', () => {
-    const gameEngine = new GameEngine({
-        framerate: 60,
-        resolution: {
-            width: 800,
-            height: 600
-        },
-        context: new CanvasRenderingContext2D()
-    });
+
 
     it('Should load the project from the chosen filesystem directory', async () => {
         const result = await new OpenProjectUseCase(new MockProjectRepository(), new MockSceneRepository()).execute();
 
         expect(result).toBeInstanceOf(Project);
-        expect(result).toEqual({
-            name: testProjectJson.name,
-            scenes: testProjectJson.scenes.map(scene => {
-                const result = gameEngine.createScene();
-                result.loadFromJson(testSceneJson);
-            }),
-            scenePaths: testProjectJson.scenes,
-            scopeRef: expect.any(WeakRef)
+
+        result.scenes.forEach(scene => {
+            expect(scene.toJson()).toEqual(testSceneJson)
         });
     });
 })
