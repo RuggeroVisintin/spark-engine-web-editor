@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.0.5](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.4...sparkenginewebeditor-v0.0.5) (2024-10-07)
+
+
+### Features
+
+* **actions:** add scene save/load ([#48](https://github.com/RuggeroVisintin/spark-engine-web-editor/issues/48)) ([7f23bc0](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/7f23bc0e7313aaec05969431f319104b3ceef2a2))
+* **editor:** fix error when switching focus on entities of the same type ([cdf483d](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/cdf483d52718e5c5cbb48ba443d4ff2eb20c3f8b))
+* **engine-view:** highlight selected entity in engine view ([#32](https://github.com/RuggeroVisintin/spark-engine-web-editor/issues/32)) ([b750cd3](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/b750cd3e0c13efadf9265246ba1a497761dbbc4f))
+* **entity-props:** add entity opacity editing props in the material section ([#59](https://github.com/RuggeroVisintin/spark-engine-web-editor/issues/59)) ([772da4e](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/772da4e3d1dfdc498f31ce6759f5efb51a15e133))
+* **entity-props:** add material.diffuseColor entity props editing ([#55](https://github.com/RuggeroVisintin/spark-engine-web-editor/issues/55)) ([e9b6e70](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/e9b6e7090cc517e1c8a14c90f6e6ab5951716278))
+* **EntityFactory:** improve UI and add icons ([362546d](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/362546dc88cff7e68cbcdf61ef1268d4e5196c4d))
+
 ## [0.0.4](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.3...sparkenginewebeditor-v0.0.4) (2024-05-15)
 
 
