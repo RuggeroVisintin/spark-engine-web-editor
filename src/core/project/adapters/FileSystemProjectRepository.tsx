@@ -8,7 +8,7 @@ export class FileSystemProjectRepository implements ProjectRepository {
             mode: 'readwrite'
         })
 
-        const fileHandle = await directoryHandle.getFileHandle('.proj.spark.json', {
+        const fileHandle = await directoryHandle.getFileHandle('project.spark.json', {
             create: false
         });
 
