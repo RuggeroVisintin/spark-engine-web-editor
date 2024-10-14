@@ -39,7 +39,7 @@
     "@types/jest": "^29.5.13",
     "@types/uuid": "^10.0.0",
     "@types/wicg-file-system-access": "^2023.10.5",
-    "cspell": "^8.14.4",
+    "cspell": "^8.15.2",
     "husky": "^9.1.6",
     "jest-canvas-mock": "^2.5.2",
     "react-scripts": "^5.0.1"
