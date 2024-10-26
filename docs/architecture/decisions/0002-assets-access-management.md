@@ -27,7 +27,7 @@ Access to specific directories/files can be requested through [FileSystem Web AP
 
 ### Solution #1 - Load a project as a whole directory
 
-With this solution, instead of opening/saving a single scene, the user would be prompted to select a directory which must contain a valid `.proj.spark.json` file.
+With this solution, instead of opening/saving a single scene, the user would be prompted to select a directory which must contain a valid `project-manifest.spark.json` file.
 This way the editor would be able to access all the directories inside the project directory, and load assets in the scene, which would use a path relative to the
 project's directory.
 
@@ -133,7 +133,7 @@ This solution is therefore excluded without further analaysis.
 
 6) We will notify the user when the project file inside a directory is invalid to make sure they are aware
 
-7) We will use `.project-manifest.spark.json` filename to ensure only a single project manifest exists in every project directory
+7) We will use `project-manifest.spark.json` filename to ensure only a single project manifest exists in every project directory
 
 ## Consequences
 
