@@ -5,7 +5,6 @@ import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
 import { ActionMenu } from '../../templates/ActionMenu';
 import { EntityPropsPanel } from '../../templates/EntityPropsPanel';
-import { LoadSceneUseCase } from '../../core/scene/usecases/LoadSceneUseCase';
 import { SaveSceneUseCase, SetDebuggerEntityUseCase } from '../../core/scene/usecases';
 import { SceneRepository } from '../../core/scene/ports';
 import { FileSystemSceneRepository } from '../../core/scene/adapters';
@@ -104,9 +103,6 @@ export const EditorLayout = () => {
             .execute();
 
         const newScene = newProject.scenes[0];
-
-        // const newScene = await new LoadSceneUseCase(sceneRepo)
-        //     .execute();
 
         scene?.dispose();
         newScene.draw();
