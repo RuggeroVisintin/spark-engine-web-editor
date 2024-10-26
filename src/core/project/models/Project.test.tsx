@@ -39,12 +39,23 @@ describe('core/project/models/Project', () => {
         it('Should load the scene files based on the given paths', async () => {
             const project = new Project({
                 name: 'test-project',
+                scenes: ['test.scene.spark.json'],
+            }, new WeakRef<FileSystemDirectoryHandle>(createDirectoryHandleMock() as unknown as FileSystemDirectoryHandle));
+
+            await project.loadScenes(sceneRepo);
+
+            expect(project.scenes[0].toJson()).toEqual(testSceneJson);
+        })
+
+        it('Should load the scene files when they are located in a subdirectory', async () => {
+            const project = new Project({
+                name: 'test-project',
                 scenes: ['scenes/test.scene.spark.json'],
             }, new WeakRef<FileSystemDirectoryHandle>(createDirectoryHandleMock() as unknown as FileSystemDirectoryHandle));
 
             await project.loadScenes(sceneRepo);
 
-            expect(project.scenes[0].toJson()).toEqual(testSceneJson)
+            expect(project.scenes[0].toJson()).toEqual(testSceneJson);
         })
     })
 })

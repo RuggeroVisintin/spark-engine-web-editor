@@ -14,7 +14,16 @@ export class FileSystemSceneRepository implements SceneRepository {
         let fileHandle;
 
         if (scopeRef) {
-            fileHandle = await scopeRef.accessScope.get().getFileHandle(scopeRef.path, {
+            let currentScope = scopeRef.accessScope.get();
+
+            const directories = scopeRef.path.split('/');
+            const filename = directories.pop();
+
+            for (let i = 0; i < directories.length; i++) {
+                currentScope = await currentScope.getDirectoryHandle(directories[i], { create: false });
+            }
+
+            fileHandle = await currentScope.getFileHandle(filename ?? '', {
                 create: false
             })
         } else {
