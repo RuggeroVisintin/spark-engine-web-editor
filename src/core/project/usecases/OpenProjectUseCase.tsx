@@ -11,7 +11,7 @@ export class OpenProjectUseCase {
     public async execute(): Promise<Project> {
         const lodedProject = await this.projectRepository.read();
 
-        lodedProject.loadScenes(this.sceneRepository);
+        await lodedProject.loadScenes(this.sceneRepository);
 
         return lodedProject;
     }

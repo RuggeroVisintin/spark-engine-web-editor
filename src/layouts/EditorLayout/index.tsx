@@ -5,10 +5,12 @@ import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
 import { ActionMenu } from '../../templates/ActionMenu';
 import { EntityPropsPanel } from '../../templates/EntityPropsPanel';
-import { LoadSceneUseCase } from '../../core/scene/usecases/LoadSceneUseCase';
 import { SaveSceneUseCase, SetDebuggerEntityUseCase } from '../../core/scene/usecases';
 import { SceneRepository } from '../../core/scene/ports';
 import { FileSystemSceneRepository } from '../../core/scene/adapters';
+import { OpenProjectUseCase } from '../../core/project/usecases/OpenProjectUseCase';
+import { ProjectRepository } from '../../core/project/ports';
+import { FileSystemProjectRepository } from '../../core/project/adapters';
 
 const debuggerEntity = new GameObject({
     name: 'DebuggerEntity',
@@ -24,6 +26,7 @@ const debuggerEntity = new GameObject({
 });
 
 let sceneRepo: SceneRepository;
+let projectRepo: ProjectRepository;
 
 export const EditorLayout = () => {
     const [scene, setScene] = useState<Scene>();
@@ -34,7 +37,9 @@ export const EditorLayout = () => {
 
     const onEngineReady = useCallback((newEngine: GameEngine) => {
         newEngine.renderer.defaultWireframeThickness = 3;
+
         sceneRepo = new FileSystemSceneRepository(newEngine);
+        projectRepo = new FileSystemProjectRepository();
 
 
         setScene(newEngine.createScene(true));
@@ -94,8 +99,10 @@ export const EditorLayout = () => {
     const onProjectFileOpen = async () => {
         if (!sceneRepo) return;
 
-        const newScene = await new LoadSceneUseCase(sceneRepo)
+        const newProject = await new OpenProjectUseCase(projectRepo, sceneRepo)
             .execute();
+
+        const newScene = newProject.scenes[0];
 
         scene?.dispose();
         newScene.draw();
