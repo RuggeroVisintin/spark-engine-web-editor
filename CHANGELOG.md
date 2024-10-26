@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.6](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.5...sparkenginewebeditor-v0.0.6) (2024-10-26)
+
+
+### Features
+
+* **project:** add ability to load a project directory ([#67](https://github.com/RuggeroVisintin/spark-engine-web-editor/issues/67)) ([edb6c1f](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/edb6c1fe21eee10ff33d3fd88bd14cfbc4543e2e))
+
 ## [0.0.5](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.4...sparkenginewebeditor-v0.0.5) (2024-10-07)
 
 
