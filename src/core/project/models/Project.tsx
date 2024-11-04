@@ -20,6 +20,7 @@ export class Project {
         this.scenePaths = props.scenes;
     }
 
+    // TODO - move this coordination effort at the useCase level and use a Project.addScenes method instead
     public async loadScenes(sceneRepository: SceneRepository): Promise<void> {
         for (const scenePath of this.scenePaths) {
             const scene = await sceneRepository.read({
@@ -31,11 +32,11 @@ export class Project {
         }
     }
 
+
     public toJson(): ProjectJsonProps {
         return {
             name: this.name,
-            scenes: this.scenePaths,
-
+            scenes: this.scenePaths
         }
     }
 };
