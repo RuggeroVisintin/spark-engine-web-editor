@@ -15,7 +15,19 @@ export class FileSystemProjectRepository implements ProjectRepository {
         return new Project(JSON.parse(await (await fileHandle.getFile()).text()), new WeakRef(directoryHandle));
     }
 
-    public async save(): Promise<void> {
-        throw new Error("Method not implemented.");
+    public async save(project: Project): Promise<void> {
+        const directoryHandle = await window.showDirectoryPicker({
+            mode: 'readwrite'
+        });
+
+        const fileHandle = await directoryHandle.getFileHandle('project-manifest.spark.json', {
+            create: true
+        });
+
+        const writeSocket = await fileHandle.createWritable({
+            keepExistingData: false
+        });
+
+        writeSocket.write(JSON.stringify(project.toJson()));
     }
 }

@@ -1,4 +1,4 @@
-import { createDirectoryHandleMock, setMockedFile } from "../../../__mocks__/fs-api.mock";
+import { createDirectoryHandleMock, FileSystemWritableFileStreamMock, setMockedFile } from "../../../__mocks__/fs-api.mock";
 import testProjectJson from "../../../__mocks__/assets/test-project.json";
 import { FileSystemProjectRepository } from "./FileSystemProjectRepository";
 import { Project } from "../models";
@@ -15,5 +15,17 @@ describe('core/project/adapters/FileSystemProjectRepository', () => {
             expect(JSON.stringify(await projectRepo.read())).toEqual(JSON.stringify(expectedProject));
         })
     });
+
+    describe('save', () => {
+        it('Should use FileSystem Web APIs to save a project file to the given filePath', async () => {
+            const directoryHandleRef = createDirectoryHandleMock();
+            const projectToSave = new Project(testProjectJson, new WeakRef(directoryHandleRef));
+
+            const projectRepo = new FileSystemProjectRepository();
+            await projectRepo.save(projectToSave);
+
+            expect(FileSystemWritableFileStreamMock.write).toHaveBeenCalled();
+        })
+    })
 
 })
