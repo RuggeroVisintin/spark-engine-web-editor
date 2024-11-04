@@ -58,4 +58,15 @@ describe('core/project/models/Project', () => {
             expect(project.scenes[0].toJson()).toEqual(testSceneJson);
         })
     })
+
+    describe('.toJson()', () => {
+        it('Should return a Json representation of the project', () => {
+            const projectJson = {
+                name: 'test-project',
+                scenes: ['scenes/test.scene.spark.json']
+            };
+
+            expect(new Project(projectJson).toJson()).toEqual(projectJson);
+        });
+    })
 })

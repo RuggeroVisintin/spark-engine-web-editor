@@ -30,4 +30,12 @@ export class Project {
             this.scenes.push(scene);
         }
     }
+
+    public toJson(): ProjectJsonProps {
+        return {
+            name: this.name,
+            scenes: this.scenePaths,
+
+        }
+    }
 };
