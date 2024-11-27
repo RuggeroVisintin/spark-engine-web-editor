@@ -19,36 +19,60 @@ describe('core/scene/adapters/FileSystemSceneRepository', () => {
         jest.clearAllMocks();
     });
 
-    it('Should use FileSystem Web APIs to prompt the user to pick a scene file', async () => {
-        setMockedFile(JSON.stringify(testSceneJson));
+    describe('.read()', () => {
+        it('Should use FileSystem Web APIs to prompt the user to pick a scene file', async () => {
+            setMockedFile(JSON.stringify(testSceneJson));
 
-        const sceneRepo = new FileSystemSceneRepository(gameEngine);
-        expect((await sceneRepo.read()).toJson()).toEqual(testSceneJson);
+            const sceneRepo = new FileSystemSceneRepository(gameEngine);
+            expect((await sceneRepo.read()).toJson()).toEqual(testSceneJson);
+        });
+
+        it('Should use FileSystem web APIs to read a file from the given folder scope withouth prompting the user when valid scopeRef is provided', async () => {
+            setMockedFile(JSON.stringify(testSceneJson));
+
+            const sceneRepo = new FileSystemSceneRepository(gameEngine);
+            const result = await sceneRepo.read({
+                accessScope: new WeakRef<FileSystemDirectoryHandle>(createDirectoryHandleMock() as unknown as FileSystemDirectoryHandle),
+                path: 'test-scene.json'
+            })
+
+            expect(global.showOpenFilePicker).not.toHaveBeenCalled();
+            expect(result.toJson()).toEqual(testSceneJson);
+        });
     });
 
-    it('Should use FileSystem web APIs to save a scene file at given filePath', async () => {
-        const writableSpy = jest.spyOn(FileSystemWritableFileStreamMock, 'write');
+    describe('.save()', () => {
+        it('Should use FileSystem web APIs to save a scene file at given filePath', async () => {
+            const writableSpy = jest.spyOn(FileSystemWritableFileStreamMock, 'write');
 
-        const sceneRepo = new FileSystemSceneRepository(gameEngine);
-        const testScene = gameEngine.createScene();
-        testScene.loadFromJson(testSceneJson);
+            const sceneRepo = new FileSystemSceneRepository(gameEngine);
+            const testScene = gameEngine.createScene();
+            testScene.loadFromJson(testSceneJson);
 
-        await sceneRepo.save(testScene);
+            await sceneRepo.save(testScene);
 
-        expect(writableSpy).toHaveBeenCalledWith(JSON.stringify(testSceneJson))
-    })
+            expect(writableSpy).toHaveBeenCalledWith(JSON.stringify(testSceneJson))
+        });
 
-    it('Should use FileSystem web APIs to read a file from the given folder scope withouth prompting the user when valid scopeRef is provided', async () => {
-        setMockedFile(JSON.stringify(testSceneJson));
-        const filePickerSpy = jest.spyOn(window, 'showOpenFilePicker');
+        it('Shouls use FileSystem web APIs to save a scene file at the specified location when provided', async () => {
+            const writableSpy = jest.spyOn(FileSystemWritableFileStreamMock, 'write');
 
-        const sceneRepo = new FileSystemSceneRepository(gameEngine);
-        const result = await sceneRepo.read({
-            accessScope: new WeakRef<FileSystemDirectoryHandle>(createDirectoryHandleMock() as unknown as FileSystemDirectoryHandle),
-            path: 'test-scene.json'
+            const testScene = gameEngine.createScene();
+            testScene.loadFromJson(testSceneJson);
+
+            const sceneRepo = new FileSystemSceneRepository(gameEngine);
+            await sceneRepo.save(testScene, {
+                accessScope: new WeakRef<FileSystemDirectoryHandle>(createDirectoryHandleMock() as unknown as FileSystemDirectoryHandle),
+                path: 'test-scene.json'
+            })
+
+            expect(global.showSaveFilePicker).not.toHaveBeenCalled();
+            expect(writableSpy).toHaveBeenCalledWith(JSON.stringify(testSceneJson));
         })
-
-        expect(filePickerSpy).not.toHaveBeenCalled();
-        expect(result.toJson()).toEqual(testSceneJson);
     })
+
+
+
+
+
 })
