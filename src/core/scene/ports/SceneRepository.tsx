@@ -1,12 +1,12 @@
 import { Scene } from "sparkengineweb";
 import { WeakRef } from "../../../common";
 
-interface RefConfigParams {
+export interface RefConfigParams {
     accessScope: WeakRef;
     path: string;
 }
 
 export interface SceneRepository {
     read(refConfig?: RefConfigParams): Promise<Scene>;
-    save(sceneJson: Scene): Promise<void>;
+    save(sceneJson: Scene, refConfig?: RefConfigParams): Promise<void>;
 }

@@ -11,7 +11,7 @@ export class SaveProjectUseCase {
     public async execute(project: Project): Promise<void> {
         await Promise.all([
             this.projectRepository.save(project),
-            ...project.scenes.map(scene => this.sceneRepository.save(scene))
+            project.saveScenes(this.sceneRepository)
         ]);
     }
 }

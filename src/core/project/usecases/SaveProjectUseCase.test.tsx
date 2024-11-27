@@ -3,7 +3,6 @@ import { SceneRepository } from "../../scene";
 import { Project } from "../models";
 import { ProjectRepository } from "../ports";
 import { SaveProjectUseCase } from "./SaveProjectUseCase";
-import mockSceneJson from '../../../__mocks__/assets/test-scene.json';
 import { GameEngine, Scene } from "sparkengineweb";
 
 const gameEngine = new GameEngine({
@@ -42,15 +41,20 @@ describe('core/project/usecases/SaveProjectuseCase', () => {
         expect(projectRepository.save).toHaveBeenCalledWith(project);
     });
 
-    it(' Should save the project\'s scenes in the the given filesystem directory', async () => {
+    it('Should save the project\'s scenes in the the given filesystem directory', async () => {
+        const weakRef = new WeakRef<string>('path/to/project')
+
         const project = new Project({
             name: 'Test Project',
             scenes: ['scenes/test-scene.json']
-        }, new WeakRef<string>('path/to/project'))
+        }, weakRef);
 
         await project.loadScenes(sceneRepository);
         await saveProjectUseCase.execute(project);
 
-        expect(sceneRepository.save).toHaveBeenCalledWith(project.scenes[0]);
+        expect(sceneRepository.save).toHaveBeenCalledWith(project.scenes[0], {
+            accessScope: weakRef,
+            path: 'scenes/test-scene.json'
+        });
     });
 });

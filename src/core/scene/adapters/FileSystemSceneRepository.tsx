@@ -1,8 +1,8 @@
 import { GameEngine, Scene } from "sparkengineweb";
-import { SceneRepository } from "../ports";
+import { RefConfigParams, SceneRepository } from "../ports";
 import { WeakRef } from "../../../common";
 
-interface LocationParameters {
+interface LocationParameters extends RefConfigParams {
     accessScope: WeakRef<FileSystemDirectoryHandle>;
     path: string;
 }

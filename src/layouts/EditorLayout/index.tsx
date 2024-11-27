@@ -11,6 +11,8 @@ import { FileSystemSceneRepository } from '../../core/scene/adapters';
 import { OpenProjectUseCase } from '../../core/project/usecases/OpenProjectUseCase';
 import { ProjectRepository } from '../../core/project/ports';
 import { FileSystemProjectRepository } from '../../core/project/adapters';
+import { SaveProjectUseCase } from '../../core/project/usecases';
+import { Project } from '../../core/project/models';
 
 const debuggerEntity = new GameObject({
     name: 'DebuggerEntity',
@@ -29,6 +31,7 @@ let sceneRepo: SceneRepository;
 let projectRepo: ProjectRepository;
 
 export const EditorLayout = () => {
+    const [currentProject, setCurrentProject] = useState<Project>();
     const [scene, setScene] = useState<Scene>();
     const [debuggerScene, setDebuggerScene] = useState<Scene>();
     const [entities, setEntities] = useState<IEntity[]>([]);
@@ -108,6 +111,7 @@ export const EditorLayout = () => {
         newScene.draw();
 
         setScene(newScene);
+        setCurrentProject(newProject);
         setEntities([...newScene?.entities || []]);
 
         if (debuggerEntity) {
@@ -116,9 +120,10 @@ export const EditorLayout = () => {
     };
 
     const onProjectFileSave = async () => {
-        if (!scene) return;
+        if (!currentProject) return;
 
-        await new SaveSceneUseCase(sceneRepo).execute(scene);
+        await new SaveProjectUseCase(projectRepo, sceneRepo).execute(currentProject);
+        // await new SaveSceneUseCase(sceneRepo).execute(scene);
     };
 
     return (
