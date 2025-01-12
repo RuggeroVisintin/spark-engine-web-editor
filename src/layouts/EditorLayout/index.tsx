@@ -126,7 +126,6 @@ export const EditorLayout = () => {
         if (!currentProject) return;
 
         await new SaveProjectUseCase(projectRepo, sceneRepo).execute(currentProject);
-        // await new SaveSceneUseCase(sceneRepo).execute(scene);
     };
 
     return (
