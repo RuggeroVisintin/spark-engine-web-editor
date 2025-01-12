@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.0.6](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.5...sparkenginewebeditor-v0.0.6) (2025-01-12)
+
+
+### Features
+
+* **core:** add FileSystemProjectRepository.save ([7b5e007](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/7b5e00791435944c5c127dd52b23139231228db3))
+* **core:** add Project.toJson() method to serialize a project into its json format ([fef847b](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/fef847b086654fd48b84ff254e7220d359ff34e2))
+* **core:** add SaveProjectUseCase ([626c25c](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/626c25c374b92cb81f525d9c2663decce72a9c4e))
+* **project:** add ability to load a project directory ([#67](https://github.com/RuggeroVisintin/spark-engine-web-editor/issues/67)) ([edb6c1f](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/edb6c1fe21eee10ff33d3fd88bd14cfbc4543e2e))
+* **project:** add ability to overwrite current project changes in filesystem ([#84](https://github.com/RuggeroVisintin/spark-engine-web-editor/issues/84)) ([33b6966](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/33b6966c41e778e660253545414a8fa69908e044))
+
 ## [0.0.5](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.4...sparkenginewebeditor-v0.0.5) (2024-10-07)
 
 
