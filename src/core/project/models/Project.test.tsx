@@ -69,4 +69,32 @@ describe('core/project/models/Project', () => {
             expect(new Project(projectJson).toJson()).toEqual(projectJson);
         });
     })
+
+    describe('.addScene()', () => {
+        it('Should add the scene to the list of scenes in the project', () => {
+            const project = new Project({
+                name: 'test-project',
+                scenes: []
+            });
+
+            const newScene = gameEngine.createScene()
+
+            project.addScene(newScene);
+
+            expect(project.scenes).toEqual([newScene]);
+        });
+
+        it('Should register the scene path in the list of scene paths for the project', () => {
+            const project = new Project({
+                name: 'test-project',
+                scenes: []
+            });
+
+            const newScene = gameEngine.createScene()
+
+            project.addScene(newScene);
+
+            expect(project.scenePaths).toEqual(['scenes/test-scene.spark.json']);
+        });
+    })
 })

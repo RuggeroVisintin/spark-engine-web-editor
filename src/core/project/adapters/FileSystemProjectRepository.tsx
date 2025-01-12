@@ -16,9 +16,15 @@ export class FileSystemProjectRepository implements ProjectRepository {
     }
 
     public async save(project: Project): Promise<void> {
-        const directoryHandle = await window.showDirectoryPicker({
-            mode: 'readwrite'
-        });
+        let directoryHandle: FileSystemDirectoryHandle;
+
+        if (project.scopeRef.get()) {
+            directoryHandle = project.scopeRef.get() as FileSystemDirectoryHandle;
+        } else {
+            directoryHandle = await window.showDirectoryPicker({
+                mode: 'readwrite'
+            });
+        }
 
         const fileHandle = await directoryHandle.getFileHandle('project-manifest.spark.json', {
             create: true

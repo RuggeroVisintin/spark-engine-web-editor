@@ -1,8 +1,8 @@
 import { GameEngine, Scene } from "sparkengineweb";
-import { SceneRepository } from "../ports";
+import { RefConfigParams, SceneRepository } from "../ports";
 import { WeakRef } from "../../../common";
 
-interface RefConfigParams {
+interface LocationParameters extends RefConfigParams {
     accessScope: WeakRef<FileSystemDirectoryHandle>;
     path: string;
 }
@@ -10,22 +10,11 @@ interface RefConfigParams {
 export class FileSystemSceneRepository implements SceneRepository {
     constructor(private readonly factory: GameEngine) { }
 
-    public async read(scopeRef?: RefConfigParams): Promise<Scene> {
+    public async read(location?: LocationParameters): Promise<Scene> {
         let fileHandle;
 
-        if (scopeRef) {
-            let currentScope = scopeRef.accessScope.get();
-
-            const directories = scopeRef.path.split('/');
-            const filename = directories.pop();
-
-            for (let i = 0; i < directories.length; i++) {
-                currentScope = await currentScope.getDirectoryHandle(directories[i], { create: false });
-            }
-
-            fileHandle = await currentScope.getFileHandle(filename ?? '', {
-                create: false
-            })
+        if (location) {
+            fileHandle = await this.getTargetFileHandle(location);
         } else {
             [fileHandle] = await window.showOpenFilePicker({
                 multiple: false,
@@ -43,17 +32,38 @@ export class FileSystemSceneRepository implements SceneRepository {
         return result;
     }
 
-    public async save(scene: Scene): Promise<void> {
-        const fileHandle = await window.showSaveFilePicker({
-            types: [{
-                accept: {
-                    'application/json': ['.spark.json']
-                }
-            }]
-        });
+    public async save(scene: Scene, location?: LocationParameters): Promise<void> {
+        let fileHandle;
+
+        if (location) {
+            fileHandle = await this.getTargetFileHandle(location, true);
+        } else {
+            fileHandle = await window.showSaveFilePicker({
+                types: [{
+                    accept: {
+                        'application/json': ['.spark.json']
+                    }
+                }]
+            });
+        }
 
         const writable = await fileHandle.createWritable();
         await writable.write(JSON.stringify(scene.toJson()));
         await writable.close();
+    }
+
+    private async getTargetFileHandle(location: LocationParameters, shouldCreate = false): Promise<FileSystemFileHandle> {
+        let currentScope = location.accessScope.get();
+
+        const directories = location.path.split('/');
+        const filename = directories.pop();
+
+        for (let i = 0; i < directories.length; i++) {
+            currentScope = await currentScope.getDirectoryHandle(directories[i], { create: false });
+        }
+
+        return await currentScope.getFileHandle(filename ?? '', {
+            create: shouldCreate
+        });
     }
 }

@@ -5,12 +5,14 @@ import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
 import { ActionMenu } from '../../templates/ActionMenu';
 import { EntityPropsPanel } from '../../templates/EntityPropsPanel';
-import { SaveSceneUseCase, SetDebuggerEntityUseCase } from '../../core/scene/usecases';
+import { SetDebuggerEntityUseCase } from '../../core/scene/usecases';
 import { SceneRepository } from '../../core/scene/ports';
 import { FileSystemSceneRepository } from '../../core/scene/adapters';
 import { OpenProjectUseCase } from '../../core/project/usecases/OpenProjectUseCase';
 import { ProjectRepository } from '../../core/project/ports';
 import { FileSystemProjectRepository } from '../../core/project/adapters';
+import { SaveProjectUseCase } from '../../core/project/usecases';
+import { Project } from '../../core/project/models';
 
 const debuggerEntity = new GameObject({
     name: 'DebuggerEntity',
@@ -29,11 +31,13 @@ let sceneRepo: SceneRepository;
 let projectRepo: ProjectRepository;
 
 export const EditorLayout = () => {
+    const [currentProject, setCurrentProject] = useState<Project>(new Project({ name: 'my-project', scenes: [] }));
     const [scene, setScene] = useState<Scene>();
     const [debuggerScene, setDebuggerScene] = useState<Scene>();
     const [entities, setEntities] = useState<IEntity[]>([]);
     const [currentEntity, setCurrentEntity] = useState<IEntity | undefined>(undefined);
     const engine = useRef<GameEngine>();
+
 
     const onEngineReady = useCallback((newEngine: GameEngine) => {
         newEngine.renderer.defaultWireframeThickness = 3;
@@ -41,14 +45,18 @@ export const EditorLayout = () => {
         sceneRepo = new FileSystemSceneRepository(newEngine);
         projectRepo = new FileSystemProjectRepository();
 
+        const scene = newEngine.createScene(true);
 
-        setScene(newEngine.createScene(true));
+        currentProject.addScene(scene);
+
+        setScene(scene);
         setDebuggerScene(newEngine.createScene(true));
 
         newEngine.run();
 
         engine.current = newEngine;
-    }, []);
+        // eslint-disable-next-line
+    }, [null]);
 
     const onAddEntity = useCallback((entity: IEntity) => {
         if (!scene) return;
@@ -108,6 +116,7 @@ export const EditorLayout = () => {
         newScene.draw();
 
         setScene(newScene);
+        setCurrentProject(newProject);
         setEntities([...newScene?.entities || []]);
 
         if (debuggerEntity) {
@@ -116,9 +125,9 @@ export const EditorLayout = () => {
     };
 
     const onProjectFileSave = async () => {
-        if (!scene) return;
+        if (!currentProject) return;
 
-        await new SaveSceneUseCase(sceneRepo).execute(scene);
+        await new SaveProjectUseCase(projectRepo, sceneRepo).execute(currentProject);
     };
 
     return (

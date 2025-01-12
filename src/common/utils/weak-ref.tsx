@@ -4,4 +4,8 @@ export class WeakRef<T = unknown> {
     get(): T {
         return this.ref;
     }
+
+    isEmpty(): boolean {
+        return this.ref === null;
+    }
 }
