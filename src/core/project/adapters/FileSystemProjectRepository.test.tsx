@@ -24,9 +24,9 @@ describe('core/project/adapters/FileSystemProjectRepository', () => {
             await projectRepo.save(projectToSave);
 
             expect(FileSystemWritableFileStreamMock.write).toHaveBeenCalledWith(JSON.stringify(projectToSave.toJson()));
-        })
+        });
 
-        it('Shouls use FileSystem web APIs to save the project in its original location when the project as a valid directory handle', async () => {
+        it('Should use FileSystem web APIs to save the project in its original location when the project as a valid directory handle', async () => {
             const directoryHandleRef = createDirectoryHandleMock();
             const projectToSave = new Project(testProjectJson, new WeakRef(directoryHandleRef));
 
@@ -34,7 +34,9 @@ describe('core/project/adapters/FileSystemProjectRepository', () => {
             await projectRepo.save(projectToSave);
 
             expect(FileSystemWritableFileStreamMock.write).toHaveBeenCalledWith(JSON.stringify(projectToSave.toJson()));
-        })
+        });
+
+
     })
 
 })

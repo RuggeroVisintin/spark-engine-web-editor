@@ -39,15 +39,11 @@ export class Project {
                 accessScope: this.scopeRef as WeakRef<FileSystemDirectoryHandle>,
             })
         }));
+    }
 
-        // for (const scenePath of this.scenePaths) {
-        //     const scene = await sceneRepository.save(scene, {
-        //         accessScope: this.scopeRef,
-        //         path: scenePath
-        //     });
-
-        //     this.scenes.push(scene);
-        // }
+    public addScene(scene: Scene): void {
+        this.scenes.push(scene);
+        this.scenePaths.push(`scenes/test-scene.spark.json`)
     }
 
 

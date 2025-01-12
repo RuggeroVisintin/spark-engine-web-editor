@@ -31,7 +31,7 @@ let sceneRepo: SceneRepository;
 let projectRepo: ProjectRepository;
 
 export const EditorLayout = () => {
-    const [currentProject, setCurrentProject] = useState<Project>();
+    const [currentProject, setCurrentProject] = useState<Project>(new Project({ name: 'my-project', scenes: [] }));
     const [scene, setScene] = useState<Scene>();
     const [debuggerScene, setDebuggerScene] = useState<Scene>();
     const [entities, setEntities] = useState<IEntity[]>([]);
@@ -44,8 +44,11 @@ export const EditorLayout = () => {
         sceneRepo = new FileSystemSceneRepository(newEngine);
         projectRepo = new FileSystemProjectRepository();
 
+        const scene = newEngine.createScene(true);
 
-        setScene(newEngine.createScene(true));
+        currentProject.addScene(scene);
+
+        setScene(scene);
         setDebuggerScene(newEngine.createScene(true));
 
         newEngine.run();
