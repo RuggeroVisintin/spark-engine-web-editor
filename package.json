@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.5.0",
-    "@types/jest": "^29.5.13",
+    "@types/jest": "^29.5.14",
     "@types/uuid": "^10.0.0",
     "@types/wicg-file-system-access": "^2023.10.5",
     "cspell": "^8.17.1",
