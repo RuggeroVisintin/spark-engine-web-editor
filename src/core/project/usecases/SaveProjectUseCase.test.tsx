@@ -3,7 +3,7 @@ import { SceneRepository } from "../../scene";
 import { Project } from "../models";
 import { ProjectRepository } from "../ports";
 import { SaveProjectUseCase } from "./SaveProjectUseCase";
-import { GameEngine, Scene } from "sparkengineweb";
+import { GameEngine } from "sparkengineweb";
 
 const gameEngine = new GameEngine({
     framerate: 60,

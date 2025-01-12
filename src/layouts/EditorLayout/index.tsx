@@ -5,7 +5,7 @@ import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
 import { ActionMenu } from '../../templates/ActionMenu';
 import { EntityPropsPanel } from '../../templates/EntityPropsPanel';
-import { SaveSceneUseCase, SetDebuggerEntityUseCase } from '../../core/scene/usecases';
+import { SetDebuggerEntityUseCase } from '../../core/scene/usecases';
 import { SceneRepository } from '../../core/scene/ports';
 import { FileSystemSceneRepository } from '../../core/scene/adapters';
 import { OpenProjectUseCase } from '../../core/project/usecases/OpenProjectUseCase';
@@ -54,7 +54,7 @@ export const EditorLayout = () => {
         newEngine.run();
 
         engine.current = newEngine;
-    }, []);
+    }, [engine]);
 
     const onAddEntity = useCallback((entity: IEntity) => {
         if (!scene) return;
