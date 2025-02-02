@@ -29,7 +29,35 @@ describe('core/project/models/Project', () => {
                 scopeRef: expect.any(WeakRef)
             })
         })
-    })
+    });
+
+    describe('.fromProject()', () => {
+        it('Should copy the source project scenes in the new project instance', () => {
+            const sourceProject = new Project({
+                name: 'test-project',
+                scenes: ['scenes/test.scene.spark.json']
+            });
+
+            sourceProject.scenes = [gameEngine.createScene()];
+            const newProject = Project.fromProject(sourceProject);
+
+            expect(newProject.scenes).toEqual(sourceProject.scenes);
+        });
+
+        it('Should override the scopeRef of the new project instance with the given one', () => {
+            const sourceProject = new Project({
+                name: 'test-project',
+                scenes: ['scenes/test.scene.spark.json']
+            });
+
+            const newScopeRef = new WeakRef<FileSystemDirectoryHandle>(createDirectoryHandleMock() as unknown as FileSystemDirectoryHandle);
+
+            const newProject = Project.fromProject(sourceProject, newScopeRef);
+
+            expect(newProject.scopeRef).toEqual(newScopeRef);
+        })
+    });
+
 
     describe('.loadScenes()', () => {
         beforeEach(() => {

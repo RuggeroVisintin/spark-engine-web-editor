@@ -20,6 +20,14 @@ export class Project {
         this.scenePaths = props.scenes;
     }
 
+    static fromProject(project: Project, scopeRef?: WeakRef): Project {
+        const result = new Project(project.toJson(), scopeRef);
+
+        result.scenes = project.scenes;
+
+        return result;
+    }
+
     // TODO - move this coordination effort at the useCase level and use a Project.addScenes method instead
     public async loadScenes(sceneRepository: SceneRepository): Promise<void> {
         for (const scenePath of this.scenePaths) {
@@ -45,7 +53,6 @@ export class Project {
         this.scenes.push(scene);
         this.scenePaths.push(`scenes/test-scene.spark.json`)
     }
-
 
     public toJson(): ProjectJsonProps {
         return {

@@ -127,7 +127,7 @@ export const EditorLayout = () => {
     const onProjectFileSave = async () => {
         if (!currentProject) return;
 
-        await new SaveProjectUseCase(projectRepo, sceneRepo).execute(currentProject);
+        setCurrentProject(await new SaveProjectUseCase(projectRepo, sceneRepo).execute(currentProject));
     };
 
     return (
