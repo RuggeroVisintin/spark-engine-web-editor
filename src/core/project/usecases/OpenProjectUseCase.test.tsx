@@ -18,6 +18,7 @@ const gameEngine = new GameEngine({
 class MockProjectRepository implements ProjectRepository {
     read = jest.fn().mockResolvedValue(new Project(testProjectJson));
     save = jest.fn();
+    update = jest.fn();
 }
 
 class MockSceneRepository implements SceneRepository {

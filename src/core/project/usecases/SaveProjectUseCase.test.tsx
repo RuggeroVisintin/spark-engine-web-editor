@@ -18,6 +18,7 @@ const gameEngine = new GameEngine({
 class MockProjectReposioty implements ProjectRepository {
     read = jest.fn();
     save = jest.fn();
+    update = jest.fn();
 };
 
 class MockSceneRepository implements SceneRepository {
@@ -28,7 +29,11 @@ class MockSceneRepository implements SceneRepository {
 describe('core/project/usecases/SaveProjectuseCase', () => {
     const projectRepository = new MockProjectReposioty();
     const sceneRepository = new MockSceneRepository();
-    const saveProjectUseCase = new SaveProjectUseCase(projectRepository, sceneRepository);
+    let saveProjectUseCase: SaveProjectUseCase;
+
+    beforeEach(() => {
+        saveProjectUseCase = new SaveProjectUseCase(projectRepository, sceneRepository);
+    });
 
     it('Should save the project in the given filesystem directory', async () => {
         const project = new Project({
@@ -38,7 +43,7 @@ describe('core/project/usecases/SaveProjectuseCase', () => {
 
         await saveProjectUseCase.execute(project);
 
-        expect(projectRepository.save).toHaveBeenCalledWith(project);
+        expect(projectRepository.update).toHaveBeenCalledWith(project);
     });
 
     it('Should save the project\'s scenes in the the given filesystem directory', async () => {
@@ -57,4 +62,20 @@ describe('core/project/usecases/SaveProjectuseCase', () => {
             path: 'scenes/test-scene.json'
         });
     });
-});
+
+    it('Should save the project before saving the scenes if the project was not loaded from a folder yet', async () => {
+        projectRepository.save.mockImplementationOnce((project: Project) => {
+            return new Promise<Project>((resolve) => {
+                resolve(new Project(project.toJson(), new WeakRef('path/to/project')))
+            });
+        });
+
+        const project = new Project({
+            name: 'Test Project',
+            scenes: ['scenes/test-scene.json']
+        }, new WeakRef())
+
+        const newProject = await saveProjectUseCase.execute(project) as Project;
+        expect(newProject.scopeRef.get()).toBe('path/to/project');
+    })
+})

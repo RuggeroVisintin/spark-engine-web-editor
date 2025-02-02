@@ -8,15 +8,19 @@ export class SaveProjectUseCase {
         private readonly sceneRepository: SceneRepository
     ) { }
 
-    public async execute(project: Project): Promise<void> {
+    public async execute(project: Project): Promise<Project> {
         if (project.scopeRef.isEmpty()) {
-            // TODO -- when project was not loaeded from folder yet, we need to save it before saving the scenes
+            const newProject = await this.projectRepository.save(project);
+            await newProject.saveScenes(this.sceneRepository);
 
+            return newProject;
         } else {
             await Promise.all([
-                this.projectRepository.save(project),
+                this.projectRepository.update(project),
                 project.saveScenes(this.sceneRepository)
             ]);
+
+            return project;
         }
     }
 }

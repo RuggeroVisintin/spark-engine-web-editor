@@ -53,7 +53,7 @@ export class FileSystemSceneRepository implements SceneRepository {
     }
 
     private async getTargetFileHandle(location: LocationParameters, shouldCreate = false): Promise<FileSystemFileHandle> {
-        let currentScope = location.accessScope.get();
+        let currentScope = location.accessScope.get() as FileSystemDirectoryHandle;
 
         const directories = location.path.split('/');
         const filename = directories.pop();
