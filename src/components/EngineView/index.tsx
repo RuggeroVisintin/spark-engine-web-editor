@@ -28,7 +28,7 @@ export const EngineView = memo(({ onEngineReady }: EngineViewProps) => {
             onEngineReady(engine);
             isEngineInit = true;
         }
-    }, [canvasRef]);
+    }, [canvasRef, onEngineReady]);
 
     return (
         <Box>
