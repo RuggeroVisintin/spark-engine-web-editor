@@ -19,7 +19,6 @@ on:
       token:
         required: true
 
-
 jobs:
   code_scan:
     name: Analyze
