@@ -12,15 +12,16 @@
 name: "CodeQL"
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
   schedule:
     - cron: '24 8 * * 6'
+  workflow_call:
+    secrets:
+      token:
+        required: true
+
 
 jobs:
-  analyze:
+  code_scan:
     name: Analyze
     # Runner size impacts CodeQL analysis time. To learn more, please see:
     #   - https://gh.io/recommended-hardware-resources-for-running-codeql
