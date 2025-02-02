@@ -39,7 +39,7 @@ export const EditorLayout = () => {
     const engine = useRef<GameEngine>();
 
 
-    const onEngineReady = useCallback((newEngine: GameEngine) => {
+    const onEngineReady = (newEngine: GameEngine) => {
         newEngine.renderer.defaultWireframeThickness = 3;
 
         sceneRepo = new FileSystemSceneRepository(newEngine);
@@ -56,7 +56,7 @@ export const EditorLayout = () => {
 
         engine.current = newEngine;
         // eslint-disable-next-line
-    }, [null]);
+    };
 
     const onAddEntity = useCallback((entity: IEntity) => {
         if (!scene) return;

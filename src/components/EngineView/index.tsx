@@ -12,11 +12,13 @@ const RenderingCanvas = styled.canvas({
     background: 'black'
 })
 
+let isEngineInit = false;
+
 export const EngineView = memo(({ onEngineReady }: EngineViewProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
-        if (canvasRef.current !== null) {
+        if (!!canvasRef.current && !isEngineInit) {
             const engine = new SparkEngine.GameEngine({
                 framerate: 60,
                 context: canvasRef.current.getContext('2d')!,
@@ -24,12 +26,13 @@ export const EngineView = memo(({ onEngineReady }: EngineViewProps) => {
             });
 
             onEngineReady(engine);
+            isEngineInit = true;
         }
-    }, [onEngineReady]);
+    }, [canvasRef]);
 
     return (
         <Box>
             <RenderingCanvas ref={canvasRef} id="canvas"></RenderingCanvas>
         </Box>
     )
-});
+}, () => true);
