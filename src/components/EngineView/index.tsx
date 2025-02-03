@@ -16,13 +16,15 @@ let isEngineInit = false;
 
 export const EngineView = memo(({ onEngineReady }: EngineViewProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const width = 1920;
+    const height = 1080;
 
     useEffect(() => {
         if (!!canvasRef.current && !isEngineInit) {
             const engine = new SparkEngine.GameEngine({
                 framerate: 60,
                 context: canvasRef.current.getContext('2d')!,
-                resolution: { width: 1920, height: 1080 }
+                resolution: { width, height }
             });
 
             onEngineReady(engine);
@@ -32,7 +34,7 @@ export const EngineView = memo(({ onEngineReady }: EngineViewProps) => {
 
     return (
         <Box>
-            <RenderingCanvas ref={canvasRef} id="canvas"></RenderingCanvas>
+            <RenderingCanvas ref={canvasRef} id="canvas" width={width} height={height}></RenderingCanvas>
         </Box>
     )
 }, () => true);
