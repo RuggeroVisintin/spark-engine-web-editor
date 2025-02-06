@@ -30,7 +30,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sparkengineweb": "https://github.com/RuggeroVisintin/SparkEngineWeb/releases/download/sparkengineweb-v0.12.3/sparkengineweb-v0.12.3-lib.tar.gz",
-    "styled-components": "^6.1.14",
+    "styled-components": "^6.1.15",
     "uuid": "^11.0.5",
     "web-vitals": "^4.2.4"
   },
