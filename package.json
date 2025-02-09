@@ -12,8 +12,8 @@
     "url": "https://github.com/RuggeroVisintin/spark-engine-web-editor/issues"
   },
   "scripts": {
-    "start": "source .env && echo $SPARK_ENGINE_PATH && craco start",
-    "build": "source .env && echo $SPARK_ENGINE_PATH && craco build",
+    "start": "source .env && craco start",
+    "build": "source .env && craco build",
     "test": "source .env && craco test",
     "test:ci": "bash ./scripts/test-ci.sh",
     "eject": "react-scripts eject",
