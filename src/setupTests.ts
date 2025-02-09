@@ -8,7 +8,7 @@ import './__mocks__/fs-api.mock';
 
 jest.disableAutomock();
 
-// jest.mock('sparkengineweb')
+// jest.mock('@sparkengine')
 
 // jest.mock('uuid', () => ({
 //     v4: () => 'test-uuid'

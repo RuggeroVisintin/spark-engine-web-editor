@@ -1,5 +1,5 @@
 import React from "react"
-import { GameObject, StaticObject } from "sparkengineweb"
+import { GameObject, StaticObject } from "@sparkengine"
 import { ScenePanel } from "."
 import { fireEvent, render, screen } from '@testing-library/react';
 
@@ -11,8 +11,8 @@ describe('ScenePanel', () => {
             new GameObject()
         ]
 
-        render(<ScenePanel entities={entityList} onRemoveEntity={() => { }} onFocusEntity={() => {}}></ScenePanel>)
-        expect(screen.getAllByTestId(`ScenePanel.EntityEntry`, {exact: false}).length).toBe(3);
+        render(<ScenePanel entities={entityList} onRemoveEntity={() => { }} onFocusEntity={() => { }}></ScenePanel>)
+        expect(screen.getAllByTestId(`ScenePanel.EntityEntry`, { exact: false }).length).toBe(3);
     });
 
     it('Should invoke the onRemoveEntity callback when the entity remove button is clicked', () => {
@@ -23,7 +23,7 @@ describe('ScenePanel', () => {
         ]
 
         const cb = jest.fn();
-        render(<ScenePanel entities={entityList} onRemoveEntity={cb} onFocusEntity={() => {}}></ScenePanel>);
+        render(<ScenePanel entities={entityList} onRemoveEntity={cb} onFocusEntity={() => { }}></ScenePanel>);
 
         fireEvent.click(screen.getByTestId(`RemoveEntityButton.${entityList[0].uuid}`));
         expect(cb).toHaveBeenCalledWith(entityList[0]);
@@ -37,7 +37,7 @@ describe('ScenePanel', () => {
         ]
 
         const cb = jest.fn();
-        render(<ScenePanel entities={entityList} onRemoveEntity={() => {}} onFocusEntity={cb}></ScenePanel>);
+        render(<ScenePanel entities={entityList} onRemoveEntity={() => { }} onFocusEntity={cb}></ScenePanel>);
 
         fireEvent.click(screen.getByTestId(`ScenePanel.EntityEntry.${entityList[1].uuid}`));
         expect(cb).toHaveBeenCalledWith(entityList[1]);

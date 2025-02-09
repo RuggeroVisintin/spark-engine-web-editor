@@ -1,4 +1,4 @@
-import { Scene } from "sparkengineweb";
+import { Scene } from "@sparkengine";
 import { WeakRef } from "../../../common";
 
 export interface RefConfigParams {

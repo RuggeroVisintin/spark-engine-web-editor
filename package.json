@@ -12,9 +12,9 @@
     "url": "https://github.com/RuggeroVisintin/spark-engine-web-editor/issues"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
     "test:ci": "bash ./scripts/test-ci.sh",
     "eject": "react-scripts eject",
     "license-check": "bash ./scripts/check-licenses.sh",
@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.7.1",
+    "@craco/craco": "^7.1.0",
     "@types/jest": "^29.5.14",
     "@types/uuid": "^10.0.0",
     "@types/wicg-file-system-access": "^2023.10.5",

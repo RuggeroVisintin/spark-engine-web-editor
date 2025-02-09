@@ -1,4 +1,4 @@
-import { IEntity, Scene, TransformComponent } from "sparkengineweb";
+import { IEntity, Scene, TransformComponent } from "@sparkengine";
 
 export class SetDebuggerEntityUseCase {
     constructor(private readonly debuggerScene?: Scene) { }

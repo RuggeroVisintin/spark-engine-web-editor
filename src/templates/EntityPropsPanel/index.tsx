@@ -1,5 +1,5 @@
 import React, { useId } from "react";
-import { IEntity, MaterialComponent, TransformComponent, Vec2 } from "sparkengineweb";
+import { IEntity, MaterialComponent, TransformComponent, Vec2 } from "@sparkengine";
 import { FormInput } from "../../components";
 import { Box, Spacing } from "../../primitives";
 import { InputRow } from "../../primitives/InputRow";

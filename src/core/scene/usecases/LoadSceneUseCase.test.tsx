@@ -1,4 +1,4 @@
-import { GameEngine } from "sparkengineweb";
+import { GameEngine } from "@sparkengine";
 import { LoadSceneUseCase } from "./LoadSceneUseCase";
 import testSceneJson from '../../../__mocks__/assets/test-scene.json';
 import { SceneRepository } from "../ports";

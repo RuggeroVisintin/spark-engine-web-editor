@@ -1,5 +1,5 @@
 import React from "react";
-import { GameObject, Rgb, Vec2 } from "sparkengineweb";
+import { GameObject, Rgb, Vec2 } from "@sparkengine";
 import { EntityPropsPanel } from ".";
 import { fireEvent, render, screen } from "@testing-library/react";
 

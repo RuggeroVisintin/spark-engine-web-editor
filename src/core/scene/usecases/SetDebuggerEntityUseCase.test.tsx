@@ -1,4 +1,4 @@
-import { GameEngine, GameObject, Vec2 } from "sparkengineweb";
+import { GameEngine, GameObject, Vec2 } from "@sparkengine";
 import { SetDebuggerEntityUseCase } from "./SetDebuggerEntityUseCase";
 
 const engine = new GameEngine({

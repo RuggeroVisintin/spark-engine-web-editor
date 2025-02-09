@@ -4,7 +4,7 @@ import { OpenProjectUseCase } from "./OpenProjectUseCase";
 import { Project } from "../models";
 import { SceneRepository } from "../../scene/ports";
 import testSceneJson from '../../../__mocks__/assets/test-scene.json';
-import { GameEngine, Scene } from "sparkengineweb";
+import { GameEngine, Scene } from "@sparkengine";
 
 const gameEngine = new GameEngine({
     framerate: 60,

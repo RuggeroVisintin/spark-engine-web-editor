@@ -1,7 +1,7 @@
 import { FileSystemSceneRepository } from "./FileSystemSceneRepository";
 import testSceneJson from '../../../__mocks__/assets/test-scene.json';
 import { createDirectoryHandleMock, FileSystemWritableFileStreamMock, setMockedFile } from "../../../__mocks__/fs-api.mock";
-import { GameEngine } from "sparkengineweb";
+import { GameEngine } from "@sparkengine";
 import { WeakRef } from "../../../common";
 
 const gameEngine = new GameEngine({

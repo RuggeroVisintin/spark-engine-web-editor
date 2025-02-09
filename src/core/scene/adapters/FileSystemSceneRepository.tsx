@@ -1,4 +1,4 @@
-import { GameEngine, Scene } from "sparkengineweb";
+import { GameEngine, Scene } from "@sparkengine";
 import { RefConfigParams, SceneRepository } from "../ports";
 import { WeakRef } from "../../../common";
 

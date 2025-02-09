@@ -1,4 +1,4 @@
-import { GameEngine } from "sparkengineweb";
+import { GameEngine } from "@sparkengine";
 import { FileSystemSceneRepository } from "../../scene"
 import { Project } from "./Project"
 import { WeakRef } from "../../../common";

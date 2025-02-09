@@ -1,5 +1,5 @@
 import React from 'react';
-import { IEntity } from 'sparkengineweb';
+import { IEntity } from '@sparkengine';
 import { ListItem } from '../../components';
 import { Box, Spacing } from '../../primitives';
 

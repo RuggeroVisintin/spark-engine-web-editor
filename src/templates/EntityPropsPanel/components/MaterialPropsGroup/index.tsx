@@ -1,5 +1,5 @@
 import React, { useId } from "react";
-import { MaterialComponent, Rgb } from "sparkengineweb";
+import { MaterialComponent, Rgb } from "@sparkengine";
 import { FormInput } from "../../../../components";
 import { InputRow } from "../../../../primitives/InputRow";
 import { Box } from "../../../../primitives";

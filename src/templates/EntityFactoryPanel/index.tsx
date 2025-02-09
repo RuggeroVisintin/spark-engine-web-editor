@@ -1,5 +1,5 @@
 import React from 'react';
-import { GameObject, Rgb, StaticObject, TriggerEntity, Vec2 } from 'sparkengineweb';
+import { GameObject, Rgb, StaticObject, TriggerEntity, Vec2 } from '@sparkengine';
 import { ListItem } from '../../components';
 import { Box, Spacing } from '../../primitives';
 
@@ -48,7 +48,7 @@ const entityDict: Record<string, EntityDictEntry> = {
         factory: () => new TriggerEntity(),
         icon: 'trigger_icon.jpeg'
     }
-    // TODO: implement optional target in SparkEngineWeb
+    // TODO: implement optional target in @sparkengine
     // 'TriggerEntity': newTriggerEntity
 }
 
@@ -59,13 +59,13 @@ export const EntityFactoryPanel = ({ onAddEntity }: EntityFactoryPanelProps) => 
             $spacing={Spacing.sm}
             data-testid="EntityFactoryPanel"
         >
-            {Object.entries(entityDict).map(([entityType, {factory, icon}]) => (
+            {Object.entries(entityDict).map(([entityType, { factory, icon }]) => (
                 <ListItem
                     key={entityType}
                     text={`Add ${entityType}`}
                     onClick={() => onAddEntity(factory())}
                     imgSrc={icon}
-                    data-testid={`Add${entityType}Button`}/>
+                    data-testid={`Add${entityType}Button`} />
             ))}
         </Box>
     )

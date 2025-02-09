@@ -1,4 +1,4 @@
-import { Scene } from "sparkengineweb";
+import { Scene } from "@sparkengine";
 import { SceneRepository } from "../../scene";
 import { WeakRef } from "../../../common";
 
