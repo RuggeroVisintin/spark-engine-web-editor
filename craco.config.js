@@ -2,6 +2,8 @@ const path = require("path");
 
 const SPARK_ENGINE_PATH = process.env.SPARK_ENGINE_PATH || path.resolve(__dirname, "node_modules/sparkengineweb");
 
+console.log('SPARK_ENGINE_PATH', SPARK_ENGINE_PATH);
+
 module.exports = {
     webpack: {
         alias: {

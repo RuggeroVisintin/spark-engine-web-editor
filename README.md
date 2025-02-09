@@ -11,6 +11,16 @@ It leverages web technology to ensure high compatibility with many devices and e
 2) `npm i` to install needed dependencies
 3) `npm start` to launch the editor
 
+### Local Development Enhancements
+
+If you are part of the core contributors to the project, there is a great chance you also need to debug the core of sparkengine.
+To enhance your experience, you can link the project directly against the local `sparkengineweb` repository like so:
+
+1) Open a terminal and move to the root of this project
+2) `cp dev.env .env` 
+3) replace `<path/to/sparkengine/local/repo>` with the absolute path of the cloned `sparkengineweb` project
+4) you can now make changes to the `sparkengineweb` project and rebuild, the changes will be automatically applied here too
+
 ### Prerequisites
 
 * Node ^20
