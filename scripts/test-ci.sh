@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-npx react-scripts test \
+npm run test -- \
     --collectCoverage \
     --coverageDirectory=.coverage \
     --watch=false \
