@@ -41,9 +41,10 @@ export const FormInput = ({ label, onChange, defaultValue, "data-testid": dataTe
             {defaultValue && <img src={defaultValue as string} alt={defaultValue as string}></img>}
             {label && <Label htmlFor={id}>{label}</Label>}
             <Input
+                data-testid={`${dataTestId}.InputField`}
                 type={inputType}
                 id={id}
-                hidden={true}
+                hidden={!!defaultValue}
             />
         </FlexBox>
     }
