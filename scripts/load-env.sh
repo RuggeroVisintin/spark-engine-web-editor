@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
 
-if [ -f  ]; then
+if [ -f .env]; then
     source .env
 fi
