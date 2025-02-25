@@ -12,9 +12,9 @@
     "url": "https://github.com/RuggeroVisintin/spark-engine-web-editor/issues"
   },
   "scripts": {
-    "start": "bash ./scripts/load-env.sh && craco start",
-    "build": "bash ./scripts/load-env.sh && craco build",
-    "test": "bash ./scripts/load-env.sh && craco test",
+    "start": "bash ./scripts/load-env.sh start",
+    "build": "bash ./scripts/load-env.sh build",
+    "test": "bash ./scripts/load-env.sh && test",
     "test:ci": "bash ./scripts/test-ci.sh",
     "eject": "react-scripts eject",
     "license-check": "bash ./scripts/check-licenses.sh",
