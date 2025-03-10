@@ -35,7 +35,7 @@
     "web-vitals": "^4.2.4"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^19.7.1",
+    "@commitlint/config-conventional": "^19.8.0",
     "@craco/craco": "^7.1.0",
     "@types/jest": "^29.5.14",
     "@types/uuid": "^10.0.0",
