@@ -26,7 +26,7 @@ describe('core/assets/image/adapters/FileSystemImageLoader', () => {
                 getFileHandle: jest.fn(() => { throw new Error('File not found') })
             })));
 
-            expect(async () => { await loader.load({ src: 'assets/test.png' }) })
+            await expect(async () => { await loader.load({ src: 'assets/test.png' }) })
                 .rejects
                 .toThrow('File not found');
         })
