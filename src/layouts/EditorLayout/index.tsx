@@ -12,7 +12,9 @@ import { OpenProjectUseCase } from '../../core/project/usecases/OpenProjectUseCa
 import { ProjectRepository } from '../../core/project/ports';
 import { FileSystemProjectRepository } from '../../core/project/adapters';
 import { SaveProjectUseCase } from '../../core/project/usecases';
+import { GetNewEngineUseCase } from '../../core/engine/usecases';
 import { Project } from '../../core/project/models';
+import { OnEngineReadyCBProps } from '../../components/EngineView';
 
 const debuggerEntity = new GameObject({
     name: 'DebuggerEntity',
@@ -39,8 +41,12 @@ export const EditorLayout = () => {
     const engine = useRef<GameEngine>();
 
 
-    const onEngineReady = (newEngine: GameEngine) => {
-        newEngine.renderer.defaultWireframeThickness = 3;
+    const onEngineReady = async ({ context, resolution }: OnEngineReadyCBProps) => {
+        const newEngine = await new GetNewEngineUseCase().execute({
+            width: resolution.width,
+            height: resolution.height,
+            context
+        });
 
         sceneRepo = new FileSystemSceneRepository(newEngine);
         projectRepo = new FileSystemProjectRepository();
@@ -55,7 +61,6 @@ export const EditorLayout = () => {
         newEngine.run();
 
         engine.current = newEngine;
-        // eslint-disable-next-line
     };
 
     const onAddEntity = useCallback((entity: IEntity) => {
