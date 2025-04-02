@@ -39,7 +39,7 @@
     "@craco/craco": "^7.1.0",
     "@types/jest": "^29.5.14",
     "@types/uuid": "^10.0.0",
-    "@types/wicg-file-system-access": "^2023.10.5",
+    "@types/wicg-file-system-access": "^2023.10.6",
     "craco-alias": "^3.0.1",
     "cspell": "^8.18.1",
     "husky": "^9.1.7",
