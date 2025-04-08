@@ -39,7 +39,7 @@ export const FormInput = ({ label, onChange, defaultValue, "data-testid": dataTe
     if (type === 'image') {
         return <FlexBox $direction="row" $fill $fillMethod="flex">
             {defaultValue && <img src={defaultValue as string} alt={defaultValue as string}></img>}
-            {label && <Label htmlFor={id}>{label}</Label>}
+            {label && <Label htmlFor={id} data-testid={`${dataTestId}.InputField`}>{label}</Label>}
             <Input
                 type={inputType}
                 id={id}
