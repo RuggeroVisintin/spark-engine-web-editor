@@ -1,7 +1,8 @@
 import React from "react";
-import { GameObject, Rgb, Vec2 } from "@sparkengine";
+import { GameObject, ImageAsset, Rgb, Vec2 } from "@sparkengine";
 import { EntityPropsPanel } from ".";
 import { fireEvent, render, screen } from "@testing-library/react";
+import { FakeBitmap } from "../../__mocks__/bitmap.mock";
 
 
 describe('EntityPropsPanel', () => {
@@ -189,8 +190,8 @@ describe('EntityPropsPanel', () => {
             })
         });
 
-        describe.skip('.diffuseTexture', () => {
-            it('Should initialize the material.diffuseTexture value with the same value as the selected entity', () => {
+        describe('.diffuseTexture', () => {
+            it('Should prompt to add the image when no texture is loaded', () => {
                 const entity = new GameObject();
                 entity.material.diffuseTexturePath = 'test.png';
 
@@ -198,8 +199,20 @@ describe('EntityPropsPanel', () => {
 
                 const inputField = screen.getByTestId(`EntityPropsPanel.DiffuseTexture.InputField`);
 
-                expect(inputField).toHaveValue(entity.material.diffuseTexturePath);
+                expect(inputField).toHaveTextContent("Add");
             });
+
+            it('Should prompt to replace the image when a texture is loaded', () => {
+                const entity = new GameObject();
+                entity.material.diffuseTexturePath = 'test.png';
+                entity.material.diffuseTexture = new ImageAsset(new FakeBitmap(), 'test.png');
+
+                render(<EntityPropsPanel entity={entity} />);
+
+                const inputField = screen.getByTestId(`EntityPropsPanel.DiffuseTexture.InputField`);
+
+                expect(inputField).toHaveTextContent("Replace");
+            })
         })
     })
 })
