@@ -10,7 +10,7 @@ describe('core/assets/image/adapters/FileSystemImageLoader', () => {
                 new WeakRef(createDirectoryHandleMock())
             );
 
-            const result = await loader.load({ src: 'assets/test.png' });
+            const result = await loader.load('assets/test.png');
 
             expect(result).toBeInstanceOf(ImageAsset);
         });
@@ -26,7 +26,7 @@ describe('core/assets/image/adapters/FileSystemImageLoader', () => {
                 getFileHandle: jest.fn(() => { throw new Error('File not found') })
             })));
 
-            await expect(async () => { await loader.load({ src: 'assets/test.png' }) })
+            await expect(async () => { await loader.load('assets/test.png') })
                 .rejects
                 .toThrow('File not found');
         })

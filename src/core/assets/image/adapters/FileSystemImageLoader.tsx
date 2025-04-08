@@ -1,4 +1,4 @@
-import { FileLocation, ImageAsset, ImageLoader } from "@sparkengine";
+import { ImageAsset, ImageLoader } from "@sparkengine";
 import { WeakRef } from "../../../../common";
 import { FileSystemRepository } from "../../../common";
 
@@ -9,9 +9,9 @@ export class FileSystemImageLoader extends FileSystemRepository implements Image
         super();
     }
 
-    public async load(fileLoaction: FileLocation): Promise<ImageAsset> {
+    public async load(src: string): Promise<ImageAsset> {
         const fileHandle = await this.getTargetFileHandle({
-            path: fileLoaction.src,
+            path: src,
             accessScope: this.projectScope
         });
 
