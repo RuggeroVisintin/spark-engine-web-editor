@@ -1,14 +1,11 @@
 import { GameEngine, Scene } from "@sparkengine";
-import { RefConfigParams, SceneRepository } from "../ports";
-import { WeakRef } from "../../../common";
+import { SceneRepository } from "../ports";
+import { FileSystemRepository, LocationParameters } from "../../common";
 
-interface LocationParameters extends RefConfigParams {
-    accessScope: WeakRef<FileSystemDirectoryHandle>;
-    path: string;
-}
-
-export class FileSystemSceneRepository implements SceneRepository {
-    constructor(private readonly factory: GameEngine) { }
+export class FileSystemSceneRepository extends FileSystemRepository implements SceneRepository {
+    constructor(private readonly factory: GameEngine) {
+        super();
+    }
 
     public async read(location?: LocationParameters): Promise<Scene> {
         let fileHandle;
@@ -50,20 +47,5 @@ export class FileSystemSceneRepository implements SceneRepository {
         const writable = await fileHandle.createWritable();
         await writable.write(JSON.stringify(scene.toJson()));
         await writable.close();
-    }
-
-    private async getTargetFileHandle(location: LocationParameters, shouldCreate = false): Promise<FileSystemFileHandle> {
-        let currentScope = location.accessScope.get() as FileSystemDirectoryHandle;
-
-        const directories = location.path.split('/');
-        const filename = directories.pop();
-
-        for (let i = 0; i < directories.length; i++) {
-            currentScope = await currentScope.getDirectoryHandle(directories[i], { create: false });
-        }
-
-        return await currentScope.getFileHandle(filename ?? '', {
-            create: shouldCreate
-        });
     }
 }
