@@ -1,9 +1,10 @@
-import { GameEngine, GameEngineOptions } from "sparkengineweb";
+import { GameEngine, ImageLoader } from "@sparkengine";
 
 interface NewEngineCommand {
     width: number;
     height: number;
     context: CanvasRenderingContext2D;
+    imageLoader?: ImageLoader;
 }
 
 export class GetNewEngineUseCase {
@@ -16,7 +17,8 @@ export class GetNewEngineUseCase {
             resolution: {
                 width: command.width,
                 height: command.height
-            }
+            },
+            imageLoader: command.imageLoader
         });
 
         newEngine.renderer.defaultWireframeThickness = 3;
