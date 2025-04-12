@@ -108,6 +108,8 @@ export const EditorLayout = () => {
 
         material.diffuseColor = newDiffuseColor ?? material.diffuseColor;
         material.opacity = newOpacity ?? material.opacity;
+
+        // TODO: copy image in asset folder when image is selected
     }
 
     const onEntityFocus = (target: IEntity) => {

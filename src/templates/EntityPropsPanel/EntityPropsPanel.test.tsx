@@ -213,6 +213,10 @@ describe('EntityPropsPanel', () => {
 
                 expect(inputField).toHaveTextContent("Replace");
             })
+
+            it('Should invoke the onMaterialUpdate callback when the diffuse texture input changes', () => {
+
+            });
         })
     })
 })
