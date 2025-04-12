@@ -6,4 +6,4 @@ if [ -f .env ]; then
     source .env
 fi
 
-craco $1 
+craco $@
