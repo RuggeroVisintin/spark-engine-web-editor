@@ -1,5 +1,5 @@
 export class WeakRef<T = unknown> {
-    constructor(private ref?: T) { }
+    constructor(private readonly ref?: T) { }
 
     get(): T | undefined {
         return this.ref;
