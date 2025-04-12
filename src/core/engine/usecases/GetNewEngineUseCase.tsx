@@ -8,8 +8,6 @@ interface NewEngineCommand {
 }
 
 export class GetNewEngineUseCase {
-    constructor() { }
-
     async execute(command: NewEngineCommand): Promise<GameEngine> {
         const newEngine = new GameEngine({
             framerate: 60,

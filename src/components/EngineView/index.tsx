@@ -1,6 +1,5 @@
 import React, { memo, useEffect, useRef } from 'react';
 import { Box } from '../../primitives';
-import * as SparkEngine from '@sparkengine';
 import styled from 'styled-components';
 
 interface EngineViewProps {
