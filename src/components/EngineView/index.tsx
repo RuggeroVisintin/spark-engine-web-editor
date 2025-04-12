@@ -1,11 +1,15 @@
 import React, { memo, useEffect, useRef } from 'react';
 import { Box } from '../../primitives';
-import * as SparkEngine from '@sparkengine';
 import styled from 'styled-components';
 
 interface EngineViewProps {
     onEngineReady: Function
 }
+
+export interface OnEngineReadyCBProps {
+    context: CanvasRenderingContext2D;
+    resolution: { width: number, height: number };
+};
 
 const RenderingCanvas = styled.canvas({
     width: '100%',
@@ -21,15 +25,13 @@ export const EngineView = memo(({ onEngineReady }: EngineViewProps) => {
 
     useEffect(() => {
         if (!!canvasRef.current && !isEngineInit) {
-            const engine = new SparkEngine.GameEngine({
-                framerate: 60,
-                context: canvasRef.current.getContext('2d')!,
+            onEngineReady({
+                context: canvasRef.current.getContext('2d') as CanvasRenderingContext2D,
                 resolution: { width, height }
-            });
-
-            onEngineReady(engine);
+            } as OnEngineReadyCBProps);
             isEngineInit = true;
         }
+
     }, [canvasRef, onEngineReady]);
 
     return (

@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { GameEngine, GameObject, IEntity, MaterialComponent, Rgb, Scene, TransformComponent, Vec2 } from '@sparkengine';
+import { GameEngine, GameObject, IEntity, ImageLoader, MaterialComponent, Rgb, Scene, TransformComponent, Vec2 } from '@sparkengine';
 import { EngineView } from '../../components';
 import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
@@ -12,7 +12,11 @@ import { OpenProjectUseCase } from '../../core/project/usecases/OpenProjectUseCa
 import { ProjectRepository } from '../../core/project/ports';
 import { FileSystemProjectRepository } from '../../core/project/adapters';
 import { SaveProjectUseCase } from '../../core/project/usecases';
+import { GetNewEngineUseCase } from '../../core/engine/usecases';
 import { Project } from '../../core/project/models';
+import { OnEngineReadyCBProps } from '../../components/EngineView';
+import { FileSystemImageLoader } from '../../core/assets/image/adapters';
+import { WeakRef } from '../../common';
 
 const debuggerEntity = new GameObject({
     name: 'DebuggerEntity',
@@ -29,18 +33,26 @@ const debuggerEntity = new GameObject({
 
 let sceneRepo: SceneRepository;
 let projectRepo: ProjectRepository;
+let imageLoader: ImageLoader;
+
+const project = new Project({ name: 'my-project', scenes: [] });
+imageLoader = new FileSystemImageLoader(project.scopeRef as WeakRef<FileSystemDirectoryHandle>);
 
 export const EditorLayout = () => {
-    const [currentProject, setCurrentProject] = useState<Project>(new Project({ name: 'my-project', scenes: [] }));
+    const [currentProject, setCurrentProject] = useState<Project>(project);
     const [scene, setScene] = useState<Scene>();
     const [debuggerScene, setDebuggerScene] = useState<Scene>();
     const [entities, setEntities] = useState<IEntity[]>([]);
     const [currentEntity, setCurrentEntity] = useState<IEntity | undefined>(undefined);
     const engine = useRef<GameEngine>();
 
-
-    const onEngineReady = (newEngine: GameEngine) => {
-        newEngine.renderer.defaultWireframeThickness = 3;
+    const onEngineReady = async ({ context, resolution }: OnEngineReadyCBProps) => {
+        const newEngine = await new GetNewEngineUseCase().execute({
+            width: resolution.width,
+            height: resolution.height,
+            imageLoader,
+            context
+        });
 
         sceneRepo = new FileSystemSceneRepository(newEngine);
         projectRepo = new FileSystemProjectRepository();
@@ -55,7 +67,6 @@ export const EditorLayout = () => {
         newEngine.run();
 
         engine.current = newEngine;
-        // eslint-disable-next-line
     };
 
     const onAddEntity = useCallback((entity: IEntity) => {
@@ -109,6 +120,8 @@ export const EditorLayout = () => {
 
         const newProject = await new OpenProjectUseCase(projectRepo, sceneRepo)
             .execute();
+
+        (imageLoader as FileSystemImageLoader).changeScope(newProject.scopeRef as WeakRef<FileSystemDirectoryHandle>);
 
         const newScene = newProject.scenes[0];
 
