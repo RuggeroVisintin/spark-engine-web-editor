@@ -18,7 +18,7 @@ export abstract class FileSystemRepository {
         const filename = directories.pop();
 
         for (let i = 0; i < directories.length; i++) {
-            currentScope = await currentScope.getDirectoryHandle(directories[i], { create: false });
+            currentScope = await currentScope.getDirectoryHandle(directories[i], { create: shouldCreate });
         }
 
         return await currentScope.getFileHandle(filename ?? '', {

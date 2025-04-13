@@ -1,5 +1,5 @@
 import { ImageAsset } from "@sparkengine";
-import { WeakRef } from "../../../../common";
+import { bitmapToBlob, WeakRef } from "../../../../common";
 import { FileSystemImageRepository } from "./FileSystemImageRepository";
 import { createDirectoryHandleMock, FileSystemWritableFileStreamMock, setMockedFile } from "../../../../__mocks__/fs-api.mock";
 import { FakeBitmap } from "../../../../__mocks__/bitmap.mock";
@@ -41,11 +41,11 @@ describe('core/assets/image/adapters/FileSystemImageLoader', () => {
         it('Shoudld save a given ImageAsset to the given path within the project scope', async () => {
             const asset = new ImageAsset(new FakeBitmap(), 'png');
 
-            await fileSystemImageRepository.save(asset, 'assets/test.png');
+            await fileSystemImageRepository.save(asset, { path: 'assets/test.png', accessScope: new WeakRef(createDirectoryHandleMock()) });
 
             expect(FileSystemWritableFileStreamMock.write).toHaveBeenCalledWith({
                 type: 'write',
-                data: new Blob([asset.media.toString()], { type: 'image/png' })
+                data: bitmapToBlob(asset.media),
             });
         });
 

@@ -1,24 +1,25 @@
 import { ImageAsset, ImageLoader } from "@sparkengine";
-import { WeakRef } from "../../../../common";
-import { FileSystemRepository } from "../../../common";
+import { bitmapToBlob, WeakRef } from "../../../../common";
+import { FileSystemRepository, LocationParameters } from "../../../common";
+import { ImageRepository } from "../ports";
 
-export class FileSystemImageRepository extends FileSystemRepository implements ImageLoader {
+export class FileSystemImageRepository extends FileSystemRepository implements ImageLoader, ImageRepository {
     constructor(
         private projectScope?: WeakRef<FileSystemDirectoryHandle>
     ) {
         super();
     }
 
-    public async save(ImageAsset: ImageAsset, src: string): Promise<void> {
+    public async save(image: ImageAsset, location: LocationParameters): Promise<void> {
         const fileHandle = await this.getTargetFileHandle({
-            path: src,
-            accessScope: this.projectScope!
+            path: location.path,
+            accessScope: location.accessScope
         }, true);
 
         const writable = await fileHandle.createWritable();
         await writable.write({
             type: 'write',
-            data: new Blob([ImageAsset.media.toString()], { type: `image/${ImageAsset.type}` })
+            data: await bitmapToBlob(image.media),
         });
         await writable.close();
     }

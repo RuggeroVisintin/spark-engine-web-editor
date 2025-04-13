@@ -17,6 +17,7 @@ import { Project } from '../../core/project/models';
 import { OnEngineReadyCBProps } from '../../components/EngineView';
 import { FileSystemImageRepository } from '../../core/assets/image/adapters';
 import { WeakRef } from '../../common';
+import { ImageRepository } from '../../core/assets';
 
 const debuggerEntity = new GameObject({
     name: 'DebuggerEntity',
@@ -33,10 +34,11 @@ const debuggerEntity = new GameObject({
 
 let sceneRepo: SceneRepository;
 let projectRepo: ProjectRepository;
+let imageRepository: ImageRepository;
 let imageLoader: ImageLoader;
 
 const project = new Project({ name: 'my-project', scenes: [] });
-imageLoader = new FileSystemImageRepository(project.scopeRef as WeakRef<FileSystemDirectoryHandle>);
+imageLoader = imageRepository = new FileSystemImageRepository(project.scopeRef as WeakRef<FileSystemDirectoryHandle>);
 
 export const EditorLayout = () => {
     const [currentProject, setCurrentProject] = useState<Project>(project);
@@ -108,9 +110,7 @@ export const EditorLayout = () => {
 
         material.diffuseColor = newDiffuseColor ?? material.diffuseColor;
         material.opacity = newOpacity ?? material.opacity;
-
-        // TODO: copy image in asset folder when image is selected
-        console.log('newDiffuseTexture', newDiffuseTexture);
+        material.diffuseTexture = newDiffuseTexture ?? material.diffuseTexture;
     }
 
     const onEntityFocus = (target: IEntity) => {
@@ -143,7 +143,7 @@ export const EditorLayout = () => {
     const onProjectFileSave = async () => {
         if (!currentProject) return;
 
-        setCurrentProject(await new SaveProjectUseCase(projectRepo, sceneRepo).execute(currentProject));
+        setCurrentProject(await new SaveProjectUseCase(projectRepo, sceneRepo, imageRepository).execute(currentProject));
     };
 
     return (

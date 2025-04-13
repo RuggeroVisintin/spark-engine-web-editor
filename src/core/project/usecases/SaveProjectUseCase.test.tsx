@@ -1,9 +1,10 @@
+import { FakeBitmap } from "../../../__mocks__/bitmap.mock";
 import { WeakRef } from "../../../common";
 import { SceneRepository } from "../../scene";
 import { Project } from "../models";
 import { ProjectRepository } from "../ports";
 import { SaveProjectUseCase } from "./SaveProjectUseCase";
-import { GameEngine } from "@sparkengine";
+import { BaseEntity, GameEngine, GameObject, ImageAsset } from "@sparkengine";
 
 const gameEngine = new GameEngine({
     framerate: 60,
@@ -22,17 +23,30 @@ class MockProjectReposioty implements ProjectRepository {
 };
 
 class MockSceneRepository implements SceneRepository {
-    read = jest.fn().mockResolvedValue(gameEngine.createScene());
+    read = jest.fn(() => {
+        return Promise.resolve(gameEngine.createScene())
+    });
+    save = jest.fn();
+}
+
+class MockImageRepository {
+    read = jest.fn();
     save = jest.fn();
 }
 
 describe('core/project/usecases/SaveProjectuseCase', () => {
-    const projectRepository = new MockProjectReposioty();
-    const sceneRepository = new MockSceneRepository();
+    let projectRepository: MockProjectReposioty;
+    let sceneRepository: MockSceneRepository;
+    let imageRepository: MockImageRepository;
+
     let saveProjectUseCase: SaveProjectUseCase;
 
     beforeEach(() => {
-        saveProjectUseCase = new SaveProjectUseCase(projectRepository, sceneRepository);
+        projectRepository = new MockProjectReposioty();
+        sceneRepository = new MockSceneRepository();
+        imageRepository = new MockImageRepository();
+
+        saveProjectUseCase = new SaveProjectUseCase(projectRepository, sceneRepository, imageRepository);
     });
 
     it('Should save the project in the given filesystem directory', async () => {
@@ -77,5 +91,22 @@ describe('core/project/usecases/SaveProjectuseCase', () => {
 
         const newProject = await saveProjectUseCase.execute(project) as Project;
         expect(newProject.scopeRef.get()).toBe('path/to/project');
+    });
+
+    it('Should save the project\'s assets in the "assets" directory', async () => {
+        const project = new Project({
+            name: 'Test Project',
+            scenes: []
+        }, new WeakRef<string>('path/to/project'))
+
+        const scene = gameEngine.createScene();
+        const gameObject = new GameObject({});
+        gameObject.material.diffuseTexture = new ImageAsset(new FakeBitmap(), 'png');
+        scene.registerEntity(gameObject);
+        project.addScene(scene);
+
+        await saveProjectUseCase.execute(project);
+
+        expect(imageRepository.save).toHaveBeenCalledWith(gameObject.material.diffuseTexture, { path: 'assets/test.png', accessScope: project.scopeRef });
     })
 })
