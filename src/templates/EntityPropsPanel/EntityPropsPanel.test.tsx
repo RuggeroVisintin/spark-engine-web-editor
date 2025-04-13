@@ -3,6 +3,7 @@ import { GameObject, ImageAsset, Rgb, Vec2 } from "@sparkengine";
 import { EntityPropsPanel } from ".";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { FakeBitmap } from "../../__mocks__/bitmap.mock";
+import { setMockedFile } from "../../__mocks__/fs-api.mock";
 
 
 describe('EntityPropsPanel', () => {
@@ -214,8 +215,23 @@ describe('EntityPropsPanel', () => {
                 expect(inputField).toHaveTextContent("Replace");
             })
 
-            it('Should invoke the onMaterialUpdate callback when the diffuse texture input changes', () => {
+            it('Should invoke the onMaterialUpdate callback when the diffuse texture input changes', async () => {
+                const entity = new GameObject();
+                entity.material.diffuseTexturePath = 'test.png';
 
+                setMockedFile('assets/test.png');
+
+                const promise = new Promise((resolve) => {
+                    render(<EntityPropsPanel entity={entity} onMaterialUpdate={({ newDiffuseTexture }: { newDiffuseTexture: ImageAsset }) => {
+                        expect(newDiffuseTexture).toBeInstanceOf(ImageAsset);
+                        resolve(null);
+                    }} />);
+
+                    const inputField = screen.getByTestId(`EntityPropsPanel.DiffuseTexture.InputField`);
+                    inputField.click();
+                })
+
+                await promise;
             });
         })
     })

@@ -1,5 +1,5 @@
 import React from "react";
-import { MaterialComponent, Rgb } from "@sparkengine";
+import { ImageAsset, MaterialComponent, Rgb } from "@sparkengine";
 import { FormInput } from "../../../../components";
 import { InputRow } from "../../../../primitives/InputRow";
 import { Box } from "../../../../primitives";
@@ -51,7 +51,7 @@ export const MaterialPropsGroup = ({ material, parentUuid, onMaterialUpdate }: M
             data-testid="EntityPropsPanel.DiffuseTexture"
             type="image"
             label={material.diffuseTexture ? 'Replace' : 'Add'}
-            onChange={() => { throw new Error('Not implemented') }}
+            onChange={(newDiffuseTexture: ImageAsset) => { onMaterialUpdate?.({ newDiffuseTexture }) }}
         ></FormInput>
     ]
 

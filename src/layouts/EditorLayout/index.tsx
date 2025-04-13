@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { GameEngine, GameObject, IEntity, ImageLoader, MaterialComponent, Rgb, Scene, TransformComponent, Vec2 } from '@sparkengine';
+import { GameEngine, GameObject, IEntity, ImageAsset, ImageLoader, MaterialComponent, Rgb, Scene, TransformComponent, Vec2 } from '@sparkengine';
 import { EngineView } from '../../components';
 import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
@@ -101,7 +101,7 @@ export const EditorLayout = () => {
         new SetDebuggerEntityUseCase(debuggerScene).execute(currentEntity!, debuggerEntity);
     }
 
-    const onMaterialUpdate = ({ newDiffuseColor, newOpacity }: { newDiffuseColor: Rgb, newOpacity: number }) => {
+    const onMaterialUpdate = ({ newDiffuseColor, newOpacity, newDiffuseTexture }: { newDiffuseColor: Rgb, newOpacity: number, newDiffuseTexture: ImageAsset }) => {
         const material = currentEntity?.getComponent<MaterialComponent>('MaterialComponent');
 
         if (!material) return;
@@ -110,6 +110,7 @@ export const EditorLayout = () => {
         material.opacity = newOpacity ?? material.opacity;
 
         // TODO: copy image in asset folder when image is selected
+        console.log('newDiffuseTexture', newDiffuseTexture);
     }
 
     const onEntityFocus = (target: IEntity) => {
