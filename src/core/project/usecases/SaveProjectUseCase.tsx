@@ -1,4 +1,4 @@
-import { MaterialComponent, typeOf } from "sparkengineweb";
+import { MaterialComponent } from "sparkengineweb";
 import { ImageRepository } from "../../assets";
 import { SceneRepository } from "../../scene";
 import { Project } from "../models";
