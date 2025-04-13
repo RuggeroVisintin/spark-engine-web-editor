@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { BackgroundColor, FlexBox } from "../../primitives";
 import { WithDataTestId } from "../../common";
 import { v4 } from "uuid";
-import { FileSystemImageLoader } from "../../core/assets/image/adapters";
+import { FileSystemImageRepository } from "../../core/assets/image/adapters";
 import { ImageAsset } from "sparkengineweb";
 
 const Input = styled.input`
@@ -30,7 +30,7 @@ const typesMap: Record<string, string> = {
     'image': 'file'
 }
 
-const imageLoader = new FileSystemImageLoader();
+const imageLoader = new FileSystemImageRepository();
 
 export const FormInput = ({ label, onChange, defaultValue, "data-testid": dataTestId, type }: FormInputProps = {}) => {
     const id = v4();

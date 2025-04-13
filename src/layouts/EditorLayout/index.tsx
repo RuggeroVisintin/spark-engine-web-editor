@@ -15,7 +15,7 @@ import { SaveProjectUseCase } from '../../core/project/usecases';
 import { GetNewEngineUseCase } from '../../core/engine/usecases';
 import { Project } from '../../core/project/models';
 import { OnEngineReadyCBProps } from '../../components/EngineView';
-import { FileSystemImageLoader } from '../../core/assets/image/adapters';
+import { FileSystemImageRepository } from '../../core/assets/image/adapters';
 import { WeakRef } from '../../common';
 
 const debuggerEntity = new GameObject({
@@ -36,7 +36,7 @@ let projectRepo: ProjectRepository;
 let imageLoader: ImageLoader;
 
 const project = new Project({ name: 'my-project', scenes: [] });
-imageLoader = new FileSystemImageLoader(project.scopeRef as WeakRef<FileSystemDirectoryHandle>);
+imageLoader = new FileSystemImageRepository(project.scopeRef as WeakRef<FileSystemDirectoryHandle>);
 
 export const EditorLayout = () => {
     const [currentProject, setCurrentProject] = useState<Project>(project);
@@ -124,7 +124,7 @@ export const EditorLayout = () => {
         const newProject = await new OpenProjectUseCase(projectRepo, sceneRepo)
             .execute();
 
-        (imageLoader as FileSystemImageLoader).changeScope(newProject.scopeRef as WeakRef<FileSystemDirectoryHandle>);
+        (imageLoader as FileSystemImageRepository).changeScope(newProject.scopeRef as WeakRef<FileSystemDirectoryHandle>);
 
         const newScene = newProject.scenes[0];
 
