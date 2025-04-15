@@ -93,7 +93,7 @@ describe('core/project/usecases/SaveProjectuseCase', () => {
         expect(newProject.scopeRef.get()).toBe('path/to/project');
     });
 
-    it('Should save the project\'s assets in the "assets" directory', async () => {
+    it('Should save the project\'s assets in the "assets" directory when the project already exists', async () => {
         const project = new Project({
             name: 'Test Project',
             scenes: []
@@ -101,12 +101,43 @@ describe('core/project/usecases/SaveProjectuseCase', () => {
 
         const scene = gameEngine.createScene();
         const gameObject = new GameObject({});
+
+        gameObject.material.diffuseTexturePath = 'assets/test-1.png';
         gameObject.material.diffuseTexture = new ImageAsset(new FakeBitmap(), 'png');
+
         scene.registerEntity(gameObject);
         project.addScene(scene);
 
         await saveProjectUseCase.execute(project);
 
-        expect(imageRepository.save).toHaveBeenCalledWith(gameObject.material.diffuseTexture, { path: 'assets/test.png', accessScope: project.scopeRef });
+        expect(imageRepository.save).toHaveBeenCalledWith(gameObject.material.diffuseTexture, { path: 'assets/test-1.png', accessScope: project.scopeRef });
+    });
+
+    it('Should save the project\'s assets in the "assets" directory when the project was not loaded from a folder yet', async () => {
+        const newProjectRef = new WeakRef<string>('path/to/project');
+
+        projectRepository.save.mockImplementationOnce((project: Project) => {
+            return new Promise<Project>((resolve) => {
+                resolve(Project.fromProject(project, newProjectRef));
+            });
+        });
+
+        const project = new Project({
+            name: 'Test Project',
+            scenes: []
+        }, new WeakRef())
+
+        const scene = gameEngine.createScene();
+        const gameObject = new GameObject({});
+
+        gameObject.material.diffuseTexturePath = 'assets/test-1.png';
+        gameObject.material.diffuseTexture = new ImageAsset(new FakeBitmap(), 'png');
+
+        scene.registerEntity(gameObject);
+        project.addScene(scene);
+
+        await saveProjectUseCase.execute(project);
+
+        expect(imageRepository.save).toHaveBeenCalledWith(gameObject.material.diffuseTexture, { path: 'assets/test-1.png', accessScope: newProjectRef });
     })
 })

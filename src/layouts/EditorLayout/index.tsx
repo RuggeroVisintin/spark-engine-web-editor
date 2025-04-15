@@ -18,6 +18,7 @@ import { OnEngineReadyCBProps } from '../../components/EngineView';
 import { FileSystemImageRepository } from '../../core/assets/image/adapters';
 import { WeakRef } from '../../common';
 import { ImageRepository } from '../../core/assets';
+import { v4 } from 'uuid';
 
 const debuggerEntity = new GameObject({
     name: 'DebuggerEntity',
@@ -110,7 +111,12 @@ export const EditorLayout = () => {
 
         material.diffuseColor = newDiffuseColor ?? material.diffuseColor;
         material.opacity = newOpacity ?? material.opacity;
-        material.diffuseTexture = newDiffuseTexture ?? material.diffuseTexture;
+
+
+        if (newDiffuseTexture) {
+            material.diffuseTexturePath = `assets/${v4()}.png`;
+            material.diffuseTexture = newDiffuseTexture;
+        }
     }
 
     const onEntityFocus = (target: IEntity) => {

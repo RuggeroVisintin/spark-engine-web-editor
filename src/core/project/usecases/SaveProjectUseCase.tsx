@@ -18,7 +18,8 @@ export class SaveProjectUseCase {
         if (project.scopeRef.isEmpty()) {
             const newProject = await this.projectRepository.save(project);
             await Promise.all([
-                newProject.saveScenes(this.sceneRepository)
+                newProject.saveScenes(this.sceneRepository),
+                this.copyAssets(newProject)
             ]);
 
             return newProject;
@@ -38,16 +39,15 @@ export class SaveProjectUseCase {
             await Promise.all(scene.entities.map(async (entity) => {
                 const material = entity.getComponent<MaterialComponent>('MaterialComponent')!;
 
-                if (!material || !material.diffuseTexture) {
+                if (!material || !material.diffuseTexture || !material.diffuseTexturePath) {
                     return;
                 }
 
                 await this.imageRepository.save(material.diffuseTexture, {
-                    path: 'assets/test.png',
+                    path: material.diffuseTexturePath,
                     accessScope: project.scopeRef as WeakRef<FileSystemDirectoryHandle>
                 });
             }))
         }))
-        // TODO -- copy all image assets in the asset folder
     }
 }
