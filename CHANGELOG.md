@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.7](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.6...sparkenginewebeditor-v0.0.7) (2025-04-15)
+
+
+### Features
+
+* **editor:** load diffuse textures from file system ([#112](https://github.com/RuggeroVisintin/spark-engine-web-editor/issues/112)) ([26d2807](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/26d2807e180dc3072eadc8a50c69df4b1ae00ac5))
+* **editor:** save image assets on project save ([#122](https://github.com/RuggeroVisintin/spark-engine-web-editor/issues/122)) ([2887f16](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/2887f16a5a2198cf402b14929e29a803f2531b4b))
+
 ## [0.0.6](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.5...sparkenginewebeditor-v0.0.6) (2025-02-03)
 
 
