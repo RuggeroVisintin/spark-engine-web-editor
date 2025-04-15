@@ -1,1 +1,1 @@
-export * from './FileSystemImageLoader';
+export * from './FileSystemImageRepository';

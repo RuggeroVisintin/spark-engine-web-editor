@@ -1,7 +1,10 @@
-import React, { useId } from "react";
+import React from "react";
 import styled from "styled-components"
 import { BackgroundColor, FlexBox } from "../../primitives";
 import { WithDataTestId } from "../../common";
+import { v4 } from "uuid";
+import { FileSystemImageRepository } from "../../core/assets/image/adapters";
+import { ImageAsset } from "sparkengineweb";
 
 const Input = styled.input`
     border: 1px solid ${BackgroundColor.Secondary};
@@ -27,9 +30,11 @@ const typesMap: Record<string, string> = {
     'image': 'file'
 }
 
+const imageLoader = new FileSystemImageRepository();
+
 export const FormInput = ({ label, onChange, defaultValue, "data-testid": dataTestId, type }: FormInputProps = {}) => {
-    const id = useId();
-    const inputType = type ? typesMap[type] : typesMap[typeof defaultValue] ?? 'text';
+    const id = v4();
+    const inputType = type ? typesMap[type] : typesMap[typeof defaultValue] ?? typesMap;
 
     const onValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = parseInt(event.target.value);
@@ -39,12 +44,14 @@ export const FormInput = ({ label, onChange, defaultValue, "data-testid": dataTe
     if (type === 'image') {
         return <FlexBox $direction="row" $fill $fillMethod="flex">
             {defaultValue && <img src={defaultValue as string} alt={defaultValue as string}></img>}
-            {label && <Label htmlFor={id} data-testid={`${dataTestId}.InputField`}>{label}</Label>}
-            <Input
-                type={inputType}
-                id={id}
-                hidden={true}
-            />
+            {
+                label && <button data-testid={`${dataTestId}.InputField`} onClick={() => {
+                    imageLoader.load().then((image: ImageAsset) => {
+                        onChange?.(image);
+                    });
+                }}>{label}</button>
+            }
+
         </FlexBox>
     }
 

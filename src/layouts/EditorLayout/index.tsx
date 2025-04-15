@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { GameEngine, GameObject, IEntity, ImageLoader, MaterialComponent, Rgb, Scene, TransformComponent, Vec2 } from '@sparkengine';
+import { GameEngine, GameObject, IEntity, ImageAsset, ImageLoader, MaterialComponent, Rgb, Scene, TransformComponent, Vec2 } from '@sparkengine';
 import { EngineView } from '../../components';
 import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
@@ -15,8 +15,10 @@ import { SaveProjectUseCase } from '../../core/project/usecases';
 import { GetNewEngineUseCase } from '../../core/engine/usecases';
 import { Project } from '../../core/project/models';
 import { OnEngineReadyCBProps } from '../../components/EngineView';
-import { FileSystemImageLoader } from '../../core/assets/image/adapters';
+import { FileSystemImageRepository } from '../../core/assets/image/adapters';
 import { WeakRef } from '../../common';
+import { ImageRepository } from '../../core/assets';
+import { v4 } from 'uuid';
 
 const debuggerEntity = new GameObject({
     name: 'DebuggerEntity',
@@ -33,10 +35,11 @@ const debuggerEntity = new GameObject({
 
 let sceneRepo: SceneRepository;
 let projectRepo: ProjectRepository;
+let imageRepository: ImageRepository;
 let imageLoader: ImageLoader;
 
 const project = new Project({ name: 'my-project', scenes: [] });
-imageLoader = new FileSystemImageLoader(project.scopeRef as WeakRef<FileSystemDirectoryHandle>);
+imageLoader = imageRepository = new FileSystemImageRepository(project.scopeRef as WeakRef<FileSystemDirectoryHandle>);
 
 export const EditorLayout = () => {
     const [currentProject, setCurrentProject] = useState<Project>(project);
@@ -101,13 +104,19 @@ export const EditorLayout = () => {
         new SetDebuggerEntityUseCase(debuggerScene).execute(currentEntity!, debuggerEntity);
     }
 
-    const onMaterialUpdate = ({ newDiffuseColor, newOpacity }: { newDiffuseColor: Rgb, newOpacity: number }) => {
+    const onMaterialUpdate = ({ newDiffuseColor, newOpacity, newDiffuseTexture }: { newDiffuseColor: Rgb, newOpacity: number, newDiffuseTexture: ImageAsset }) => {
         const material = currentEntity?.getComponent<MaterialComponent>('MaterialComponent');
 
         if (!material) return;
 
         material.diffuseColor = newDiffuseColor ?? material.diffuseColor;
         material.opacity = newOpacity ?? material.opacity;
+
+
+        if (newDiffuseTexture) {
+            material.diffuseTexturePath = `assets/${v4()}.png`;
+            material.diffuseTexture = newDiffuseTexture;
+        }
     }
 
     const onEntityFocus = (target: IEntity) => {
@@ -121,7 +130,7 @@ export const EditorLayout = () => {
         const newProject = await new OpenProjectUseCase(projectRepo, sceneRepo)
             .execute();
 
-        (imageLoader as FileSystemImageLoader).changeScope(newProject.scopeRef as WeakRef<FileSystemDirectoryHandle>);
+        (imageLoader as FileSystemImageRepository).changeScope(newProject.scopeRef as WeakRef<FileSystemDirectoryHandle>);
 
         const newScene = newProject.scenes[0];
 
@@ -140,7 +149,7 @@ export const EditorLayout = () => {
     const onProjectFileSave = async () => {
         if (!currentProject) return;
 
-        setCurrentProject(await new SaveProjectUseCase(projectRepo, sceneRepo).execute(currentProject));
+        setCurrentProject(await new SaveProjectUseCase(projectRepo, sceneRepo, imageRepository).execute(currentProject));
     };
 
     return (
