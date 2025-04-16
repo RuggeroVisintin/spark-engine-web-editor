@@ -2,7 +2,7 @@ import React from "react";
 import { ImageAsset, MaterialComponent, Rgb } from "@sparkengine";
 import { FormInput } from "../../../../components";
 import { InputRow } from "../../../../primitives/InputRow";
-import { Box } from "../../../../primitives";
+import { Box, Button } from "../../../../primitives";
 import { v4 } from 'uuid'
 
 export interface MaterialPropsGroupProps {
@@ -58,8 +58,11 @@ export const MaterialPropsGroup = ({ material, parentUuid, onMaterialUpdate }: M
     return (
         <>
             <InputRow $direction="row" $fill={false} $wrap={true} $fillMethod="flex">
-                <Box>Diffuse</Box>
+                <Box>Color</Box>
                 {materialDiffuseColorGroup}
+                <Button onClick={() => onMaterialUpdate?.({ removeDiffuseColor: true })} data-testid="EntityPropsPanel.RemoveDiffuseColor">
+                    X
+                </Button>
             </InputRow>
             <InputRow $direction="row" $fill={false} $wrap={true} $fillMethod="flex">
                 <Box>Opacity</Box>

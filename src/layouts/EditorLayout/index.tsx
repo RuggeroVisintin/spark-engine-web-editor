@@ -104,14 +104,15 @@ export const EditorLayout = () => {
         new SetDebuggerEntityUseCase(debuggerScene).execute(currentEntity!, debuggerEntity);
     }
 
-    const onMaterialUpdate = ({ newDiffuseColor, newOpacity, newDiffuseTexture }: { newDiffuseColor: Rgb, newOpacity: number, newDiffuseTexture: ImageAsset }) => {
+    const onMaterialUpdate = ({ newDiffuseColor, newOpacity, newDiffuseTexture, removeDiffuseColor }: { newDiffuseColor: Rgb, newOpacity: number, newDiffuseTexture: ImageAsset, removeDiffuseColor: boolean }) => {
         const material = currentEntity?.getComponent<MaterialComponent>('MaterialComponent');
 
         if (!material) return;
 
-        material.diffuseColor = newDiffuseColor ?? material.diffuseColor;
-        material.opacity = newOpacity ?? material.opacity;
+        if (newDiffuseColor) material.diffuseColor = newDiffuseColor;
+        if (newOpacity) material.opacity = newOpacity;
 
+        if (removeDiffuseColor) material.removeDiffuseColor();
 
         if (newDiffuseTexture) {
             material.diffuseTexturePath = `assets/${v4()}.png`;
