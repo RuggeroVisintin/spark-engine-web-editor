@@ -147,6 +147,20 @@ describe('EntityPropsPanel', () => {
 
                 expect(cb).toHaveBeenCalledWith({ newDiffuseColor: result });
             })
+
+            it('Should invoke the onMaterialUpdate callback when the remove diffuse color button is clicked', () => {
+                const entity = new GameObject();
+                entity.material.diffuseColor = new Rgb(123, 233, 111);
+
+                const cb = jest.fn();
+
+                render(<EntityPropsPanel entity={entity} onMaterialUpdate={cb} />);
+
+                const button = screen.getByTestId(`EntityPropsPanel.RemoveDiffuseColor`);
+                fireEvent.click(button);
+
+                expect(cb).toHaveBeenCalledWith({ removeDiffuseColor: true });
+            })
         });
 
         describe('.opacity', () => {
