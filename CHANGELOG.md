@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.8](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.7...sparkenginewebeditor-v0.0.8) (2025-04-16)
+
+
+### Features
+
+* **editor:** add diffuse color remove button ([#128](https://github.com/RuggeroVisintin/spark-engine-web-editor/issues/128)) ([6362912](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/63629120598cab57bc55462719e982386b6935f6))
+
 ## [0.0.7](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.6...sparkenginewebeditor-v0.0.7) (2025-04-15)
 
 
