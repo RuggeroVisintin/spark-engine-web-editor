@@ -5,12 +5,6 @@
 Spark Engine Web Editor is a browser based editor for the SparkEngine game engine.
 It leverages web technology to ensure high compatibility with many devices and enable web based frution without requiring any installation.
 
-## Requirements
-
-* jq
-* node 20^
-* npm 10^
-
 ## Getting Started
 
 1) Clone the project
@@ -29,6 +23,7 @@ To enhance your experience, you can link the project directly against the local 
 
 ### Prerequisites
 
+* jq
 * Node ^20
 * Npm ^10
 
