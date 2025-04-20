@@ -27,7 +27,8 @@ interface FormInputProps extends WithDataTestId {
 const typesMap: Record<string, string> = {
     'number': 'number',
     'string': 'text',
-    'image': 'file'
+    'image': 'file',
+    'color': 'color',
 }
 
 const imageLoader = new FileSystemImageRepository();
@@ -37,8 +38,7 @@ export const FormInput = ({ label, onChange, defaultValue, "data-testid": dataTe
     const inputType = type ? typesMap[type] : typesMap[typeof defaultValue] ?? typesMap;
 
     const onValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = parseInt(event.target.value);
-        onChange?.(newValue);
+        onChange?.(type === 'number' ? parseInt(event.target.value) : event.target.value);
     }
 
     if (type === 'image') {

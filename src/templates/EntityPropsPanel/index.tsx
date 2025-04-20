@@ -22,6 +22,7 @@ const TransformPropsGroup = ({ transform, parentUuid, onUpdateSize, onUpdatePosi
     const transformPositionGroup = [
         <FormInput
             label="X"
+            type="number"
             key={`${parentUuid}${useId()}`}
             defaultValue={transform.position.x}
             onChange={(newValue: number) => onUpdatePosition?.({ newPosition: new Vec2(newValue, transform.position.y) })}
@@ -29,6 +30,7 @@ const TransformPropsGroup = ({ transform, parentUuid, onUpdateSize, onUpdatePosi
         ></FormInput>,
         <FormInput
             label="Y"
+            type="number"
             key={`${parentUuid}${useId()}`}
             defaultValue={transform.position.y}
             onChange={(newValue: number) => onUpdatePosition?.({ newPosition: new Vec2(transform.position.x, newValue) })}
@@ -40,6 +42,7 @@ const TransformPropsGroup = ({ transform, parentUuid, onUpdateSize, onUpdatePosi
     const transformSizeInputs = [
         <FormInput
             label="W"
+            type="number"
             key={`${parentUuid}${useId()}`}
             defaultValue={transform.size.width}
             onChange={(newValue: number) => onUpdateSize?.({ newSize: { width: newValue, height: transform.size.height } })}
@@ -47,6 +50,7 @@ const TransformPropsGroup = ({ transform, parentUuid, onUpdateSize, onUpdatePosi
         ></FormInput>,
         <FormInput
             label="H"
+            type="number"
             key={`${parentUuid}${useId()}`}
             defaultValue={transform.size.height}
             onChange={(newValue: number) => onUpdateSize?.({ newSize: { width: transform.size.width, height: newValue } })}

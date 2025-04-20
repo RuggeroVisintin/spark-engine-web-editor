@@ -13,26 +13,14 @@ export interface MaterialPropsGroupProps {
 
 export const MaterialPropsGroup = ({ material, parentUuid, onMaterialUpdate }: MaterialPropsGroupProps) => {
     const materialDiffuseColorGroup = [
-        <FormInput
-            label="R"
+        <FormInput type="color"
             key={`${parentUuid}${v4()}`}
-            onChange={(newValue: number) => onMaterialUpdate?.({ newDiffuseColor: new Rgb(newValue, material.diffuseColor?.g, material.diffuseColor?.b) })}
-            defaultValue={material.diffuseColor?.r}
-            data-testid="EntityPropsPanel.DiffuseColor.r"
-        ></FormInput>,
-        <FormInput
-            label="G"
-            key={`${parentUuid}${v4()}`}
-            onChange={(newValue: number) => onMaterialUpdate?.({ newDiffuseColor: new Rgb(material.diffuseColor?.r, newValue, material.diffuseColor?.b) })}
-            defaultValue={material.diffuseColor?.g}
-            data-testid="EntityPropsPanel.DiffuseColor.g"
-        ></FormInput>,
-        <FormInput
-            label="B"
-            key={`${parentUuid}${v4()}`}
-            onChange={(newValue: number) => onMaterialUpdate?.({ newDiffuseColor: new Rgb(material.diffuseColor?.r, material.diffuseColor?.g, newValue) })}
-            defaultValue={material.diffuseColor?.b}
-            data-testid="EntityPropsPanel.DiffuseColor.b"
+            data-testid="EntityPropsPanel.DiffuseColor"
+            defaultValue={material.diffuseColor?.toHexString()}
+            onChange={(newDiffuseColor: string) => {
+                console.log('newDiffuseColor', newDiffuseColor);
+                onMaterialUpdate?.({ newDiffuseColor: Rgb.fromHex(newDiffuseColor) })
+            }}
         ></FormInput>
     ];
 
@@ -41,6 +29,7 @@ export const MaterialPropsGroup = ({ material, parentUuid, onMaterialUpdate }: M
             key={`${parentUuid}${v4()}`}
             data-testid="EntityPropsPanel.Opacity"
             defaultValue={material.opacity}
+            type="number"
             onChange={(newValue: number) => onMaterialUpdate?.({ newOpacity: newValue })}
         ></FormInput>
     ]

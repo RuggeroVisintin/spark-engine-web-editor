@@ -111,9 +111,9 @@ describe('EntityPropsPanel', () => {
 
                 render(<EntityPropsPanel entity={entity} />);
 
-                const inputFieldX = screen.getByTestId(`EntityPropsPanel.DiffuseColor.${prop}.InputField`);
+                const inputFieldX = screen.getByTestId(`EntityPropsPanel.DiffuseColor.InputField`);
 
-                expect(inputFieldX).toHaveValue(entity.material.diffuseColor[prop]);
+                expect(inputFieldX).toHaveValue(entity.material.diffuseColor.toHexString());
             })
 
             it.each(diffuseColorProps)('Should update the default material.diffuseColor.%s value when entity is changed', (prop) => {
@@ -127,8 +127,8 @@ describe('EntityPropsPanel', () => {
 
                 rerender(<EntityPropsPanel entity={newEntity} />);
 
-                const inputField = screen.getByTestId(`EntityPropsPanel.DiffuseColor.${prop}.InputField`);
-                expect(inputField).toHaveValue(newEntity.material.diffuseColor[prop]);
+                const inputField = screen.getByTestId(`EntityPropsPanel.DiffuseColor.InputField`);
+                expect(inputField).toHaveValue(newEntity.material.diffuseColor.toHexString());
             });
 
             it.each(diffuseColorProps)('Should invoke the onMaterialUpdate callback when the %s input changes', (prop) => {
@@ -136,14 +136,14 @@ describe('EntityPropsPanel', () => {
                 entity.material.diffuseColor = new Rgb(123, 233, 111);
 
                 const result = Rgb.fromRgb(entity.material.diffuseColor);
-                result[prop] = 125
+                result[prop] = 125;
 
                 const cb = jest.fn();
 
                 render(<EntityPropsPanel entity={entity} onMaterialUpdate={cb} />);
 
-                const inputField = screen.getByTestId(`EntityPropsPanel.DiffuseColor.${prop}.InputField`);
-                fireEvent.change(inputField, { target: { value: '125' } })
+                const inputField = screen.getByTestId(`EntityPropsPanel.DiffuseColor.InputField`);
+                fireEvent.change(inputField, { target: { value: result.toHexString() } })
 
                 expect(cb).toHaveBeenCalledWith({ newDiffuseColor: result });
             })
