@@ -1,6 +1,6 @@
-import { GameEngine, GameObject, Scene, Vec2 } from "@sparkengine";
+import { BaseEntity, GameEngine, GameObject, IEntity, Scene, Vec2 } from "@sparkengine";
 import { SetDebuggerEntityUseCase } from './SetDebuggerEntityUseCase';
-import { EntityOutline } from "../EntityOtuline";
+import IDebuggerEntity from "../IDebuggerEntity";
 
 const engine = new GameEngine({
     framerate: 60,
@@ -11,17 +11,25 @@ const engine = new GameEngine({
     }
 })
 
+class FakeDebuggerEntity extends BaseEntity implements IDebuggerEntity {
+    public matchTarget?: IEntity;
+
+    public match(target: IEntity): void {
+        this.matchTarget = target;
+    }
+}
+
 
 describe('core/scene/usecases/SetDebuggerEntityUseCase', () => {
-    let debuggerEntity: EntityOutline;
-    let debuggerEntity2: EntityOutline;
+    let debuggerEntity: FakeDebuggerEntity;
+    let debuggerEntity2: FakeDebuggerEntity;
     let debuggerScene: Scene;
     let useCase: SetDebuggerEntityUseCase;
     let target: GameObject;
 
     beforeEach(() => {
-        debuggerEntity = new EntityOutline();
-        debuggerEntity2 = new EntityOutline();
+        debuggerEntity = new FakeDebuggerEntity();
+        debuggerEntity2 = new FakeDebuggerEntity();
 
         debuggerScene = engine.createScene();
         debuggerScene.registerEntity(debuggerEntity);
@@ -39,11 +47,8 @@ describe('core/scene/usecases/SetDebuggerEntityUseCase', () => {
 
     it('Should match the transform posizion and size of the debugger entities in the scene to the one of target', () => {
         useCase.execute(target);
-        expect(debuggerEntity.transform.position).toEqual(target.transform.position);
-        expect(debuggerEntity.transform.size).toEqual(target.transform.size);
 
-        expect(debuggerEntity2.transform.position).toEqual(target.transform.position);
-        expect(debuggerEntity2.transform.size).toEqual(target.transform.size);
+        expect(debuggerEntity.matchTarget).toEqual(target);
     });
 
     it('Should not throw errors when the scene does not have a debuggerEntity', () => {
