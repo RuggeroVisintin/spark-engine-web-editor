@@ -99,7 +99,7 @@ export const EditorLayout = () => {
         if (!transform || !debuggerScene || !currentEntity) return;
 
         transform.size = newSize;
-        new SetDebuggerEntityUseCase(debuggerScene).execute(currentEntity!, debugEntities.outline);
+        new SetDebuggerEntityUseCase(debuggerScene).execute(currentEntity);
     }
 
     const onMaterialUpdate = ({ newDiffuseColor, newOpacity, newDiffuseTexture, removeDiffuseColor }: { newDiffuseColor: Rgb, newOpacity: number, newDiffuseTexture: ImageAsset, removeDiffuseColor: boolean }) => {
@@ -139,15 +139,12 @@ export const EditorLayout = () => {
         const newScene = newProject.scenes[0];
 
         scene?.dispose();
+        debuggerScene?.hide();
         newScene.draw();
 
         setScene(newScene);
         setCurrentProject(newProject);
         setEntities([...newScene?.entities || []]);
-
-        if (debugEntities.outline) {
-            debuggerScene?.unregisterEntity(debugEntities.outline.uuid);
-        }
     };
 
     const onProjectFileSave = async () => {

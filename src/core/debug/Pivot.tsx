@@ -1,9 +1,11 @@
-import { GameObject, Rgb } from "sparkengineweb";
+import { GameObject, IEntity, incrementallyUnique, Rgb, TransformComponent, Type } from "sparkengineweb";
+import IDebuggerEntity from "./IDebuggerEntity";
 
-export default class Pivot extends GameObject {
+@Type('Pivot')
+export default class Pivot extends GameObject implements IDebuggerEntity {
     constructor() {
         super({
-            name: 'Pivot',
+            name: incrementallyUnique('Pivot'),
             material: {
                 diffuseColor: new Rgb(255, 255, 0)
             },
@@ -11,8 +13,24 @@ export default class Pivot extends GameObject {
                 isWireframe: false
             },
             transform: {
-                depthIndex: 0
+                // Depth -1 ensures this is always drawn on top of everything else
+                depthIndex: -1,
+                size: {
+                    width: 10,
+                    height: 10
+                }
             }
         });
+    }
+
+    match(target: IEntity): void {
+        const debuggerTransform = this.getComponent<TransformComponent>('TransformComponent');
+        const targetTransform = target.getComponent<TransformComponent>('TransformComponent');
+
+        if (!targetTransform || !debuggerTransform) {
+            return;
+        }
+
+        debuggerTransform.position = targetTransform.position;
     }
 }

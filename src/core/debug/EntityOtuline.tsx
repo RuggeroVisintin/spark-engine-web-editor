@@ -1,12 +1,12 @@
-import { GameObject, IEntity, Rgb, TransformComponent } from "sparkengineweb";
+import { GameObject, IEntity, incrementallyUnique, RegisterUnique, Rgb, TransformComponent, Type } from "sparkengineweb";
 import IDebuggerEntity from "./IDebuggerEntity";
 
-let UNIQUE_COUNTER = 0;
-
+@Type('EntityOutline')
 export class EntityOutline extends GameObject implements IDebuggerEntity {
     constructor() {
+
         super({
-            name: UNIQUE_COUNTER === 0 ? 'EntityOutline' : `EntityOutline${UNIQUE_COUNTER}`,
+            name: incrementallyUnique('EntityOutline'),
             material: {
                 diffuseColor: new Rgb(255, 255, 0)
             },
@@ -14,11 +14,10 @@ export class EntityOutline extends GameObject implements IDebuggerEntity {
                 isWireframe: true
             },
             transform: {
-                depthIndex: 0
+                // Depth -1 ensures this is always drawn on top of everything else
+                depthIndex: -1
             }
         });
-
-        UNIQUE_COUNTER++;
     }
 
     match(target: IEntity): void {
