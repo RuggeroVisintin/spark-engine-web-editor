@@ -1,4 +1,4 @@
-import { GameObject, IEntity, incrementallyUnique, Rgb, TransformComponent, Type } from "sparkengineweb";
+import { GameObject, IEntity, incrementallyUnique, Rgb, TransformComponent, Type, Vec2 } from "sparkengineweb";
 import IDebuggerEntity from "./IDebuggerEntity";
 
 @Type('Pivot')
@@ -18,7 +18,8 @@ export default class Pivot extends GameObject implements IDebuggerEntity {
                 size: {
                     width: 10,
                     height: 10
-                }
+                },
+                position: new Vec2(55, 55)
             }
         });
     }
