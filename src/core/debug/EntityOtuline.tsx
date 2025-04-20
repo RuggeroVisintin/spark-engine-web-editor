@@ -3,7 +3,7 @@ import { GameObject, Rgb } from "sparkengineweb";
 export class EntityOutline extends GameObject {
     constructor() {
         super({
-            name: 'DebuggerEntity',
+            name: 'EntityOutline',
             material: {
                 diffuseColor: new Rgb(255, 255, 0)
             },
