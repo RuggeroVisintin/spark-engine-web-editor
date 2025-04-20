@@ -1,11 +1,10 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { GameEngine, GameObject, IEntity, ImageAsset, ImageLoader, MaterialComponent, Rgb, Scene, TransformComponent, Vec2 } from '@sparkengine';
+import { GameEngine, IEntity, ImageAsset, ImageLoader, MaterialComponent, Rgb, Scene, TransformComponent, Vec2 } from '@sparkengine';
 import { EngineView } from '../../components';
 import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
 import { ActionMenu } from '../../templates/ActionMenu';
 import { EntityPropsPanel } from '../../templates/EntityPropsPanel';
-import { SetDebuggerEntityUseCase } from '../../core/scene/usecases';
 import { SceneRepository } from '../../core/scene/ports';
 import { FileSystemSceneRepository } from '../../core/scene/adapters';
 import { OpenProjectUseCase } from '../../core/project/usecases/OpenProjectUseCase';
@@ -19,19 +18,14 @@ import { FileSystemImageRepository } from '../../core/assets/image/adapters';
 import { WeakRef } from '../../common';
 import { ImageRepository } from '../../core/assets';
 import { v4 } from 'uuid';
+import { EntityOutline } from '../../core/debug';
+import Pivot from '../../core/debug/Pivot';
+import { SetDebuggerEntityUseCase } from '../../core/debug/usecases';
 
-const debuggerEntity = new GameObject({
-    name: 'DebuggerEntity',
-    material: {
-        diffuseColor: new Rgb(255, 255, 0)
-    },
-    shape: {
-        isWireframe: true
-    },
-    transform: {
-        depthIndex: 0
-    }
-});
+const debugEntities = {
+    outline: new EntityOutline(),
+    originPivot: new Pivot()
+}
 
 let sceneRepo: SceneRepository;
 let projectRepo: ProjectRepository;
@@ -61,11 +55,15 @@ export const EditorLayout = () => {
         projectRepo = new FileSystemProjectRepository();
 
         const scene = newEngine.createScene(true);
+        const debuggerScene = newEngine.createScene(true);
+
+        debuggerScene.registerEntity(debugEntities.outline);
+        debuggerScene.registerEntity(debugEntities.originPivot);
 
         currentProject.addScene(scene);
 
         setScene(scene);
-        setDebuggerScene(newEngine.createScene(true));
+        setDebuggerScene(debuggerScene);
 
         newEngine.run();
 
@@ -83,25 +81,25 @@ export const EditorLayout = () => {
         if (!scene || !debuggerScene) return;
 
         scene.unregisterEntity(entity.uuid);
-        debuggerScene.unregisterEntity(debuggerEntity.uuid);
+        debuggerScene.hide();
         setEntities([...scene.entities ?? []]);
         setCurrentEntity(undefined);
     }, [scene, debuggerScene]);
 
     const onPositionUpdate = ({ newPosition }: { newPosition: Vec2 }) => {
         const transform = currentEntity?.getComponent<TransformComponent>('TransformComponent');
-        if (!transform) return;
+        if (!transform || !debuggerScene || !currentEntity) return;
 
         transform.position = newPosition;
-        new SetDebuggerEntityUseCase(debuggerScene).execute(currentEntity!, debuggerEntity);
+        new SetDebuggerEntityUseCase(debuggerScene).execute(currentEntity);
     }
 
     const onSizeUpdate = ({ newSize }: { newSize: { width: number, height: number } }) => {
         const transform = currentEntity?.getComponent<TransformComponent>('TransformComponent');
-        if (!transform) return;
+        if (!transform || !debuggerScene || !currentEntity) return;
 
         transform.size = newSize;
-        new SetDebuggerEntityUseCase(debuggerScene).execute(currentEntity!, debuggerEntity);
+        new SetDebuggerEntityUseCase(debuggerScene).execute(currentEntity);
     }
 
     const onMaterialUpdate = ({ newDiffuseColor, newOpacity, newDiffuseTexture, removeDiffuseColor }: { newDiffuseColor: Rgb, newOpacity: number, newDiffuseTexture: ImageAsset, removeDiffuseColor: boolean }) => {
@@ -122,7 +120,12 @@ export const EditorLayout = () => {
 
     const onEntityFocus = (target: IEntity) => {
         setCurrentEntity(target);
-        new SetDebuggerEntityUseCase(debuggerScene).execute(target, debuggerEntity, true);
+
+        if (!debuggerScene) return;
+
+        debuggerScene.draw()
+
+        new SetDebuggerEntityUseCase(debuggerScene).execute(target);
     }
 
     const onProjectFileOpen = async () => {
@@ -136,15 +139,12 @@ export const EditorLayout = () => {
         const newScene = newProject.scenes[0];
 
         scene?.dispose();
+        debuggerScene?.hide();
         newScene.draw();
 
         setScene(newScene);
         setCurrentProject(newProject);
         setEntities([...newScene?.entities || []]);
-
-        if (debuggerEntity) {
-            debuggerScene?.unregisterEntity(debuggerEntity.uuid);
-        }
     };
 
     const onProjectFileSave = async () => {
