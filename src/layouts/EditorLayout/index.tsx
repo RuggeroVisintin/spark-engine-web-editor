@@ -5,7 +5,6 @@ import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
 import { ActionMenu } from '../../templates/ActionMenu';
 import { EntityPropsPanel } from '../../templates/EntityPropsPanel';
-import { SetDebuggerEntityUseCase } from '../../core/scene/usecases';
 import { SceneRepository } from '../../core/scene/ports';
 import { FileSystemSceneRepository } from '../../core/scene/adapters';
 import { OpenProjectUseCase } from '../../core/project/usecases/OpenProjectUseCase';
@@ -21,6 +20,7 @@ import { ImageRepository } from '../../core/assets';
 import { v4 } from 'uuid';
 import { EntityOutline } from '../../core/debug';
 import Pivot from '../../core/debug/Pivot';
+import { SetDebuggerEntityUseCase } from '../../core/debug/usecases';
 
 const debugEntities = {
     outline: new EntityOutline(),
