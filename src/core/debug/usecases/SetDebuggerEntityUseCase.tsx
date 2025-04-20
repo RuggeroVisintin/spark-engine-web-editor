@@ -1,4 +1,4 @@
-import { IEntity, Scene, TransformComponent } from "@sparkengine";
+import { IEntity, Scene } from "@sparkengine";
 import IDebuggerEntity from "../IDebuggerEntity";
 
 export class SetDebuggerEntityUseCase {
