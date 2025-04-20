@@ -55,11 +55,15 @@ export const EditorLayout = () => {
         projectRepo = new FileSystemProjectRepository();
 
         const scene = newEngine.createScene(true);
+        const debuggerScene = newEngine.createScene(true);
+
+        debuggerScene.registerEntity(debugEntities.outline);
+        debuggerScene.registerEntity(debugEntities.originPivot);
 
         currentProject.addScene(scene);
 
         setScene(scene);
-        setDebuggerScene(newEngine.createScene(true));
+        setDebuggerScene(debuggerScene);
 
         newEngine.run();
 
@@ -77,22 +81,22 @@ export const EditorLayout = () => {
         if (!scene || !debuggerScene) return;
 
         scene.unregisterEntity(entity.uuid);
-        debuggerScene.unregisterEntity(debugEntities.outline.uuid);
+        debuggerScene.hide();
         setEntities([...scene.entities ?? []]);
         setCurrentEntity(undefined);
     }, [scene, debuggerScene]);
 
     const onPositionUpdate = ({ newPosition }: { newPosition: Vec2 }) => {
         const transform = currentEntity?.getComponent<TransformComponent>('TransformComponent');
-        if (!transform) return;
+        if (!transform || !debuggerScene || !currentEntity) return;
 
         transform.position = newPosition;
-        new SetDebuggerEntityUseCase(debuggerScene).execute(currentEntity!, debugEntities.outline);
+        new SetDebuggerEntityUseCase(debuggerScene).execute(currentEntity);
     }
 
     const onSizeUpdate = ({ newSize }: { newSize: { width: number, height: number } }) => {
         const transform = currentEntity?.getComponent<TransformComponent>('TransformComponent');
-        if (!transform) return;
+        if (!transform || !debuggerScene || !currentEntity) return;
 
         transform.size = newSize;
         new SetDebuggerEntityUseCase(debuggerScene).execute(currentEntity!, debugEntities.outline);
@@ -116,7 +120,12 @@ export const EditorLayout = () => {
 
     const onEntityFocus = (target: IEntity) => {
         setCurrentEntity(target);
-        new SetDebuggerEntityUseCase(debuggerScene).execute(target, debugEntities.outline, true);
+
+        if (!debuggerScene) return;
+
+        debuggerScene.draw()
+
+        new SetDebuggerEntityUseCase(debuggerScene).execute(target);
     }
 
     const onProjectFileOpen = async () => {
