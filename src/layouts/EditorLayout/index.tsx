@@ -19,19 +19,9 @@ import { FileSystemImageRepository } from '../../core/assets/image/adapters';
 import { WeakRef } from '../../common';
 import { ImageRepository } from '../../core/assets';
 import { v4 } from 'uuid';
+import { EntityOutline } from '../../core/debug';
 
-const debuggerEntity = new GameObject({
-    name: 'DebuggerEntity',
-    material: {
-        diffuseColor: new Rgb(255, 255, 0)
-    },
-    shape: {
-        isWireframe: true
-    },
-    transform: {
-        depthIndex: 0
-    }
-});
+const debuggerEntity = new EntityOutline();
 
 let sceneRepo: SceneRepository;
 let projectRepo: ProjectRepository;
