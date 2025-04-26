@@ -1,9 +1,11 @@
 import React, { memo, useEffect, useRef } from 'react';
 import { Box } from '../../primitives';
 import styled from 'styled-components';
+import { Function } from '../../common';
 
 interface EngineViewProps {
-    onEngineReady: Function
+    onEngineReady: Function<OnEngineReadyCBProps>
+    onClick?: Function<MouseEvent>
 }
 
 export interface OnEngineReadyCBProps {
@@ -18,7 +20,7 @@ const RenderingCanvas = styled.canvas({
 
 let isEngineInit = false;
 
-export const EngineView = memo(({ onEngineReady }: EngineViewProps) => {
+export const EngineView = memo(({ onEngineReady, onClick }: EngineViewProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const width = 1920;
     const height = 1080;
@@ -36,7 +38,14 @@ export const EngineView = memo(({ onEngineReady }: EngineViewProps) => {
 
     return (
         <Box>
-            <RenderingCanvas ref={canvasRef} id="canvas" width={width} height={height}></RenderingCanvas>
+            <RenderingCanvas
+                ref={canvasRef}
+                id="canvas"
+                data-testid="EngineView.canvas"
+                width={width}
+                height={height}
+                onClick={(e) => onClick?.(e.nativeEvent)}
+            ></RenderingCanvas>
         </Box>
     )
 }, () => true);
