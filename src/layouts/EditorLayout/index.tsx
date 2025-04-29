@@ -153,12 +153,19 @@ export const EditorLayout = () => {
         setCurrentProject(await new SaveProjectUseCase(projectRepo, sceneRepo, imageRepository).execute(currentProject));
     };
 
+    const onEngineViewClick = (e: MouseEvent) => {
+        console.log('EngineView clicked', e);
+        if (e.button === 2) {
+            console.log('Right click');
+        }
+    }
+
     return (
         <FlexBox $fill={true}>
             <ActionMenu onProjectFileOpen={onProjectFileOpen} onProjectFileSave={onProjectFileSave}></ActionMenu>
             <FlexBox $direction='row' $fill style={{ overflow: 'hidden' }}>
                 <EntityFactoryPanel onAddEntity={onAddEntity}></EntityFactoryPanel>
-                <EngineView onEngineReady={onEngineReady}></EngineView>
+                <EngineView onEngineReady={onEngineReady} onClick={onEngineViewClick}></EngineView>
                 <Box $size={0.25}>
                     <FlexBox $fill={true}>
                         <ScenePanel

@@ -32,6 +32,13 @@ export const EngineView = memo(({ onEngineReady, onClick }: EngineViewProps) => 
                 resolution: { width, height }
             } as OnEngineReadyCBProps);
             isEngineInit = true;
+
+            canvasRef.current.addEventListener(`contextmenu`, (e) => {
+                if (onClick) {
+                    e.preventDefault();
+                    onClick(e);
+                }
+            });
         }
 
     }, [canvasRef, onEngineReady]);
