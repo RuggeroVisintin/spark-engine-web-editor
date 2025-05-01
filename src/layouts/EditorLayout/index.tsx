@@ -22,11 +22,6 @@ import Pivot from '../../core/debug/Pivot';
 import { SetDebuggerEntityUseCase } from '../../core/debug/usecases';
 import { EditorService } from '../../core/editor';
 
-const debugEntities = {
-    outline: new EntityOutline(),
-    originPivot: new Pivot()
-}
-
 let sceneRepo: SceneRepository;
 let projectRepo: ProjectRepository;
 let imageRepository: ImageRepository;
@@ -53,28 +48,21 @@ export const EditorLayout = () => {
         sceneRepo = new FileSystemSceneRepository(newEngine);
         projectRepo = new FileSystemProjectRepository();
 
-        const scene = newEngine.createScene(true);
-        const debuggerScene = newEngine.createScene(true);
+        const scene = editorService.currentScene;
+        const debuggerScene = editorService.editorScene;
 
-        debuggerScene.registerEntity(debugEntities.outline);
-        debuggerScene.registerEntity(debugEntities.originPivot);
+        scene && setScene(scene);
 
-        currentProject.addScene(scene);
-
-        setScene(scene);
-        setDebuggerScene(debuggerScene);
-
-        newEngine.run();
+        debuggerScene && setDebuggerScene(debuggerScene);
+        editorService.project && setCurrentProject(editorService.project);
 
         engine.current = newEngine;
     };
 
-    const onAddEntity = useCallback((entity: IEntity) => {
-        if (!scene) return;
-
-        scene.registerEntity(entity);
-        setEntities([...scene.entities ?? []]);
-    }, [scene]);
+    const onAddEntity = (entity: IEntity) => {
+        editorService.addNewEntity(entity);
+        setEntities([...editorService.currentScene?.entities ?? []]);
+    };
 
     const onRemoveEntity = useCallback((entity: IEntity) => {
         if (!scene || !debuggerScene) return;
@@ -156,12 +144,10 @@ export const EditorLayout = () => {
         if (e.button === 2) {
             const { targetX, targetY } = e;
 
-
-            console.log('Right click', targetX, targetY);
             const spawnPoint = new Vec2(targetX, targetY);
 
             setSpawnPoint(spawnPoint);
-            debugEntities.originPivot.transform.position = spawnPoint;
+            EditorService.editorEntities.originPivot.transform.position = spawnPoint;
         }
     }
 
