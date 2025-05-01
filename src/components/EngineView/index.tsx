@@ -1,4 +1,4 @@
-import React, { DOMElement, memo, useEffect, useRef } from 'react';
+import React, { memo, useEffect, useRef } from 'react';
 import { Box } from '../../primitives';
 import styled from 'styled-components';
 import { Function } from '../../common';
