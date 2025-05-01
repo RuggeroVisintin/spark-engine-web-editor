@@ -20,7 +20,7 @@
     "license-check": "bash ./scripts/check-licenses.sh",
     "lint": "eslint . --ext .tsx",
     "lint:fix": "eslint --fix . --ext .tsx",
-    "postinstall": "npm run license-check",
+    "postinstall": "bash ./scripts/post-install.sh",
     "prepare": "husky"
   },
   "dependencies": {
