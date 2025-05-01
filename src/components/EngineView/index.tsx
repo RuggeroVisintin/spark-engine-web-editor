@@ -60,7 +60,7 @@ export const EngineView = memo(({ onEngineReady, onClick }: EngineViewProps) => 
             });
         }
 
-    }, [canvasRef, onEngineReady]);
+    }, [canvasRef, onEngineReady, onClick]);
 
     return (
         <Box>
