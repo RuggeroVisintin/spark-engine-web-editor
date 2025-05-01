@@ -13,7 +13,7 @@ import { FileSystemProjectRepository } from '../../core/project/adapters';
 import { SaveProjectUseCase } from '../../core/project/usecases';
 import { GetNewEngineUseCase } from '../../core/engine/usecases';
 import { Project } from '../../core/project/models';
-import { OnEngineReadyCBProps } from '../../components/EngineView';
+import { MouseClickEvent, OnEngineReadyCBProps } from '../../components/EngineView';
 import { FileSystemImageRepository } from '../../core/assets/image/adapters';
 import { WeakRef } from '../../common';
 import { ImageRepository } from '../../core/assets';
@@ -37,6 +37,7 @@ imageLoader = imageRepository = new FileSystemImageRepository(project.scopeRef a
 
 export const EditorLayout = () => {
     const [currentProject, setCurrentProject] = useState<Project>(project);
+    const [spawnPoint, setSpawnPoint] = useState<Vec2>(new Vec2(55, 55));
     const [scene, setScene] = useState<Scene>();
     const [debuggerScene, setDebuggerScene] = useState<Scene>();
     const [entities, setEntities] = useState<IEntity[]>([]);
@@ -153,12 +154,25 @@ export const EditorLayout = () => {
         setCurrentProject(await new SaveProjectUseCase(projectRepo, sceneRepo, imageRepository).execute(currentProject));
     };
 
+    const onEngineViewClick = (e: MouseClickEvent) => {
+        if (e.button === 2) {
+            const { targetX, targetY } = e;
+
+
+            console.log('Right click', targetX, targetY);
+            const spawnPoint = new Vec2(targetX, targetY);
+
+            setSpawnPoint(spawnPoint);
+            debugEntities.originPivot.transform.position = spawnPoint;
+        }
+    }
+
     return (
         <FlexBox $fill={true}>
             <ActionMenu onProjectFileOpen={onProjectFileOpen} onProjectFileSave={onProjectFileSave}></ActionMenu>
             <FlexBox $direction='row' $fill style={{ overflow: 'hidden' }}>
-                <EntityFactoryPanel onAddEntity={onAddEntity}></EntityFactoryPanel>
-                <EngineView onEngineReady={onEngineReady}></EngineView>
+                <EntityFactoryPanel onAddEntity={onAddEntity} spawnPoint={spawnPoint}></EntityFactoryPanel>
+                <EngineView onEngineReady={onEngineReady} onClick={onEngineViewClick}></EngineView>
                 <Box $size={0.25}>
                     <FlexBox $fill={true}>
                         <ScenePanel
