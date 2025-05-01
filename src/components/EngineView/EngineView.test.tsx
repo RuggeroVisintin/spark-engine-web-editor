@@ -1,18 +1,57 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { EngineView } from ".";
 
 describe('EngineView', () => {
-    it('Should execute the onClick callback when clicked', async () => {
-        const onClick = jest.fn();
-        const onEngineReady = jest.fn();
+    describe('.onClick()', () => {
+        it('Should execute the onClick callback when clicked', async () => {
+            const onClick = jest.fn();
+            const onEngineReady = jest.fn();
 
-        const engineView = <EngineView onEngineReady={onEngineReady} onClick={onClick} />;
-        render(engineView);
+            const engineView = <EngineView onEngineReady={onEngineReady} onClick={onClick} />;
+            render(engineView);
 
-        const canvas = await screen.findByTestId('EngineView.canvas');
-        canvas.click();
+            const canvas = await screen.findByTestId('EngineView.canvas');
+            canvas.click();
 
-        expect(onClick).toHaveBeenCalledWith(expect.any(MouseEvent));
-    });
+            expect(onClick).toHaveBeenCalledWith(expect.objectContaining({
+                button: 0,
+                targetX: expect.any(Number),
+                targetY: expect.any(Number)
+            }));
+        });
+
+        it('Should provide view adjusted mouse coordinates', async () => {
+            const onClick = jest.fn();
+            const onEngineReady = jest.fn();
+
+            const scaleFactor = 2;
+
+            HTMLCanvasElement.prototype.getBoundingClientRect = jest.fn(() => {
+                return {
+                    left: 0,
+                    top: 0,
+                    width: 1920 / scaleFactor,
+                    height: 1080 / scaleFactor
+                } as DOMRect;
+            })
+
+            const engineView = <EngineView onEngineReady={onEngineReady} onClick={onClick} />;
+            render(engineView);
+
+            const canvas = await screen.findByTestId('EngineView.canvas');
+            fireEvent.click(canvas, {
+                clientX: 100,
+                clientY: 200,
+                button: 0
+            })
+
+            expect(onClick).toHaveBeenCalledWith(expect.objectContaining({
+                button: 0,
+                targetX: 100 * scaleFactor,
+                targetY: 200 * scaleFactor
+            }));
+        });
+    })
+
 })

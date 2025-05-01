@@ -4,15 +4,16 @@ import { ListItem } from '../../components';
 import { Box, Spacing } from '../../primitives';
 
 interface EntityFactoryPanelProps {
-    onAddEntity: Function
+    onAddEntity: Function,
+    spawnPoint?: Vec2
 }
 
-const defaultTransformProps = {
+const defaultTransformProps = (spawnPoint = new Vec2(55, 55)) => ({
     transform: {
         size: { width: 30, height: 30 },
-        position: new Vec2(55, 55)
+        position: spawnPoint,
     }
-}
+});
 
 const defaultMaterialProps = {
     material: {
@@ -20,13 +21,8 @@ const defaultMaterialProps = {
     }
 }
 
-const newGameObject = () => new GameObject({
-    ...defaultTransformProps,
-    ...defaultMaterialProps
-});
-
-const newStaticObject = () => new StaticObject({
-    ...defaultTransformProps,
+const newEntity = <T extends GameObject>(constructor: new (...args: any) => T) => (spawnPoint?: Vec2) => new constructor({
+    ...defaultTransformProps(spawnPoint),
     ...defaultMaterialProps
 });
 
@@ -37,22 +33,22 @@ interface EntityDictEntry {
 
 const entityDict: Record<string, EntityDictEntry> = {
     'GameObject': {
-        factory: newGameObject,
+        factory: newEntity<GameObject>(GameObject),
         icon: 'game_object_icon.jpeg'
     },
     'StaticObject': {
-        factory: newStaticObject,
+        factory: newEntity<StaticObject>(StaticObject),
         icon: 'static_object_icon.jpeg'
     },
     'TriggerObject': {
-        factory: () => new TriggerEntity(),
+        factory: newEntity<TriggerEntity>(TriggerEntity),
         icon: 'trigger_icon.jpeg'
     }
     // TODO: implement optional target in @sparkengine
     // 'TriggerEntity': newTriggerEntity
 }
 
-export const EntityFactoryPanel = ({ onAddEntity }: EntityFactoryPanelProps) => {
+export const EntityFactoryPanel = ({ onAddEntity, spawnPoint }: EntityFactoryPanelProps) => {
     return (
         <Box
             $size={0.25}
@@ -63,7 +59,7 @@ export const EntityFactoryPanel = ({ onAddEntity }: EntityFactoryPanelProps) => 
                 <ListItem
                     key={entityType}
                     text={`Add ${entityType}`}
-                    onClick={() => onAddEntity(factory())}
+                    onClick={() => onAddEntity(factory(spawnPoint))}
                     imgSrc={icon}
                     data-testid={`Add${entityType}Button`} />
             ))}
