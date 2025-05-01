@@ -11,9 +11,8 @@ import { OpenProjectUseCase } from '../../core/project/usecases/OpenProjectUseCa
 import { ProjectRepository } from '../../core/project/ports';
 import { FileSystemProjectRepository } from '../../core/project/adapters';
 import { SaveProjectUseCase } from '../../core/project/usecases';
-import { GetNewEngineUseCase } from '../../core/engine/usecases';
 import { Project } from '../../core/project/models';
-import { MouseClickEvent, OnEngineReadyCBProps } from '../../components/EngineView';
+import { MouseClickEvent, OnEngineViewReadyCBProps } from '../../components/EngineView';
 import { FileSystemImageRepository } from '../../core/assets/image/adapters';
 import { WeakRef } from '../../common';
 import { ImageRepository } from '../../core/assets';
@@ -21,6 +20,7 @@ import { v4 } from 'uuid';
 import { EntityOutline } from '../../core/debug';
 import Pivot from '../../core/debug/Pivot';
 import { SetDebuggerEntityUseCase } from '../../core/debug/usecases';
+import { EditorService } from '../../core/editor';
 
 const debugEntities = {
     outline: new EntityOutline(),
@@ -35,6 +35,8 @@ let imageLoader: ImageLoader;
 const project = new Project({ name: 'my-project', scenes: [] });
 imageLoader = imageRepository = new FileSystemImageRepository(project.scopeRef as WeakRef<FileSystemDirectoryHandle>);
 
+const editorService = new EditorService(imageLoader);
+
 export const EditorLayout = () => {
     const [currentProject, setCurrentProject] = useState<Project>(project);
     const [spawnPoint, setSpawnPoint] = useState<Vec2>(new Vec2(55, 55));
@@ -44,13 +46,9 @@ export const EditorLayout = () => {
     const [currentEntity, setCurrentEntity] = useState<IEntity | undefined>(undefined);
     const engine = useRef<GameEngine>();
 
-    const onEngineReady = async ({ context, resolution }: OnEngineReadyCBProps) => {
-        const newEngine = await new GetNewEngineUseCase().execute({
-            width: resolution.width,
-            height: resolution.height,
-            imageLoader,
-            context
-        });
+    const onEngineViewReady = async ({ context, resolution }: OnEngineViewReadyCBProps) => {
+        editorService.start(context, resolution);
+        const newEngine = editorService.engine!;
 
         sceneRepo = new FileSystemSceneRepository(newEngine);
         projectRepo = new FileSystemProjectRepository();
@@ -172,7 +170,7 @@ export const EditorLayout = () => {
             <ActionMenu onProjectFileOpen={onProjectFileOpen} onProjectFileSave={onProjectFileSave}></ActionMenu>
             <FlexBox $direction='row' $fill style={{ overflow: 'hidden' }}>
                 <EntityFactoryPanel onAddEntity={onAddEntity} spawnPoint={spawnPoint}></EntityFactoryPanel>
-                <EngineView onEngineReady={onEngineReady} onClick={onEngineViewClick}></EngineView>
+                <EngineView onEngineViewReady={onEngineViewReady} onClick={onEngineViewClick}></EngineView>
                 <Box $size={0.25}>
                     <FlexBox $fill={true}>
                         <ScenePanel

@@ -9,13 +9,13 @@ export interface MouseClickEvent {
     button: number
 }
 
-export interface OnEngineReadyCBProps {
+export interface OnEngineViewReadyCBProps {
     context: CanvasRenderingContext2D;
     resolution: { width: number, height: number };
 };
 
 interface EngineViewProps {
-    onEngineReady: Function<OnEngineReadyCBProps>
+    onEngineViewReady: Function<OnEngineViewReadyCBProps>
     onClick?: Function<MouseClickEvent>
 }
 
@@ -41,15 +41,15 @@ function mouseEventToMouseClickEvent(e: MouseEvent): MouseClickEvent {
     }
 }
 
-export const EngineView = memo(({ onEngineReady, onClick }: EngineViewProps) => {
+export const EngineView = memo(({ onEngineViewReady, onClick }: EngineViewProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
         if (!!canvasRef.current && !isEngineInit) {
-            onEngineReady({
+            onEngineViewReady({
                 context: canvasRef.current.getContext('2d') as CanvasRenderingContext2D,
                 resolution: { width, height }
-            } as OnEngineReadyCBProps);
+            } as OnEngineViewReadyCBProps);
             isEngineInit = true;
 
             canvasRef.current.addEventListener(`contextmenu`, (e) => {
@@ -60,7 +60,7 @@ export const EngineView = memo(({ onEngineReady, onClick }: EngineViewProps) => 
             });
         }
 
-    }, [canvasRef, onEngineReady, onClick]);
+    }, [canvasRef, onEngineViewReady, onClick]);
 
     return (
         <Box>

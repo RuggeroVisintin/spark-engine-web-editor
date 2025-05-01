@@ -8,7 +8,7 @@ describe('EngineView', () => {
             const onClick = jest.fn();
             const onEngineReady = jest.fn();
 
-            const engineView = <EngineView onEngineReady={onEngineReady} onClick={onClick} />;
+            const engineView = <EngineView onEngineViewReady={onEngineReady} onClick={onClick} />;
             render(engineView);
 
             const canvas = await screen.findByTestId('EngineView.canvas');
@@ -36,7 +36,7 @@ describe('EngineView', () => {
                 } as DOMRect;
             })
 
-            const engineView = <EngineView onEngineReady={onEngineReady} onClick={onClick} />;
+            const engineView = <EngineView onEngineViewReady={onEngineReady} onClick={onClick} />;
             render(engineView);
 
             const canvas = await screen.findByTestId('EngineView.canvas');
@@ -68,7 +68,7 @@ describe('EngineView', () => {
                 } as DOMRect;
             })
 
-            const engineView = <EngineView onEngineReady={onEngineReady} onClick={onClick} />;
+            const engineView = <EngineView onEngineViewReady={onEngineReady} onClick={onClick} />;
             render(engineView);
 
             const canvas = await screen.findByTestId('EngineView.canvas');
