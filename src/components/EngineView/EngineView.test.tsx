@@ -27,7 +27,7 @@ describe('EngineView', () => {
 
             const scaleFactor = 2;
 
-            HTMLCanvasElement.prototype.getBoundingClientRect = jest.fn(() => {
+            Element.prototype.getBoundingClientRect = jest.fn(() => {
                 return {
                     left: 0,
                     top: 0,
@@ -52,6 +52,38 @@ describe('EngineView', () => {
                 targetY: 200 * scaleFactor
             }));
         });
+
+        it('Should round coordinates to the nearest integer', async () => {
+            const onClick = jest.fn();
+            const onEngineReady = jest.fn();
+
+            const scaleFactor = 1.261;
+
+            Element.prototype.getBoundingClientRect = jest.fn(() => {
+                return {
+                    left: 0,
+                    top: 0,
+                    width: 1920 / scaleFactor,
+                    height: 1080 / scaleFactor
+                } as DOMRect;
+            })
+
+            const engineView = <EngineView onEngineReady={onEngineReady} onClick={onClick} />;
+            render(engineView);
+
+            const canvas = await screen.findByTestId('EngineView.canvas');
+            fireEvent.click(canvas, {
+                clientX: 100,
+                clientY: 200,
+                button: 0
+            })
+
+            expect(onClick).toHaveBeenCalledWith(expect.objectContaining({
+                button: 0,
+                targetX: Math.round(100 * scaleFactor),
+                targetY: Math.round(200 * scaleFactor)
+            }));
+        })
     })
 
 })

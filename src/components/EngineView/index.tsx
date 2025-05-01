@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef } from 'react';
+import React, { DOMElement, memo, useEffect, useRef } from 'react';
 import { Box } from '../../primitives';
 import styled from 'styled-components';
 import { Function } from '../../common';
@@ -29,14 +29,14 @@ const width = 1920;
 const height = 1080;
 
 function mouseEventToMouseClickEvent(e: MouseEvent): MouseClickEvent {
-    const rect = (e.target as HTMLCanvasElement).getBoundingClientRect();
+    const rect = (e.target as HTMLElement).getBoundingClientRect();
 
-    const scaleFactorX = width / rect.width;
-    const scaleFactorY = height / rect.height;
+    const scaleFactorX = rect.width ? width / rect.width : 1;
+    const scaleFactorY = rect.height ? height / rect.height : 1;
 
     return {
-        targetX: (e.clientX - rect.left) * scaleFactorX,
-        targetY: (e.clientY - rect.top) * scaleFactorY,
+        targetX: Math.round((e.clientX - rect.left) * scaleFactorX),
+        targetY: Math.round((e.clientY - rect.top) * scaleFactorY),
         button: e.button
     }
 }
