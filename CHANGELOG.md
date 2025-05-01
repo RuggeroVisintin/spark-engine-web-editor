@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.0.8](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.7...sparkenginewebeditor-v0.0.8) (2025-05-01)
+
+
+### Features
+
+* **editor:** add ability to set spawning position ([#137](https://github.com/RuggeroVisintin/spark-engine-web-editor/issues/137)) ([ffdded4](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/ffdded45096003a938ed0757270231580f1bafa8))
+* **editor:** add diffuse color remove button ([#128](https://github.com/RuggeroVisintin/spark-engine-web-editor/issues/128)) ([6362912](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/63629120598cab57bc55462719e982386b6935f6))
+* **editor:** add origin debugging pivot ([#134](https://github.com/RuggeroVisintin/spark-engine-web-editor/issues/134)) ([a88bbbe](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/a88bbbe55a0298fec3693537f61897ea9b2e5671))
+* **UI:** add color picker for material diffuse color ([e362734](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/e362734c22820b61ad082ebf2f07408d747eee1d))
+
 ## [0.0.7](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.6...sparkenginewebeditor-v0.0.7) (2025-04-15)
 
 
