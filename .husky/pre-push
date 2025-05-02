@@ -3,4 +3,5 @@
 
 set -e
 
-npm run lint:fix || true
+npm run lint
+
