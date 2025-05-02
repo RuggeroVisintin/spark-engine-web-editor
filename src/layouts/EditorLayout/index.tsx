@@ -17,8 +17,6 @@ import { FileSystemImageRepository } from '../../core/assets/image/adapters';
 import { WeakRef } from '../../common';
 import { ImageRepository } from '../../core/assets';
 import { v4 } from 'uuid';
-import { EntityOutline } from '../../core/debug';
-import Pivot from '../../core/debug/Pivot';
 import { SetDebuggerEntityUseCase } from '../../core/debug/usecases';
 import { EditorService } from '../../core/editor';
 
