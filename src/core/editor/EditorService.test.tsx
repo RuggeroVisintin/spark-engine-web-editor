@@ -76,7 +76,7 @@ describe('EditorService', () => {
             const resolution = { width: 800, height: 600 };
             editorService.start(context, resolution);
 
-            const entity = { uuid: 'test-uuid' } as IEntity;
+            const entity = new GameObject();
 
             editorService.selectEntity(entity);
 
