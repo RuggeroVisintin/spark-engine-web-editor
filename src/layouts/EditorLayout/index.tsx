@@ -46,12 +46,8 @@ export const EditorLayout = () => {
         sceneRepo = new FileSystemSceneRepository(newEngine);
         projectRepo = new FileSystemProjectRepository();
 
-        const scene = editorService.currentScene;
-        const debuggerScene = editorService.editorScene;
-
-        scene && setScene(scene);
-
-        debuggerScene && setDebuggerScene(debuggerScene);
+        editorService.currentScene && setScene(editorService.currentScene);
+        editorService.editorScene && setDebuggerScene(editorService.editorScene);
         editorService.project && setCurrentProject(editorService.project);
 
         engine.current = newEngine;
@@ -62,33 +58,14 @@ export const EditorLayout = () => {
         setEntities([...editorService.currentScene?.entities ?? []]);
     };
 
-    const onRemoveEntity = useCallback((entity: IEntity) => {
-        if (!scene || !debuggerScene) return;
-
-        scene.unregisterEntity(entity.uuid);
-        debuggerScene.hide();
-        setEntities([...scene.entities ?? []]);
+    const onRemoveEntity = (entity: IEntity) => {
+        editorService.removeEntity(entity.uuid);
+        setEntities([...editorService.currentScene?.entities ?? []]);
         setCurrentEntity(undefined);
-    }, [scene, debuggerScene]);
-
-    const onPositionUpdate = ({ newPosition }: { newPosition: Vec2 }) => {
-        const transform = currentEntity?.getComponent<TransformComponent>('TransformComponent');
-        if (!transform || !debuggerScene || !currentEntity) return;
-
-        transform.position = newPosition;
-        new SetDebuggerEntityUseCase(debuggerScene).execute(currentEntity);
-    }
-
-    const onSizeUpdate = ({ newSize }: { newSize: { width: number, height: number } }) => {
-        const transform = currentEntity?.getComponent<TransformComponent>('TransformComponent');
-        if (!transform || !debuggerScene || !currentEntity) return;
-
-        transform.size = newSize;
-        new SetDebuggerEntityUseCase(debuggerScene).execute(currentEntity);
-    }
+    };
 
     const onMaterialUpdate = ({ newDiffuseColor, newOpacity, newDiffuseTexture, removeDiffuseColor }: { newDiffuseColor: Rgb, newOpacity: number, newDiffuseTexture: ImageAsset, removeDiffuseColor: boolean }) => {
-        const material = currentEntity?.getComponent<MaterialComponent>('MaterialComponent');
+        const material = editorService.currentEntity?.getComponent<MaterialComponent>('MaterialComponent');
 
         if (!material) return;
 
@@ -104,13 +81,8 @@ export const EditorLayout = () => {
     }
 
     const onEntityFocus = (target: IEntity) => {
-        setCurrentEntity(target);
-
-        if (!debuggerScene) return;
-
-        debuggerScene.draw()
-
-        new SetDebuggerEntityUseCase(debuggerScene).execute(target);
+        editorService.selectEntity(target);
+        editorService.currentEntity && setCurrentEntity(editorService.currentEntity);
     }
 
     const onProjectFileOpen = async () => {
@@ -166,8 +138,8 @@ export const EditorLayout = () => {
                         {currentEntity &&
                             <EntityPropsPanel
                                 entity={currentEntity}
-                                onUpdatePosition={onPositionUpdate}
-                                onUpdateSize={onSizeUpdate}
+                                onUpdatePosition={editorService.updateCurrentEntityPosition}
+                                onUpdateSize={editorService.updateCurrentEntitySize}
                                 onMaterialUpdate={onMaterialUpdate}
                             ></EntityPropsPanel>}
                     </FlexBox>

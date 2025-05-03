@@ -1,4 +1,4 @@
-import { GameEngine, IEntity, ImageLoader, Scene, TransformComponent } from "sparkengineweb";
+import { GameEngine, IEntity, ImageLoader, Scene, TransformComponent, Vec2 } from "sparkengineweb";
 import { SetDebuggerEntityUseCase } from "../debug/usecases";
 import { Optional } from "../../common";
 import { Project } from "../project/models";
@@ -43,22 +43,11 @@ export class EditorService {
     }
 
     public start(context: CanvasRenderingContext2D, resolution: { width: number, height: number }): void {
-        this._engine = new GameEngine({
-            framerate: 60,
-            context: context,
-            resolution: {
-                width: resolution.width,
-                height: resolution.height
-            },
-            imageLoader: this.imageLoader
-        });
+        this._engine = this.initEngine(context, resolution);
 
         this._project = new Project({
             name: 'my-project', scenes: []
         });
-
-
-        this._engine.renderer.defaultWireframeThickness = 3;
 
         this._currentScene = this._engine.createScene(true);
         this._project.addScene(this._currentScene);
@@ -70,10 +59,21 @@ export class EditorService {
 
     public selectEntity(entity: IEntity): void {
         this._currentEntity = entity;
+
+        if (!this.editorScene) return;
+
+        new SetDebuggerEntityUseCase(this.editorScene).execute(this._currentEntity!);
+        this.editorScene.draw();
     }
 
     public addNewEntity(entity: IEntity): void {
         this._currentScene?.registerEntity(entity);
+    }
+
+    public removeEntity(id: string): void {
+        this._currentScene?.unregisterEntity(id);
+
+        this._editorScene?.hide();
     }
 
     public updateCurrentEntitySize(newSize: { width: number, height: number }): void {
@@ -86,10 +86,35 @@ export class EditorService {
         this._editorScene && new SetDebuggerEntityUseCase(this._editorScene).execute(this._currentEntity!);
     }
 
+    public updateCurrentEntityPosition(newPosition: Vec2): void {
+        const transform = this._currentEntity?.getComponent<TransformComponent>('TransformComponent');
+
+        if (!transform) return;
+
+        transform.position = newPosition;
+        this._editorScene && new SetDebuggerEntityUseCase(this._editorScene).execute(this._currentEntity!);
+    }
+
     private initEditorScene(): void {
         this._editorScene = this._engine!.createScene(true);
         this._editorScene.registerEntity(EditorService.editorEntities.outline);
         this._editorScene.registerEntity(EditorService.editorEntities.originPivot);
         this._project!.addScene(this._editorScene);
+    }
+
+    private initEngine(context: CanvasRenderingContext2D, resolution: { width: number, height: number }): GameEngine {
+        const result = new GameEngine({
+            framerate: 60,
+            context: context,
+            resolution: {
+                width: resolution.width,
+                height: resolution.height
+            },
+            imageLoader: this.imageLoader
+        });
+
+        result.renderer.defaultWireframeThickness = 3;
+
+        return result;
     }
 }

@@ -1,4 +1,4 @@
-import { GameEngine, GameObject, IEntity } from "sparkengineweb";
+import { GameEngine, GameObject, IEntity, Vec2 } from "sparkengineweb";
 import { EditorService } from "./EditorService";
 import { FileSystemImageRepository } from "../assets";
 
@@ -11,6 +11,8 @@ describe('EditorService', () => {
         context = new CanvasRenderingContext2D();
         imageLoader = new FileSystemImageRepository();
         editorService = new EditorService(imageLoader);
+
+
     })
 
     describe('.start()', () => {
@@ -22,8 +24,6 @@ describe('EditorService', () => {
             expect(editorService.engine?.renderer.resolution).toEqual(resolution);
             expect(editorService.engine?.imageLoader).toEqual(imageLoader);
         });
-
-
 
         it('Should create a new scene', () => {
             const resolution = { width: 800, height: 600 };
@@ -71,6 +71,19 @@ describe('EditorService', () => {
 
             expect(editorService.currentEntity).toEqual(entity);
         });
+
+        it('Should draw the editor scene', () => {
+            const resolution = { width: 800, height: 600 };
+            editorService.start(context, resolution);
+
+            const entity = { uuid: 'test-uuid' } as IEntity;
+
+            editorService.selectEntity(entity);
+
+            expect(editorService.editorScene?.shouldDraw).toBe(true);
+        })
+
+        it.todo('Should match the editor entities to the new entity');
     });
 
     describe('.addNewEntity()', () => {
@@ -82,6 +95,30 @@ describe('EditorService', () => {
             editorService.addNewEntity(entity);
 
             expect(editorService.currentScene?.entities).toContain(entity);
+        });
+    });
+
+    describe('.removeEntity()', () => {
+        it('Should remove the entity from the current scene', () => {
+            const resolution = { width: 800, height: 600 };
+            const entity = new GameObject();
+
+            editorService.start(context, resolution);
+            editorService.addNewEntity(entity);
+            editorService.removeEntity(entity.uuid);
+
+            expect(editorService.currentScene?.entities).not.toContain(entity);
+        });
+
+        it('Should hide the editorScene', () => {
+            const resolution = { width: 800, height: 600 };
+            const entity = new GameObject();
+
+            editorService.start(context, resolution);
+            editorService.addNewEntity(entity);
+            editorService.removeEntity(entity.uuid);
+
+            expect(editorService.editorScene?.shouldDraw).toBe(false);
         })
     })
 
@@ -94,5 +131,20 @@ describe('EditorService', () => {
 
             expect((editorService.currentEntity as GameObject)?.transform.size).toEqual({ width: 200, height: 200 });
         });
+
+        it.todo('Should match the editor entities to the new size');
+    });
+
+    describe('.updateCurrentEntityPosition()', () => {
+        it('Should update the position of the current entity', () => {
+            const entity = new GameObject();
+
+            editorService.selectEntity(entity);
+            editorService.updateCurrentEntityPosition(new Vec2(200, 200));
+
+            expect((editorService.currentEntity as GameObject)?.transform.position).toEqual({ x: 200, y: 200 });
+        });
+
+        it.todo('Should match the editor entities to the new position');
     });
 });
