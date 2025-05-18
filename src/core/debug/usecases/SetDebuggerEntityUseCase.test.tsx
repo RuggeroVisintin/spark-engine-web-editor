@@ -31,7 +31,7 @@ describe('core/scene/usecases/SetDebuggerEntityUseCase', () => {
         debuggerEntity = new FakeDebuggerEntity();
         debuggerEntity2 = new FakeDebuggerEntity();
 
-        debuggerScene = engine.createScene();
+        debuggerScene = new Scene();
         debuggerScene.registerEntity(debuggerEntity);
         debuggerScene.registerEntity(debuggerEntity2);
 
@@ -52,7 +52,7 @@ describe('core/scene/usecases/SetDebuggerEntityUseCase', () => {
     });
 
     it('Should not throw errors when the scene does not have a debuggerEntity', () => {
-        const emptyScene = engine.createScene();
+        const emptyScene = new Scene();
         const useCase = new SetDebuggerEntityUseCase(emptyScene);
 
         expect(() => {

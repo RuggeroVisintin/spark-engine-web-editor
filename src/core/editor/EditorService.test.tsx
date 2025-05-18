@@ -1,4 +1,4 @@
-import { GameEngine, GameObject, IEntity, Scene, Vec2 } from "sparkengineweb";
+import { GameObject, IEntity, Scene, Vec2 } from "sparkengineweb";
 import { EditorService } from "./EditorService";
 import { FileSystemImageRepository } from "../assets";
 import { ProjectRepository } from "../project/ports";
@@ -18,16 +18,7 @@ class ProjectRepositoryTestDouble implements ProjectRepository {
     public project?: Project;
 }
 
-const gameEngine = new GameEngine({
-    framerate: 60,
-    context: new CanvasRenderingContext2D(),
-    resolution: {
-        width: 800,
-        height: 600
-    }
-})
-const sceneToLoad = gameEngine.createScene(true);
-
+const sceneToLoad = new Scene();
 
 describe('EditorService', () => {
     let editorService: EditorService;
@@ -62,7 +53,14 @@ describe('EditorService', () => {
             editorService.start(context, resolution);
 
             expect(editorService.currentScene).toBeDefined();
-            expect(editorService.engine?.scenes).toContain(editorService.currentScene);
+        });
+
+        it('Should draw the current scene', () => {
+            const resolution = { width: 800, height: 600 };
+
+            editorService.start(context, resolution);
+
+            expect(editorService.currentScene?.shouldDraw).toBe(true);
         });
 
         it('Should create a new editor scene', () => {
@@ -71,10 +69,16 @@ describe('EditorService', () => {
             editorService.start(context, resolution);
 
             expect(editorService.editorScene).toBeDefined();
-            expect(editorService.engine?.scenes).toContain(editorService.editorScene);
             expect(editorService?.editorScene?.entities).toContain(EditorService.editorEntities.originPivot);
             expect(editorService?.editorScene?.entities).toContain(EditorService.editorEntities.outline);
+        });
 
+        it('Should draw the editor scene', () => {
+            const resolution = { width: 800, height: 600 };
+
+            editorService.start(context, resolution);
+
+            expect(editorService.editorScene?.shouldDraw).toBe(true);
         });
 
         it('Should create a new project with the editor and game scene', () => {

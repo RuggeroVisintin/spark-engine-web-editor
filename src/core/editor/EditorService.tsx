@@ -7,6 +7,7 @@ import Pivot from "../debug/Pivot";
 import { ProjectRepository } from "../project/ports";
 import { SceneRepository } from "../scene";
 
+// TOOD: split into multiple services once refactoring is finished
 export class EditorService {
     private _currentEntity?: IEntity;
     private _currentScene?: Scene;
@@ -53,7 +54,8 @@ export class EditorService {
             name: 'my-project', scenes: []
         });
 
-        this._currentScene = this._engine.createScene(true);
+        this._currentScene = new Scene();
+        this._currentScene.draw(this._engine);
         this._project.addScene(this._currentScene);
 
         this.initEditorScene();
@@ -106,10 +108,12 @@ export class EditorService {
     }
 
     private initEditorScene(): void {
-        this._editorScene = this._engine!.createScene(true);
+        this._editorScene = new Scene();
         this._editorScene.registerEntity(EditorService.editorEntities.outline);
         this._editorScene.registerEntity(EditorService.editorEntities.originPivot);
         this._project!.addScene(this._editorScene);
+
+        this._editorScene.draw(this._engine!);
     }
 
     private initEngine(context: CanvasRenderingContext2D, resolution: { width: number, height: number }): GameEngine {
