@@ -15,7 +15,7 @@ const gameEngine = new GameEngine({
 })
 
 describe('core/project/models/Project', () => {
-    const sceneRepo = new FileSystemSceneRepository(gameEngine);
+    const sceneRepo = new FileSystemSceneRepository();
 
     describe('.constructor()', () => {
         it('should create a new instance of Project with the given props', () => {

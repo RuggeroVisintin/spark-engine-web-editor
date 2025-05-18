@@ -4,6 +4,8 @@ import { Optional } from "../../common";
 import { Project } from "../project/models";
 import { EntityOutline } from "../debug";
 import Pivot from "../debug/Pivot";
+import { ProjectRepository } from "../project/ports";
+import { SceneRepository } from "../scene";
 
 export class EditorService {
     private _currentEntity?: IEntity;
@@ -39,6 +41,8 @@ export class EditorService {
 
     constructor(
         private readonly imageLoader: ImageLoader,
+        private readonly projectRepository: ProjectRepository,
+        private readonly sceneRepository: SceneRepository
     ) {
     }
 
@@ -57,13 +61,19 @@ export class EditorService {
         this._engine.run();
     }
 
+    public async openProject(): Promise<Project> {
+        this._project = await this.projectRepository.read();
+
+        await this._project.loadScenes(this.sceneRepository);
+
+        return this._project;
+    }
+
     public selectEntity(entity: IEntity): void {
         this._currentEntity = entity;
 
-        if (!this.editorScene) return;
-
-        new SetDebuggerEntityUseCase(this.editorScene).execute(this._currentEntity!);
-        this.editorScene.draw();
+        this.editorScene && new SetDebuggerEntityUseCase(this.editorScene).execute(this._currentEntity);
+        this.engine && this.editorScene?.shouldDraw === false && this.editorScene?.draw(this.engine);
     }
 
     public addNewEntity(entity: IEntity): void {

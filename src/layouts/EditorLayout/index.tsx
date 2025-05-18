@@ -1,14 +1,11 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { GameEngine, IEntity, ImageAsset, ImageLoader, MaterialComponent, Rgb, Scene, TransformComponent, Vec2 } from '@sparkengine';
 import { EngineView } from '../../components';
 import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
 import { ActionMenu } from '../../templates/ActionMenu';
 import { EntityPropsPanel } from '../../templates/EntityPropsPanel';
-import { SceneRepository } from '../../core/scene/ports';
 import { FileSystemSceneRepository } from '../../core/scene/adapters';
-import { OpenProjectUseCase } from '../../core/project/usecases/OpenProjectUseCase';
-import { ProjectRepository } from '../../core/project/ports';
 import { FileSystemProjectRepository } from '../../core/project/adapters';
 import { SaveProjectUseCase } from '../../core/project/usecases';
 import { Project } from '../../core/project/models';
@@ -17,18 +14,18 @@ import { FileSystemImageRepository } from '../../core/assets/image/adapters';
 import { WeakRef } from '../../common';
 import { ImageRepository } from '../../core/assets';
 import { v4 } from 'uuid';
-import { SetDebuggerEntityUseCase } from '../../core/debug/usecases';
 import { EditorService } from '../../core/editor';
 
-let sceneRepo: SceneRepository;
-let projectRepo: ProjectRepository;
 let imageRepository: ImageRepository;
 let imageLoader: ImageLoader;
 
 const project = new Project({ name: 'my-project', scenes: [] });
+const projectRepo = new FileSystemProjectRepository();
+const sceneRepo = new FileSystemSceneRepository();
+
 imageLoader = imageRepository = new FileSystemImageRepository(project.scopeRef as WeakRef<FileSystemDirectoryHandle>);
 
-const editorService = new EditorService(imageLoader);
+const editorService = new EditorService(imageLoader, projectRepo, sceneRepo);
 
 export const EditorLayout = () => {
     const [currentProject, setCurrentProject] = useState<Project>(project);
@@ -42,9 +39,6 @@ export const EditorLayout = () => {
     const onEngineViewReady = async ({ context, resolution }: OnEngineViewReadyCBProps) => {
         editorService.start(context, resolution);
         const newEngine = editorService.engine!;
-
-        sceneRepo = new FileSystemSceneRepository(newEngine);
-        projectRepo = new FileSystemProjectRepository();
 
         editorService.currentScene && setScene(editorService.currentScene);
         editorService.editorScene && setDebuggerScene(editorService.editorScene);
@@ -88,8 +82,7 @@ export const EditorLayout = () => {
     const onProjectFileOpen = async () => {
         if (!sceneRepo) return;
 
-        const newProject = await new OpenProjectUseCase(projectRepo, sceneRepo)
-            .execute();
+        const newProject = await editorService.openProject();
 
         (imageLoader as FileSystemImageRepository).changeScope(newProject.scopeRef as WeakRef<FileSystemDirectoryHandle>);
 
@@ -97,7 +90,8 @@ export const EditorLayout = () => {
 
         scene?.dispose();
         debuggerScene?.hide();
-        newScene.draw();
+
+        editorService.engine && newScene?.draw(editorService.engine);
 
         setScene(newScene);
         setCurrentProject(newProject);
@@ -138,8 +132,8 @@ export const EditorLayout = () => {
                         {currentEntity &&
                             <EntityPropsPanel
                                 entity={currentEntity}
-                                onUpdatePosition={editorService.updateCurrentEntityPosition}
-                                onUpdateSize={editorService.updateCurrentEntitySize}
+                                onUpdatePosition={({ newPosition }: { newPosition: Vec2 }) => editorService.updateCurrentEntityPosition(newPosition)}
+                                onUpdateSize={({ newSize }: { newSize: { width: number, height: number } }) => editorService.updateCurrentEntitySize(newSize)}
                                 onMaterialUpdate={onMaterialUpdate}
                             ></EntityPropsPanel>}
                     </FlexBox>

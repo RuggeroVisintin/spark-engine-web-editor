@@ -1,18 +1,49 @@
-import { GameEngine, GameObject, IEntity, Vec2 } from "sparkengineweb";
+import { GameEngine, GameObject, IEntity, Scene, Vec2 } from "sparkengineweb";
 import { EditorService } from "./EditorService";
 import { FileSystemImageRepository } from "../assets";
+import { ProjectRepository } from "../project/ports";
+import { Project } from "../project/models";
+import { SceneRepositoryTestDouble } from "../../__mocks__/core/scene/SceneRepositoryTestDouble";
+import { WeakRef } from "../../common";
+
+
+class ProjectRepositoryTestDouble implements ProjectRepository {
+    public read(): Promise<Project> {
+        return Promise.resolve(this.project as Project);
+    }
+
+    save = jest.fn();
+    update = jest.fn();
+
+    public project?: Project;
+}
+
+const gameEngine = new GameEngine({
+    framerate: 60,
+    context: new CanvasRenderingContext2D(),
+    resolution: {
+        width: 800,
+        height: 600
+    }
+})
+const sceneToLoad = gameEngine.createScene(true);
+
 
 describe('EditorService', () => {
     let editorService: EditorService;
     let imageLoader: FileSystemImageRepository;
     let context: CanvasRenderingContext2D;
+    let projectRepositoryDouble: ProjectRepositoryTestDouble;
+    let sceneRepository: SceneRepositoryTestDouble;
 
     beforeEach(() => {
+        projectRepositoryDouble = new ProjectRepositoryTestDouble();
+        sceneRepository = new SceneRepositoryTestDouble();
         context = new CanvasRenderingContext2D();
         imageLoader = new FileSystemImageRepository();
-        editorService = new EditorService(imageLoader);
+        editorService = new EditorService(imageLoader, projectRepositoryDouble, sceneRepository);
 
-
+        sceneRepository.save(sceneToLoad, { path: 'test-scene.spark.json', accessScope: new WeakRef<null>(null) });
     })
 
     describe('.start()', () => {
@@ -63,6 +94,23 @@ describe('EditorService', () => {
         it.todo('Should start the engine');
     });
 
+    describe('.openProject()', () => {
+        it('Should load a new project from the given repository', async () => {
+            const resolution = { width: 800, height: 600 };
+            projectRepositoryDouble.project = new Project({
+                name: 'loaded-project',
+                scenes: ['test-scene.spark.json']
+            });
+
+            editorService.start(context, resolution);
+            await editorService.openProject();
+
+            expect(editorService.project).toEqual(projectRepositoryDouble.project);
+            expect(editorService.project?.scenes).toEqual([sceneToLoad])
+        });
+
+    })
+
     describe('.selectEntity()', () => {
         it('Should set the given entity as the current entity', () => {
             const entity = { uuid: 'test-uuid' } as IEntity;
@@ -72,12 +120,11 @@ describe('EditorService', () => {
             expect(editorService.currentEntity).toEqual(entity);
         });
 
-        it('Should draw the editor scene', () => {
+        it('Should draw the editor scene if the engine is already set', () => {
             const resolution = { width: 800, height: 600 };
             editorService.start(context, resolution);
 
             const entity = new GameObject();
-
             editorService.selectEntity(entity);
 
             expect(editorService.editorScene?.shouldDraw).toBe(true);
