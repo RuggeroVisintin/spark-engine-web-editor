@@ -1,18 +1,8 @@
 import { FileSystemSceneRepository } from "./FileSystemSceneRepository";
 import testSceneJson from '../../../__mocks__/assets/test-scene.json';
 import { createDirectoryHandleMock, FileSystemWritableFileStreamMock, setMockedFile } from "../../../__mocks__/fs-api.mock";
-import { GameEngine } from "@sparkengine";
 import { WeakRef } from "../../../common";
-
-const gameEngine = new GameEngine({
-    framerate: 60,
-    context: new CanvasRenderingContext2D(),
-    resolution: {
-        width: 800,
-        height: 600
-    }
-})
-
+import { Scene } from "sparkengineweb";
 
 describe('core/scene/adapters/FileSystemSceneRepository', () => {
     afterEach(() => {
@@ -23,14 +13,14 @@ describe('core/scene/adapters/FileSystemSceneRepository', () => {
         it('Should use FileSystem Web APIs to prompt the user to pick a scene file', async () => {
             setMockedFile(JSON.stringify(testSceneJson));
 
-            const sceneRepo = new FileSystemSceneRepository(gameEngine);
+            const sceneRepo = new FileSystemSceneRepository();
             expect((await sceneRepo.read()).toJson()).toEqual(testSceneJson);
         });
 
         it('Should use FileSystem web APIs to read a file from the given folder scope withouth prompting the user when valid scopeRef is provided', async () => {
             setMockedFile(JSON.stringify(testSceneJson));
 
-            const sceneRepo = new FileSystemSceneRepository(gameEngine);
+            const sceneRepo = new FileSystemSceneRepository();
             const result = await sceneRepo.read({
                 accessScope: new WeakRef<FileSystemDirectoryHandle>(createDirectoryHandleMock() as unknown as FileSystemDirectoryHandle),
                 path: 'test-scene.json'
@@ -45,8 +35,8 @@ describe('core/scene/adapters/FileSystemSceneRepository', () => {
         it('Should use FileSystem web APIs to save a scene file at given filePath', async () => {
             const writableSpy = jest.spyOn(FileSystemWritableFileStreamMock, 'write');
 
-            const sceneRepo = new FileSystemSceneRepository(gameEngine);
-            const testScene = gameEngine.createScene();
+            const sceneRepo = new FileSystemSceneRepository();
+            const testScene = new Scene();
             testScene.loadFromJson(testSceneJson);
 
             await sceneRepo.save(testScene);
@@ -57,10 +47,10 @@ describe('core/scene/adapters/FileSystemSceneRepository', () => {
         it('Shouls use FileSystem web APIs to save a scene file at the specified location when provided', async () => {
             const writableSpy = jest.spyOn(FileSystemWritableFileStreamMock, 'write');
 
-            const testScene = gameEngine.createScene();
+            const testScene = new Scene();
             testScene.loadFromJson(testSceneJson);
 
-            const sceneRepo = new FileSystemSceneRepository(gameEngine);
+            const sceneRepo = new FileSystemSceneRepository();
             await sceneRepo.save(testScene, {
                 accessScope: new WeakRef<FileSystemDirectoryHandle>(createDirectoryHandleMock() as unknown as FileSystemDirectoryHandle),
                 path: 'test-scene.json'

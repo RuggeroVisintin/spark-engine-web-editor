@@ -1,9 +1,9 @@
-import { GameEngine, Scene } from "@sparkengine";
+import { Scene } from "@sparkengine";
 import { SceneRepository } from "../ports";
 import { FileSystemRepository, LocationParameters } from "../../common";
 
 export class FileSystemSceneRepository extends FileSystemRepository implements SceneRepository {
-    constructor(private readonly factory: GameEngine) {
+    constructor() {
         super();
     }
 
@@ -23,7 +23,7 @@ export class FileSystemSceneRepository extends FileSystemRepository implements S
             });
         }
 
-        const result = this.factory.createScene();
+        const result = new Scene();
         result.loadFromJson(JSON.parse(await (await fileHandle.getFile()).text()));
 
         return result;
