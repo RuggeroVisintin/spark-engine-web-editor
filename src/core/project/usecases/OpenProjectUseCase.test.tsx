@@ -4,16 +4,7 @@ import { OpenProjectUseCase } from "./OpenProjectUseCase";
 import { Project } from "../models";
 import { SceneRepository } from "../../scene/ports";
 import testSceneJson from '../../../__mocks__/assets/test-scene.json';
-import { GameEngine, Scene } from "@sparkengine";
-
-const gameEngine = new GameEngine({
-    framerate: 60,
-    resolution: {
-        width: 800,
-        height: 600
-    },
-    context: new CanvasRenderingContext2D()
-});
+import { Scene } from "@sparkengine";
 
 class MockProjectRepository implements ProjectRepository {
     read = jest.fn().mockResolvedValue(new Project(testProjectJson));
@@ -24,7 +15,7 @@ class MockProjectRepository implements ProjectRepository {
 class MockSceneRepository implements SceneRepository {
     read = jest.fn().mockImplementation(async (): Promise<Scene> => {
         return new Promise((resolve) => {
-            const scene = gameEngine.createScene();
+            const scene = new Scene();
             scene.loadFromJson(testSceneJson);
             resolve(scene);
         });
@@ -33,8 +24,6 @@ class MockSceneRepository implements SceneRepository {
 }
 
 describe('core/project/usecases/OpenProjectUseCase', () => {
-
-
     it('Should load the project from the chosen filesystem directory', async () => {
         const result = await new OpenProjectUseCase(new MockProjectRepository(), new MockSceneRepository()).execute();
 

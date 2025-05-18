@@ -4,17 +4,7 @@ import { SceneRepository } from "../../scene";
 import { Project } from "../models";
 import { ProjectRepository } from "../ports";
 import { SaveProjectUseCase } from "./SaveProjectUseCase";
-import { GameEngine, GameObject, ImageAsset } from "@sparkengine";
-
-const gameEngine = new GameEngine({
-    framerate: 60,
-    resolution: {
-        width: 800,
-        height: 600
-    },
-    context: new CanvasRenderingContext2D()
-});
-
+import { GameObject, ImageAsset, Scene } from "@sparkengine";
 
 class MockProjectReposioty implements ProjectRepository {
     read = jest.fn();
@@ -24,7 +14,7 @@ class MockProjectReposioty implements ProjectRepository {
 
 class MockSceneRepository implements SceneRepository {
     read = jest.fn(() => {
-        return Promise.resolve(gameEngine.createScene())
+        return Promise.resolve(new Scene());
     });
     save = jest.fn();
 }
@@ -99,7 +89,7 @@ describe('core/project/usecases/SaveProjectuseCase', () => {
             scenes: []
         }, new WeakRef<string>('path/to/project'))
 
-        const scene = gameEngine.createScene();
+        const scene = new Scene();
         const gameObject = new GameObject({});
 
         gameObject.material.diffuseTexturePath = 'assets/test-1.png';
@@ -127,7 +117,7 @@ describe('core/project/usecases/SaveProjectuseCase', () => {
             scenes: []
         }, new WeakRef())
 
-        const scene = gameEngine.createScene();
+        const scene = new Scene();
         const gameObject = new GameObject({});
 
         gameObject.material.diffuseTexturePath = 'assets/test-1.png';

@@ -1,18 +1,9 @@
-import { GameEngine } from "@sparkengine";
+import { Scene } from "@sparkengine";
 import { FileSystemSceneRepository } from "../../scene"
 import { Project } from "./Project"
 import { WeakRef } from "../../../common";
 import { createDirectoryHandleMock, setMockedFile } from "../../../__mocks__/fs-api.mock";
 import testSceneJson from '../../../__mocks__/assets/test-scene.json';
-
-const gameEngine = new GameEngine({
-    framerate: 60,
-    context: new CanvasRenderingContext2D(),
-    resolution: {
-        width: 800,
-        height: 600
-    }
-})
 
 describe('core/project/models/Project', () => {
     const sceneRepo = new FileSystemSceneRepository();
@@ -38,7 +29,7 @@ describe('core/project/models/Project', () => {
                 scenes: ['scenes/test.scene.spark.json']
             });
 
-            sourceProject.scenes = [gameEngine.createScene()];
+            sourceProject.scenes = [new Scene()];
             const newProject = Project.fromProject(sourceProject);
 
             expect(newProject.scenes).toEqual(sourceProject.scenes);
@@ -105,7 +96,7 @@ describe('core/project/models/Project', () => {
                 scenes: []
             });
 
-            const newScene = gameEngine.createScene()
+            const newScene = new Scene();
 
             project.addScene(newScene);
 
@@ -118,7 +109,7 @@ describe('core/project/models/Project', () => {
                 scenes: []
             });
 
-            const newScene = gameEngine.createScene()
+            const newScene = new Scene();
 
             project.addScene(newScene);
 
