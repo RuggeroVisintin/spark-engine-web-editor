@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.9](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.8...sparkenginewebeditor-v0.0.9) (2025-05-21)
+
+
+### Bug Fixes
+
+* fix unwanted change ([35e8f67](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/35e8f67cb5f2ad09cd0988e45631ef3f5320ec7b))
+
 ## [0.0.8](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.7...sparkenginewebeditor-v0.0.8) (2025-05-01)
 
 
