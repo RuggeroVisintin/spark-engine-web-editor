@@ -10,7 +10,7 @@ class MockProjectReposioty implements ProjectRepository {
     read = jest.fn();
     save = jest.fn();
     update = jest.fn();
-};
+}
 
 class MockSceneRepository implements SceneRepository {
     read = jest.fn(() => {

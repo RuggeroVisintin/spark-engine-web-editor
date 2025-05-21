@@ -6,6 +6,6 @@ export class WeakRef<T = unknown> {
     }
 
     isEmpty(): boolean {
-        return !!!this.ref;
+        return !this.ref;
     }
 }

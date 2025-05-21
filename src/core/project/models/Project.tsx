@@ -5,7 +5,7 @@ import { WeakRef } from "../../../common";
 export interface ProjectJsonProps {
     name: string;
     scenes: string[];
-};
+}
 
 export class Project {
     public readonly name: string;
@@ -60,4 +60,4 @@ export class Project {
             scenes: this.scenePaths
         }
     }
-};
+}

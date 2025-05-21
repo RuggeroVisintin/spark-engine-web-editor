@@ -12,7 +12,7 @@ export interface MouseClickEvent {
 export interface OnEngineViewReadyCBProps {
     context: CanvasRenderingContext2D;
     resolution: { width: number, height: number };
-};
+}
 
 interface EngineViewProps {
     onEngineViewReady: Function<OnEngineViewReadyCBProps>

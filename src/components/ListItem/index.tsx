@@ -56,16 +56,15 @@ export const ListItem = ({
             $clickable={!!onClick}
         >
             <FlexBox $direction="row" $centerItems>
-                {imgSrc && <ImageBox src={require(`../../assets/images/${imgSrc}`)} alt="img"/>}
-                <Text>{text}</Text>
+                {imgSrc && <ImageBox src={require(`../../assets/images/${imgSrc}`)} alt="img" />}
                 {button &&
                     <Button
                         onClick={(e) => {
                             button.onClick?.(e);
                         }}
-                    	data-testid={button["data-testid"]}
+                        data-testid={button["data-testid"]}
                     >
-                    	{button.text}
+                        {button.text}
                     </Button>
                 }
             </FlexBox>

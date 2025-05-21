@@ -2,7 +2,7 @@ let __mockedFileBody = '';
 
 export function setMockedFile(mockedFileBody: string) {
     __mockedFileBody = mockedFileBody;
-};
+}
 
 export const FileSystemWritableFileStreamMock = {
     write: jest.fn(),
