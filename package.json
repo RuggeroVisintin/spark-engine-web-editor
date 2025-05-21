@@ -18,8 +18,8 @@
     "test:ci": "bash ./scripts/test-ci.sh",
     "eject": "react-scripts eject",
     "license-check": "bash ./scripts/check-licenses.sh",
-    "lint": "eslint . --ext .tsx",
-    "lint:fix": "eslint --fix . --ext .tsx",
+    "lint": "eslint . --config .eslintrc.json --ext .tsx",
+    "lint:fix": "eslint . --config .eslintrc.json --ext .tsx --fix",
     "postinstall": "bash ./scripts/post-install.sh",
     "prepare": "husky"
   },

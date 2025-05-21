@@ -12,5 +12,9 @@ module.exports = {
                 '@sparkengine': SPARK_ENGINE_PATH
             }
         }
-    }]
+    }],
+    eslint: {
+        // Use our eslint config instead
+        enable: false,
+    },
 }
