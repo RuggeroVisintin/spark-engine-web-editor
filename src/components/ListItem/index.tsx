@@ -57,6 +57,7 @@ export const ListItem = ({
         >
             <FlexBox $direction="row" $centerItems>
                 {imgSrc && <ImageBox src={require(`../../assets/images/${imgSrc}`)} alt="img" />}
+                <Text>{text}</Text>
                 {button &&
                     <Button
                         onClick={(e) => {
