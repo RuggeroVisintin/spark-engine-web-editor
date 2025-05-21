@@ -1,5 +1,9 @@
 set -e
 
+if [ -t 0 ]; then
+    echo running interactively>&2
+fi
+
 npm run lint || {
     echo "Linting failed with errors" >&2
 
@@ -11,7 +15,10 @@ npm run lint || {
     read -p "Continue? (Y/N): " confirm
 
     if [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]]; then
-        echo "Confirmed, continuing with push..."
+        echo "Confirmed, continuing with push...">&2
+    else 
+        echo "Aborting push...">&2
+        exit 1
     fi
 }
 
