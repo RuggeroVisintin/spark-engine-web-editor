@@ -1,15 +1,18 @@
 set -e
 
-# run as if we were in the pipeline
-CI=true && npm run lint
+npm run lint || {
+    echo "Linting failed with errors" >&2
 
-if [ "$(which "$read")" == "" ]; then
-  echo "Cannot read input, please run git push again from another shell">&2
-  exit 1
-fi
+    if [ "$(which "read")" == "" ]; then
+        echo "Cannot read input, please run git push again from another shell">&2
+        exit 1
+    fi
 
-read -p "Continue? (Y/N): " confirm
+    read -p "Continue? (Y/N): " confirm
 
-if [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]]; then
-  echo "Confirmed, continuing with push..."
-fi
+    if [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]]; then
+        echo "Confirmed, continuing with push..."
+    fi
+}
+
+exit 1;
