@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { GameEngine, IEntity, ImageAsset, ImageLoader, MaterialComponent, Rgb, Scene, TransformComponent, Vec2 } from '@sparkengine';
+import { GameEngine, IEntity, ImageAsset, ImageLoader, MaterialComponent, Rgb, Scene, Vec2 } from '@sparkengine';
 import { EngineView } from '../../components';
 import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';

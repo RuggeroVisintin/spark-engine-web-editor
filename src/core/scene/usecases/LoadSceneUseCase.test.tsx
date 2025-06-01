@@ -1,16 +1,7 @@
-import { GameEngine, Scene } from "@sparkengine";
+import { Scene } from "@sparkengine";
 import { LoadSceneUseCase } from "./LoadSceneUseCase";
 import testSceneJson from '../../../__mocks__/assets/test-scene.json';
 import { SceneRepository } from "../ports";
-
-const engine = new GameEngine({
-    framerate: 60,
-    context: new CanvasRenderingContext2D(),
-    resolution: {
-        width: 800,
-        height: 600
-    }
-});
 
 class MockSceneRepository implements SceneRepository {
     read = jest.fn().mockImplementation(() => {

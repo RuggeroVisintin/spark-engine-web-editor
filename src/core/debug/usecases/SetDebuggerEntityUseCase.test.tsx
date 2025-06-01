@@ -1,15 +1,6 @@
-import { BaseEntity, GameEngine, GameObject, IEntity, Scene, Vec2 } from "@sparkengine";
+import { BaseEntity, GameObject, IEntity, Scene, Vec2 } from "@sparkengine";
 import { SetDebuggerEntityUseCase } from './SetDebuggerEntityUseCase';
 import IDebuggerEntity from "../IDebuggerEntity";
-
-const engine = new GameEngine({
-    framerate: 60,
-    context: new CanvasRenderingContext2D(),
-    resolution: {
-        width: 800,
-        height: 600
-    }
-})
 
 class FakeDebuggerEntity extends BaseEntity implements IDebuggerEntity {
     public matchTarget?: IEntity;
