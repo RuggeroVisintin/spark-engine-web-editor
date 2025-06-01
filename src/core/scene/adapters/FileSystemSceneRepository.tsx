@@ -3,10 +3,6 @@ import { SceneRepository } from "../ports";
 import { FileSystemRepository, LocationParameters } from "../../common";
 
 export class FileSystemSceneRepository extends FileSystemRepository implements SceneRepository {
-    constructor() {
-        super();
-    }
-
     public async read(location?: LocationParameters): Promise<Scene> {
         let fileHandle;
 

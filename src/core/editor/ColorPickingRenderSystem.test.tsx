@@ -1,4 +1,4 @@
-import { BlendMethod, CanvasDevice, DOMImageLoader, DrawPrimitiveCommand, GameObject, PrimitiveType, RenderCommand, RenderCommandID, Renderer, SetBlendingMethodCommand, SetTransformMatrixCommand, ShapeComponent } from "sparkengineweb";
+import { BlendMethod, CanvasDevice, DOMImageLoader, DrawPrimitiveCommand, GameObject, PrimitiveType, RenderCommand, Renderer, SetBlendingMethodCommand, SetTransformMatrixCommand, ShapeComponent } from "sparkengineweb";
 import { ColorPickingRenderSystem } from "./ColorPickingRenderSystem";
 import { uuidToRgb } from "../common/uuidToRgb";
 
