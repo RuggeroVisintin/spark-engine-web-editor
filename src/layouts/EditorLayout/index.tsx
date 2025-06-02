@@ -29,7 +29,7 @@ imageLoader = imageRepository = new FileSystemImageRepository(project.scopeRef a
 const objectPikcer = new ColorObjectPicker((...params) => new Renderer(...params), { width: 1920, height: 1080 }, imageLoader);
 const objectPickingService = new ObjectPickingService(objectPikcer);
 
-const editorService = new EditorService(imageLoader, projectRepo, sceneRepo);
+const editorService = new EditorService(imageLoader, projectRepo, sceneRepo, objectPickingService);
 
 export const EditorLayout = () => {
     const [currentProject, setCurrentProject] = useState<Project>(project);
@@ -120,8 +120,7 @@ export const EditorLayout = () => {
 
 
         objectPickingService.handleMouseClick(e);
-        console.log('Selected entity:', objectPickingService.selectedEntity);
-        setCurrentEntity(objectPickingService.selectedEntity);
+        objectPickingService.selectedEntity && onEntityFocus(objectPickingService.selectedEntity);
     }
 
     return (

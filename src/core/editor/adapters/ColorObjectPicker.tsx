@@ -21,10 +21,9 @@ export class ColorObjectPicker extends RenderSystem implements ObjectPicker {
 
     public pick(x: number, y: number): Optional<IEntity> {
         const imageData = this.context.getImageData(x, y, 1, 1);
-        var index = (x + y * imageData.width) * 4;
-        var r = imageData.data[index];
-        var g = imageData.data[index + 1];
-        var b = imageData.data[index + 2];
+        var r = imageData.data[0];
+        var g = imageData.data[1];
+        var b = imageData.data[2];
 
         const color = new Rgb(r, g, b);
 

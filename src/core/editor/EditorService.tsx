@@ -1,11 +1,13 @@
-import { GameEngine, IEntity, ImageLoader, Scene, TransformComponent, Vec2 } from "sparkengineweb";
+import { GameEngine, IEntity, ImageLoader, Renderer, Scene, TransformComponent, Vec2 } from "sparkengineweb";
 import { SetDebuggerEntityUseCase } from "../debug/usecases";
-import { Optional } from "../../common";
+import { Optional } from "../common";
 import { Project } from "../project/models";
 import { EntityOutline } from "../debug";
 import Pivot from "../debug/Pivot";
 import { ProjectRepository } from "../project/ports";
 import { SceneRepository } from "../scene";
+import { ObjectPicker } from "./ports/ObjectPicker";
+import { ObjectPickingService } from "./ObjectPickingService";
 
 // TOOD: split into multiple services once refactoring is finished
 export class EditorService {
@@ -43,7 +45,8 @@ export class EditorService {
     constructor(
         private readonly imageLoader: ImageLoader,
         private readonly projectRepository: ProjectRepository,
-        private readonly sceneRepository: SceneRepository
+        private readonly sceneRepository: SceneRepository,
+        private readonly objectPicking: ObjectPickingService
     ) {
     }
 
@@ -124,7 +127,10 @@ export class EditorService {
                 width: resolution.width,
                 height: resolution.height
             },
-            imageLoader: this.imageLoader
+            imageLoader: this.imageLoader,
+            additionalRenderSystems: (renderer: Renderer, imageLoader: ImageLoader) => [
+                this.objectPicking.getRenderSystem()
+            ]
         });
 
         result.renderer.defaultWireframeThickness = 3;

@@ -1,18 +1,26 @@
-import { CanvasDevice, ImageLoader, Renderer } from "sparkengineweb";
-import { Optional } from "../../common";
+
+import { IEntity, RenderSystem } from "sparkengineweb";
+import { MouseClickEvent } from "../../components";
+import { ObjectPicker } from "./ports/ObjectPicker";
+import { Optional } from "../common";
 
 export class ObjectPickingService {
-    private _renderer?: Renderer;
+    private _selectedEntity?: IEntity;
 
-    public get renderer(): Optional<Renderer> {
-        return this._renderer;
+    public get selectedEntity(): Optional<IEntity> {
+        return this._selectedEntity;
     }
 
-    public start(context: CanvasRenderingContext2D, resolution: { width: number, height: number }): void {
-        this._renderer = new Renderer(
-            new CanvasDevice(),
-            resolution,
-            context,
-        );
+    constructor(private readonly objectPicker: ObjectPicker) {
+    }
+
+    handleMouseClick(event: MouseClickEvent): void {
+        if (event.button !== 0) return;
+
+        this._selectedEntity = this.objectPicker.pick(event.targetX, event.targetY);
+    }
+
+    getRenderSystem(): RenderSystem {
+        return this.objectPicker;
     }
 }
