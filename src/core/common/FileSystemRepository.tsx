@@ -1,4 +1,4 @@
-import { WeakRef } from "../../common";
+import { WeakRef } from "../../core/common";
 
 export interface LocationParameters extends RefConfigParams {
     accessScope: WeakRef<FileSystemDirectoryHandle>;

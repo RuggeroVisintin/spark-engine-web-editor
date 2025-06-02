@@ -1,6 +1,6 @@
 import { Scene } from "@sparkengine";
 import { SceneRepository } from "../../scene";
-import { WeakRef } from "../../../core/common";
+import { WeakRef } from "../../common";
 
 export interface ProjectJsonProps {
     name: string;

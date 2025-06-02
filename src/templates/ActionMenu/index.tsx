@@ -1,7 +1,7 @@
 import React from "react";
 import { PopupMenu } from "../../components/PopupMenu";
 import { BackgroundColor, FlexBox, TextColor } from "../../primitives";
-import { Function } from "../../common";
+import { Function } from "../../core/common";
 
 export interface ActionMenuProps {
     onProjectFileOpen: Function;

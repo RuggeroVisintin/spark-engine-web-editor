@@ -4,7 +4,7 @@ import { FileSystemImageRepository } from "../assets";
 import { ProjectRepository } from "../project/ports";
 import { Project } from "../project/models";
 import { SceneRepositoryTestDouble } from "../../__mocks__/core/scene/SceneRepositoryTestDouble";
-import { WeakRef } from "../../core/common";
+import { WeakRef } from "../common";
 
 
 class ProjectRepositoryTestDouble implements ProjectRepository {

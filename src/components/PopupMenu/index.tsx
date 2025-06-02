@@ -1,6 +1,6 @@
 import React, { useId, useState } from "react";
 import styled from "styled-components";
-import { WithDataTestId } from "../../common";
+import { WithDataTestId } from "../../core/common";
 import { BackgroundColor, FlexBox, Spacing, TextColor } from "../../primitives";
 import { ListItem } from "../ListItem";
 
