@@ -54,6 +54,7 @@ export const EditorLayout = () => {
     const onAddEntity = (entity: IEntity) => {
         editorService.addNewEntity(entity);
         setEntities([...editorService.currentScene?.entities ?? []]);
+        onEntityFocus(entity);
     };
 
     const onRemoveEntity = (entity: IEntity) => {
@@ -112,15 +113,12 @@ export const EditorLayout = () => {
         if (e.button === 2) {
             const { targetX, targetY } = e;
 
-            const spawnPoint = new Vec2(targetX, targetY);
+            EditorService.editorEntities.originPivot.transform.position = new Vec2(targetX, targetY);
 
-            setSpawnPoint(spawnPoint);
-            EditorService.editorEntities.originPivot.transform.position = spawnPoint;
+            setSpawnPoint(EditorService.editorEntities.originPivot.transform.position);
         }
 
-
-        objectPickingService.handleMouseClick(e);
-        objectPickingService.selectedEntity && onEntityFocus(objectPickingService.selectedEntity);
+        objectPickingService.handleMouseClick(e, onEntityFocus);
     }
 
     return (

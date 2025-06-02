@@ -32,6 +32,6 @@ export default class Pivot extends GameObject implements IDebuggerEntity {
             return;
         }
 
-        debuggerTransform.position = targetTransform.position;
+        debuggerTransform.position = Vec2.from(targetTransform.position);
     }
 }
