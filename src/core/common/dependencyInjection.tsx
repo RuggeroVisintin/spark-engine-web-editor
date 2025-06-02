@@ -28,3 +28,5 @@ export const DI = {
         return new config.di[typeName].concrete(...(deps || [])) as T;
     }
 };
+
+export type Factory<T extends abstract new (...args: any) => any> = (...args: ConstructorParameters<T>) => InstanceType<T>;
