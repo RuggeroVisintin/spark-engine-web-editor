@@ -2,7 +2,8 @@ import { BlendMethod, CanvasDevice, DrawPrimitiveCommand, IEntity, ImageLoader, 
 import { uuidToRgb } from "../../common/uuidToRgb";
 import { Factory, Optional } from "../../common/";
 import { ObjectPicker } from "../ports/ObjectPicker";
-import { EditorService } from "../EditorService";
+import Pivot from "../../debug/Pivot";
+import { EntityOutline } from "../../debug";
 
 export class ColorObjectPicker extends RenderSystem implements ObjectPicker {
     private colorToEntityMap: Map<string, IEntity> = new Map();
@@ -44,7 +45,7 @@ export class ColorObjectPicker extends RenderSystem implements ObjectPicker {
                 if (!parentEntity) return;
 
                 // avoid rendering the editor entities
-                if ([EditorService.editorEntities.originPivot.uuid, EditorService.editorEntities.outline.uuid].indexOf(parentEntity.uuid) !== -1) return;
+                if (parentEntity instanceof Pivot || parentEntity instanceof EntityOutline) return;
 
                 const color = uuidToRgb(parentEntity.uuid);
 

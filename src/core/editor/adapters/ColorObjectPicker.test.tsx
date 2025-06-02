@@ -1,6 +1,8 @@
 import { BlendMethod, CanvasDevice, DOMImageLoader, DrawPrimitiveCommand, GameObject, PrimitiveType, RenderCommand, Renderer, SetBlendingMethodCommand, SetTransformMatrixCommand, ShapeComponent } from "sparkengineweb";
 import { ColorObjectPicker } from "./ColorObjectPicker";
 import { uuidToRgb } from "../../common/uuidToRgb";
+import Pivot from "../../debug/Pivot";
+import { EntityOutline } from "../../debug";
 
 class RendererTestDouble extends Renderer {
     public renderCommands: RenderCommand[] = [];
@@ -74,7 +76,22 @@ describe('core/editor/adapters/ColorObjectPicker', () => {
                 new SetBlendingMethodCommand(BlendMethod.BM_Overwrite),
                 new SetTransformMatrixCommand([-0, -0]),
             ]);
-        })
+        });
+
+        it.each([
+            Pivot, EntityOutline
+        ].map((ctor) => [ctor.name, ctor])
+        )('Should not render %s editor entities', (__, ctor: new () => any) => {
+            const gameObject = new ctor();
+
+            renderSystem.registerComponent(gameObject.shape);
+            renderSystem.update();
+
+            expect(renderer.renderCommands).toStrictEqual([
+                new SetBlendingMethodCommand(BlendMethod.BM_Overwrite),
+                new SetTransformMatrixCommand([-0, -0]),
+            ]);
+        });
     });
 
     describe('.pick()', () => {
