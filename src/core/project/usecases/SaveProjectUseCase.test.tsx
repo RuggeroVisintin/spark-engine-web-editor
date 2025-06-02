@@ -1,5 +1,5 @@
 import { FakeBitmap } from "../../../__mocks__/bitmap.mock";
-import { WeakRef } from "../../../common";
+import { WeakRef } from "../../../core/common";
 import { SceneRepository } from "../../scene";
 import { Project } from "../models";
 import { ProjectRepository } from "../ports";
