@@ -1,4 +1,4 @@
-import { GameObject, IEntity, incrementallyUnique, Rgb, TransformComponent, Type } from "sparkengineweb";
+import { GameObject, IEntity, incrementallyUnique, Rgb, TransformComponent, Type, Vec2 } from "sparkengineweb";
 import IDebuggerEntity from "./IDebuggerEntity";
 
 @Type('EntityOutline')
@@ -28,7 +28,8 @@ export class EntityOutline extends GameObject implements IDebuggerEntity {
             return;
         }
 
-        debuggerTransform.position = targetTransform.position;
-        debuggerTransform.size = targetTransform.size;
+        debuggerTransform.position = Vec2.from(targetTransform.position);
+        debuggerTransform.size.height = targetTransform.size.height;
+        debuggerTransform.size.width = targetTransform.size.width;
     }
 }

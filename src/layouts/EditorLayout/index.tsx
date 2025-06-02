@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { GameEngine, IEntity, ImageAsset, ImageLoader, MaterialComponent, Rgb, Scene, Vec2 } from '@sparkengine';
+import { CanvasDevice, GameEngine, IEntity, ImageAsset, ImageLoader, MaterialComponent, Renderer, Rgb, Scene, Vec2 } from '@sparkengine';
 import { EngineView } from '../../components';
 import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
@@ -11,10 +11,12 @@ import { SaveProjectUseCase } from '../../core/project/usecases';
 import { Project } from '../../core/project/models';
 import { MouseClickEvent, OnEngineViewReadyCBProps } from '../../components/EngineView';
 import { FileSystemImageRepository } from '../../core/assets/image/adapters';
-import { WeakRef } from '../../common';
+import { WeakRef } from '../../core/common';
 import { ImageRepository } from '../../core/assets';
 import { v4 } from 'uuid';
 import { EditorService } from '../../core/editor';
+import { ColorObjectPicker } from '../../core/editor/adapters/ColorObjectPicker';
+import { ObjectPickingService } from '../../core/editor/ObjectPickingService';
 
 let imageRepository: ImageRepository;
 let imageLoader: ImageLoader;
@@ -24,8 +26,10 @@ const projectRepo = new FileSystemProjectRepository();
 const sceneRepo = new FileSystemSceneRepository();
 
 imageLoader = imageRepository = new FileSystemImageRepository(project.scopeRef as WeakRef<FileSystemDirectoryHandle>);
+const objectPikcer = new ColorObjectPicker((...params) => new Renderer(...params), { width: 1920, height: 1080 }, imageLoader);
+const objectPickingService = new ObjectPickingService(objectPikcer);
 
-const editorService = new EditorService(imageLoader, projectRepo, sceneRepo);
+const editorService = new EditorService(imageLoader, projectRepo, sceneRepo, objectPickingService);
 
 export const EditorLayout = () => {
     const [currentProject, setCurrentProject] = useState<Project>(project);
@@ -50,6 +54,7 @@ export const EditorLayout = () => {
     const onAddEntity = (entity: IEntity) => {
         editorService.addNewEntity(entity);
         setEntities([...editorService.currentScene?.entities ?? []]);
+        onEntityFocus(entity);
     };
 
     const onRemoveEntity = (entity: IEntity) => {
@@ -108,11 +113,12 @@ export const EditorLayout = () => {
         if (e.button === 2) {
             const { targetX, targetY } = e;
 
-            const spawnPoint = new Vec2(targetX, targetY);
+            EditorService.editorEntities.originPivot.transform.position = new Vec2(targetX, targetY);
 
-            setSpawnPoint(spawnPoint);
-            EditorService.editorEntities.originPivot.transform.position = spawnPoint;
+            setSpawnPoint(EditorService.editorEntities.originPivot.transform.position);
         }
+
+        objectPickingService.handleMouseClick(e, onEntityFocus);
     }
 
     return (

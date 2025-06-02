@@ -1,10 +1,14 @@
-import { GameObject, IEntity, Scene, Vec2 } from "sparkengineweb";
+import { CameraComponent, CanvasDevice, DOMImageLoader, GameObject, IEntity, ImageLoader, Renderer, RenderSystem, Scene, Vec2 } from "sparkengineweb";
 import { EditorService } from "./EditorService";
 import { FileSystemImageRepository } from "../assets";
 import { ProjectRepository } from "../project/ports";
 import { Project } from "../project/models";
 import { SceneRepositoryTestDouble } from "../../__mocks__/core/scene/SceneRepositoryTestDouble";
-import { WeakRef } from "../../common";
+import { WeakRef } from "../common";
+import { ObjectPickingService } from "./ObjectPickingService";
+import { ObjectPicker } from "./ports/ObjectPicker";
+import { IDrawableComponent } from "sparkengineweb/src/ecs/components/interfaces/IDrawableComponent";
+import { ColorObjectPicker } from "./adapters/ColorObjectPicker";
 
 
 class ProjectRepositoryTestDouble implements ProjectRepository {
@@ -18,6 +22,12 @@ class ProjectRepositoryTestDouble implements ProjectRepository {
     public project?: Project;
 }
 
+
+class ObjectPickingServiceTestDouble extends ObjectPickingService {
+    handleMouseClick = jest.fn();
+    getRenderSystem = jest.fn(() => new RenderSystem(new Renderer(new CanvasDevice(), { width: 0, height: 0 }, new CanvasRenderingContext2D()), new DOMImageLoader()))
+}
+
 const sceneToLoad = new Scene();
 
 describe('EditorService', () => {
@@ -26,13 +36,15 @@ describe('EditorService', () => {
     let context: CanvasRenderingContext2D;
     let projectRepositoryDouble: ProjectRepositoryTestDouble;
     let sceneRepository: SceneRepositoryTestDouble;
+    let objectPicking: ObjectPickingServiceTestDouble
 
     beforeEach(() => {
         projectRepositoryDouble = new ProjectRepositoryTestDouble();
         sceneRepository = new SceneRepositoryTestDouble();
         context = new CanvasRenderingContext2D();
         imageLoader = new FileSystemImageRepository();
-        editorService = new EditorService(imageLoader, projectRepositoryDouble, sceneRepository);
+        objectPicking = new ObjectPickingServiceTestDouble(new ColorObjectPicker(() => new Renderer(new CanvasDevice(), { width: 0, height: 0 }, context), { width: 0, height: 0 }, imageLoader));
+        editorService = new EditorService(imageLoader, projectRepositoryDouble, sceneRepository, objectPicking);
 
         sceneRepository.save(sceneToLoad, { path: 'test-scene.spark.json', accessScope: new WeakRef<null>(null) });
     })

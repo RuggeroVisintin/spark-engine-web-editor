@@ -2,7 +2,7 @@ import { createDirectoryHandleMock, FileSystemWritableFileStreamMock, setMockedF
 import testProjectJson from "../../../__mocks__/assets/test-project.json";
 import { FileSystemProjectRepository } from "./FileSystemProjectRepository";
 import { Project } from "../models";
-import { WeakRef } from "../../../common";
+import { WeakRef } from "../../common";
 
 describe('core/project/adapters/FileSystemProjectRepository', () => {
     describe('read', () => {

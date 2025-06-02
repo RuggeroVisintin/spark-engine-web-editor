@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useRef } from 'react';
 import { Box } from '../../primitives';
 import styled from 'styled-components';
-import { Function } from '../../common';
+import { Function } from '../../core/common';
 
 export interface MouseClickEvent {
     targetX: number;

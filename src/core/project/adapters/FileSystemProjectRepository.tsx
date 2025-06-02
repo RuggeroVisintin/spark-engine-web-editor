@@ -1,4 +1,4 @@
-import { WeakRef } from "../../../common";
+import { WeakRef } from "../../common";
 import { Project } from "../models";
 import { ProjectRepository } from "../ports";
 

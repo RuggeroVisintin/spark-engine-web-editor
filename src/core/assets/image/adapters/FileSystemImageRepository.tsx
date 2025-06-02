@@ -1,5 +1,5 @@
 import { ImageAsset, ImageLoader } from "@sparkengine";
-import { bitmapToBlob, WeakRef } from "../../../../common";
+import { bitmapToBlob, WeakRef } from "../../../common";
 import { FileSystemRepository, LocationParameters } from "../../../common";
 import { ImageRepository } from "../ports";
 

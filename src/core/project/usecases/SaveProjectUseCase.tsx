@@ -3,7 +3,7 @@ import { ImageRepository } from "../../assets";
 import { SceneRepository } from "../../scene";
 import { Project } from "../models";
 import { ProjectRepository } from "../ports";
-import { WeakRef } from "../../../common";
+import { WeakRef } from "../../common";
 
 export class SaveProjectUseCase {
     public constructor(
