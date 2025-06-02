@@ -2,17 +2,7 @@ import React, { memo, useEffect, useRef } from 'react';
 import { Box } from '../../primitives';
 import styled from 'styled-components';
 import { Function } from '../../core/common';
-
-export interface MouseClickEvent {
-    targetX: number;
-    targetY: number;
-    button: number
-}
-
-export interface MouseDragEvent extends MouseClickEvent {
-    deltaX: number;
-    deltaY: number;
-}
+import { MouseClickEvent, MouseDragEvent } from '../../core/common/events/mouse';
 
 export interface OnEngineViewReadyCBProps {
     context: CanvasRenderingContext2D;

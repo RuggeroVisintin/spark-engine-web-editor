@@ -1,5 +1,4 @@
 import { GameObject } from "sparkengineweb";
-import { MouseEvent } from "../../components";
 import { ObjectPickingService } from "./ObjectPickingService";
 
 
@@ -10,7 +9,7 @@ describe('core/editor/ObjectPickingService', () => {
                 pick: jest.fn(() => new GameObject()),
             };
             const service = new ObjectPickingService(objectPickerMock as any);
-            const event = { button: 0, targetX: 100, targetY: 200 } as MouseEvent;
+            const event = { button: 0, targetX: 100, targetY: 200 };
 
             service.handleMouseClick(event);
 
@@ -22,7 +21,7 @@ describe('core/editor/ObjectPickingService', () => {
                 pick: jest.fn(() => new GameObject()),
             };
             const service = new ObjectPickingService(objectPickerMock as any);
-            const event = { button: 1, targetX: 100, targetY: 200 } as MouseEvent;
+            const event = { button: 1, targetX: 100, targetY: 200 };
 
             service.handleMouseClick(event);
 
@@ -34,7 +33,7 @@ describe('core/editor/ObjectPickingService', () => {
                 pick: jest.fn(() => undefined),
             };
             const service = new ObjectPickingService(objectPickerMock as any);
-            const event = { button: 0, targetX: 100, targetY: 200 } as MouseEvent;
+            const event = { button: 0, targetX: 100, targetY: 200 };
 
             service.handleMouseClick(event);
 
@@ -47,7 +46,7 @@ describe('core/editor/ObjectPickingService', () => {
             };
             const callbackMock = jest.fn();
             const service = new ObjectPickingService(objectPickerMock as any);
-            const event = { button: 0, targetX: 100, targetY: 200 } as MouseEvent;
+            const event = { button: 0, targetX: 100, targetY: 200 };
 
             service.handleMouseClick(event, callbackMock);
 
