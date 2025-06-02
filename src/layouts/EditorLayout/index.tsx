@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { CanvasDevice, GameEngine, IEntity, ImageAsset, ImageLoader, MaterialComponent, Renderer, Rgb, Scene, Vec2 } from '@sparkengine';
+import { CanvasDevice, GameEngine, IEntity, ImageAsset, ImageLoader, MaterialComponent, Renderer, Rgb, Scene, TransformComponent, Vec2 } from '@sparkengine';
 import { EngineView } from '../../components';
 import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
@@ -9,7 +9,7 @@ import { FileSystemSceneRepository } from '../../core/scene/adapters';
 import { FileSystemProjectRepository } from '../../core/project/adapters';
 import { SaveProjectUseCase } from '../../core/project/usecases';
 import { Project } from '../../core/project/models';
-import { MouseClickEvent, OnEngineViewReadyCBProps } from '../../components/EngineView';
+import { MouseClickEvent, MouseDragEvent, OnEngineViewReadyCBProps } from '../../components/EngineView';
 import { FileSystemImageRepository } from '../../core/assets/image/adapters';
 import { WeakRef } from '../../core/common';
 import { ImageRepository } from '../../core/assets';
@@ -110,6 +110,7 @@ export const EditorLayout = () => {
     };
 
     const onEngineViewClick = (e: MouseClickEvent) => {
+        console.log('onEngineViewClick', e);
         if (e.button === 2) {
             const { targetX, targetY } = e;
 
@@ -121,12 +122,24 @@ export const EditorLayout = () => {
         objectPickingService.handleMouseClick(e, onEntityFocus);
     }
 
+    const onEngineViewMouseDragging = (e: MouseDragEvent) => {
+        console.log('onEngineViewMouseDragging', e);
+
+        if (!editorService.currentEntity) return;
+
+        const transform = editorService.currentEntity.getComponent<TransformComponent>('TransformComponent');
+
+        if (!transform) return;
+
+        editorService.updateCurrentEntityPosition(new Vec2(transform.position.x + e.deltaX, transform.position.y + e.deltaY));
+    };
+
     return (
         <FlexBox $fill={true}>
             <ActionMenu onProjectFileOpen={onProjectFileOpen} onProjectFileSave={onProjectFileSave}></ActionMenu>
             <FlexBox $direction='row' $fill style={{ overflow: 'hidden' }}>
                 <EntityFactoryPanel onAddEntity={onAddEntity} spawnPoint={spawnPoint}></EntityFactoryPanel>
-                <EngineView onEngineViewReady={onEngineViewReady} onClick={onEngineViewClick}></EngineView>
+                <EngineView onEngineViewReady={onEngineViewReady} onClick={onEngineViewClick} onMouseDragging={onEngineViewMouseDragging}></EngineView>
                 <Box $size={0.25}>
                     <FlexBox $fill={true}>
                         <ScenePanel

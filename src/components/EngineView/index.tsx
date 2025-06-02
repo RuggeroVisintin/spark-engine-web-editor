@@ -9,6 +9,11 @@ export interface MouseClickEvent {
     button: number
 }
 
+export interface MouseDragEvent extends MouseClickEvent {
+    deltaX: number;
+    deltaY: number;
+}
+
 export interface OnEngineViewReadyCBProps {
     context: CanvasRenderingContext2D;
     resolution: { width: number, height: number };
@@ -17,32 +22,52 @@ export interface OnEngineViewReadyCBProps {
 interface EngineViewProps {
     onEngineViewReady: Function<OnEngineViewReadyCBProps>
     onClick?: Function<MouseClickEvent>
+    onMouseDragging?: Function<MouseDragEvent>
 }
 
 const RenderingCanvas = styled.canvas({
     width: '100%',
     background: 'black'
-})
+});
 
-let isEngineInit = false;
-const width = 1920;
-const height = 1080;
-
-function mouseEventToMouseClickEvent(e: MouseEvent): MouseClickEvent {
-    const rect = (e.target as HTMLElement).getBoundingClientRect();
-
-    const scaleFactorX = rect.width ? width / rect.width : 1;
-    const scaleFactorY = rect.height ? height / rect.height : 1;
-
-    return {
-        targetX: Math.round((e.clientX - rect.left) * scaleFactorX),
-        targetY: Math.round((e.clientY - rect.top) * scaleFactorY),
-        button: e.button
-    }
-}
-
-export const EngineView = memo(({ onEngineViewReady, onClick }: EngineViewProps) => {
+export const EngineView = memo(({ onEngineViewReady, onClick, onMouseDragging }: EngineViewProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    let isEngineInit = false;
+    let isMouseDown = false;
+    let isMouseDragging = false;
+
+    const width = 1920;
+    const height = 1080;
+
+    function mouseEventToMouseClickEvent(e: MouseEvent): MouseClickEvent {
+        const rect = (e.target as HTMLElement).getBoundingClientRect();
+
+        const scaleFactorX = rect.width ? width / rect.width : 1;
+        const scaleFactorY = rect.height ? height / rect.height : 1;
+
+        return {
+            targetX: Math.round((e.clientX - rect.left) * scaleFactorX),
+            targetY: Math.round((e.clientY - rect.top) * scaleFactorY),
+            button: e.button
+        }
+    }
+
+    function mouseEventToMouseDragEvent(e: MouseEvent): MouseDragEvent {
+
+        const rect = (e.target as HTMLElement).getBoundingClientRect();
+
+        const scaleFactorX = rect.width ? width / rect.width : 1;
+        const scaleFactorY = rect.height ? height / rect.height : 1;
+
+        return {
+            targetX: Math.round((e.clientX - rect.left) * scaleFactorX),
+            targetY: Math.round((e.clientY - rect.top) * scaleFactorY),
+            button: e.button,
+            deltaX: Math.round(e.movementX * scaleFactorX),
+            deltaY: Math.round(e.movementY * scaleFactorX)
+        }
+    }
 
     useEffect(() => {
         if (!!canvasRef.current && !isEngineInit) {
@@ -70,7 +95,14 @@ export const EngineView = memo(({ onEngineViewReady, onClick }: EngineViewProps)
                 data-testid="EngineView.canvas"
                 width={width}
                 height={height}
-                onClick={(e) => onClick?.(mouseEventToMouseClickEvent(e.nativeEvent))}
+                onMouseDown={() => { isMouseDown = true; }}
+                // need to use setTimeout to avoid the mouseup event being triggered immediately after mousedown when the mouse is moving
+                onMouseUp={() => setTimeout(() => { isMouseDown = false; isMouseDragging = false; }, 0)}
+                onMouseMove={(e) => {
+                    isMouseDragging = isMouseDown && true;
+                    isMouseDragging && onMouseDragging?.(mouseEventToMouseDragEvent(e.nativeEvent));
+                }}
+                onClick={(e) => !isMouseDragging && onClick?.(mouseEventToMouseClickEvent(e.nativeEvent))}
             ></RenderingCanvas>
         </Box>
     )
