@@ -10,18 +10,19 @@ class RendererTestDouble extends Renderer {
     }
 }
 
-describe('core/editor/adapters/ColorPickingRenderSystem', () => {
+describe('core/editor/ColorPickingRenderSystem', () => {
+    let renderSystem: ColorPickingRenderSystem;
+    let renderer: RendererTestDouble
+
+    beforeEach(() => {
+        const resolution = { width: 1920, height: 1080 };
+        renderer = new RendererTestDouble(new CanvasDevice(), resolution, new CanvasRenderingContext2D());
+        renderSystem = new ColorPickingRenderSystem(() => renderer, resolution, new DOMImageLoader());
+
+        renderer.renderCommands = [];
+    });
+
     describe('.update()', () => {
-        let renderSystem: ColorPickingRenderSystem;
-        let renderer: RendererTestDouble
-
-        beforeEach(() => {
-            renderer = new RendererTestDouble(new CanvasDevice(), { width: 1920, height: 1080 }, new CanvasRenderingContext2D());
-            renderSystem = new ColorPickingRenderSystem(renderer, new DOMImageLoader());
-
-            renderer.renderCommands = [];
-        });
-
         it('Should render objects with a diffuse color based on their parent entity uuid', () => {
             const gameObject = new GameObject();
             const gameObject2 = new GameObject();
@@ -72,16 +73,6 @@ describe('core/editor/adapters/ColorPickingRenderSystem', () => {
     });
 
     describe('.pick()', () => {
-        let renderSystem: ColorPickingRenderSystem;
-        let renderer: RendererTestDouble
-
-        beforeEach(() => {
-            renderer = new RendererTestDouble(new CanvasDevice(), { width: 1920, height: 1080 }, new CanvasRenderingContext2D());
-            renderSystem = new ColorPickingRenderSystem(renderer, new DOMImageLoader());
-
-            renderer.renderCommands = [];
-        });
-
         it('Should return the entity from a given color', () => {
             const gameObject = new GameObject();
             const gameObject2 = new GameObject();
