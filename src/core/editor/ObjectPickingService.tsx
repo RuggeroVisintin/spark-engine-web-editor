@@ -1,8 +1,7 @@
 
 import { IEntity, RenderSystem } from "sparkengineweb";
-import { MouseClickEvent } from "../../components";
 import { ObjectPicker } from "./ports/ObjectPicker";
-import { Function, Optional } from "../common";
+import { Function, MouseClickEvent, Optional } from "../common";
 
 export class ObjectPickingService {
     private _selectedEntity?: IEntity;
