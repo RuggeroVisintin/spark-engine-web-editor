@@ -1,6 +1,6 @@
 import { GameEngine, IEntity, ImageLoader, Renderer, Scene, TransformComponent, Vec2 } from "sparkengineweb";
 import { SetDebuggerEntityUseCase } from "../debug/usecases";
-import { Function, MouseClickEvent, Optional } from "../common";
+import { MouseClickEvent, Optional } from "../common";
 import { Project } from "../project/models";
 import { EntityOutline } from "../debug";
 import Pivot from "../debug/Pivot";
