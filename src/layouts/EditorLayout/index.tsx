@@ -12,7 +12,7 @@ import { Project } from '../../core/project/models';
 import { OnEngineViewReadyCBProps } from '../../components/EngineView';
 import { MouseClickEvent, MouseDragEvent } from '../../core/common/events/mouse';
 import { FileSystemImageRepository } from '../../core/assets/image/adapters';
-import { WeakRef } from '../../core/common';
+import { Optional, WeakRef } from '../../core/common';
 import { ImageRepository } from '../../core/assets';
 import { v4 } from 'uuid';
 import { EditorService } from '../../core/editor';
@@ -38,7 +38,7 @@ export const EditorLayout = () => {
     const [scene, setScene] = useState<Scene>();
     const [debuggerScene, setDebuggerScene] = useState<Scene>();
     const [entities, setEntities] = useState<IEntity[]>([]);
-    const [currentEntity, setCurrentEntity] = useState<IEntity | undefined>(undefined);
+    const [currentEntity, setCurrentEntity] = useState<Optional<IEntity>>(undefined);
     const engine = useRef<GameEngine>();
 
     const onEngineViewReady = async ({ context, resolution }: OnEngineViewReadyCBProps) => {
@@ -111,7 +111,6 @@ export const EditorLayout = () => {
     };
 
     const onEngineViewClick = (e: MouseClickEvent) => {
-        console.log('onEngineViewClick', e);
         if (e.button === 2) {
             const { targetX, targetY } = e;
 
@@ -119,13 +118,14 @@ export const EditorLayout = () => {
 
             setSpawnPoint(EditorService.editorEntities.originPivot.transform.position);
         }
+    }
 
-        objectPickingService.handleMouseClick(e, onEntityFocus);
+    const onMouseDown = (e: MouseClickEvent) => {
+        editorService.onMouseDown(e);
+        setCurrentEntity(editorService.currentEntity);
     }
 
     const onEngineViewMouseDragging = (e: MouseDragEvent) => {
-        console.log('onEngineViewMouseDragging', e);
-
         if (!editorService.currentEntity) return;
 
         const transform = editorService.currentEntity.getComponent<TransformComponent>('TransformComponent');
@@ -140,7 +140,7 @@ export const EditorLayout = () => {
             <ActionMenu onProjectFileOpen={onProjectFileOpen} onProjectFileSave={onProjectFileSave}></ActionMenu>
             <FlexBox $direction='row' $fill style={{ overflow: 'hidden' }}>
                 <EntityFactoryPanel onAddEntity={onAddEntity} spawnPoint={spawnPoint}></EntityFactoryPanel>
-                <EngineView onEngineViewReady={onEngineViewReady} onClick={onEngineViewClick} onMouseDragging={onEngineViewMouseDragging}></EngineView>
+                <EngineView onEngineViewReady={onEngineViewReady} onClick={onEngineViewClick} onMouseDown={onMouseDown} onMouseDragging={onEngineViewMouseDragging}></EngineView>
                 <Box $size={0.25}>
                     <FlexBox $fill={true}>
                         <ScenePanel

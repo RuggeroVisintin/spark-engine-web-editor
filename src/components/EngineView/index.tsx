@@ -10,9 +10,11 @@ export interface OnEngineViewReadyCBProps {
 }
 
 interface EngineViewProps {
-    onEngineViewReady: Function<OnEngineViewReadyCBProps>
-    onClick?: Function<MouseClickEvent>
-    onMouseDragging?: Function<MouseDragEvent>
+    onEngineViewReady: Function<OnEngineViewReadyCBProps>;
+    onClick?: Function<MouseClickEvent>;
+    onMouseDragging?: Function<MouseDragEvent>;
+    onMouseDragStart?: Function<MouseDragEvent>;
+    onMouseDown?: Function<MouseClickEvent>
 }
 
 const RenderingCanvas = styled.canvas({
@@ -20,7 +22,7 @@ const RenderingCanvas = styled.canvas({
     background: 'black'
 });
 
-export const EngineView = memo(({ onEngineViewReady, onClick, onMouseDragging }: EngineViewProps) => {
+export const EngineView = memo(({ onEngineViewReady, onClick, onMouseDragging, onMouseDragStart, onMouseDown }: EngineViewProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     let isEngineInit = false;
@@ -85,11 +87,21 @@ export const EngineView = memo(({ onEngineViewReady, onClick, onMouseDragging }:
                 data-testid="EngineView.canvas"
                 width={width}
                 height={height}
-                onMouseDown={() => { isMouseDown = true; }}
+                onMouseDown={(e) => {
+                    isMouseDown = true;
+                    onMouseDown?.(mouseEventToMouseClickEvent(e.nativeEvent));
+                }}
                 // need to use setTimeout to avoid the mouseup event being triggered immediately after mousedown when the mouse is moving
                 onMouseUp={() => setTimeout(() => { isMouseDown = false; isMouseDragging = false; }, 0)}
                 onMouseMove={(e) => {
+                    const wasMouseDragging = isMouseDragging;
                     isMouseDragging = isMouseDown && true;
+
+                    if (!wasMouseDragging && isMouseDragging) {
+                        onMouseDragStart?.(mouseEventToMouseDragEvent(e.nativeEvent));
+                        return;
+                    }
+
                     isMouseDragging && onMouseDragging?.(mouseEventToMouseDragEvent(e.nativeEvent));
                 }}
                 onClick={(e) => !isMouseDragging && onClick?.(mouseEventToMouseClickEvent(e.nativeEvent))}

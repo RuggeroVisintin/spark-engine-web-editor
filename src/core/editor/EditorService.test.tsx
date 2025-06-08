@@ -1,13 +1,11 @@
-import { CameraComponent, CanvasDevice, DOMImageLoader, GameObject, IEntity, ImageLoader, Renderer, RenderSystem, Scene, Vec2 } from "sparkengineweb";
+import { CanvasDevice, DOMImageLoader, GameObject, IEntity, Renderer, RenderSystem, Scene, Vec2 } from "sparkengineweb";
 import { EditorService } from "./EditorService";
 import { FileSystemImageRepository } from "../assets";
 import { ProjectRepository } from "../project/ports";
 import { Project } from "../project/models";
 import { SceneRepositoryTestDouble } from "../../__mocks__/core/scene/SceneRepositoryTestDouble";
-import { WeakRef } from "../common";
+import { Optional, WeakRef } from "../common";
 import { ObjectPickingService } from "./ObjectPickingService";
-import { ObjectPicker } from "./ports/ObjectPicker";
-import { IDrawableComponent } from "sparkengineweb/src/ecs/components/interfaces/IDrawableComponent";
 import { ColorObjectPicker } from "./adapters/ColorObjectPicker";
 
 
@@ -24,6 +22,12 @@ class ProjectRepositoryTestDouble implements ProjectRepository {
 
 
 class ObjectPickingServiceTestDouble extends ObjectPickingService {
+    public _result?: IEntity;
+
+    public get selectedEntity(): Optional<IEntity> {
+        return this._result;
+    }
+
     handleMouseClick = jest.fn();
     getRenderSystem = jest.fn(() => new RenderSystem(new Renderer(new CanvasDevice(), { width: 0, height: 0 }, new CanvasRenderingContext2D()), new DOMImageLoader()))
 }
@@ -125,6 +129,54 @@ describe('EditorService', () => {
             expect(editorService.project?.scenes).toEqual([sceneToLoad])
         });
 
+    });
+
+    describe('.onMouseDown()', () => {
+        it('Should focus on the entity at the given position if any and left mouse button', () => {
+            const resolution = { width: 800, height: 600 };
+            const gameObject = new GameObject();
+            objectPicking._result = gameObject;
+
+            editorService.start(context, resolution);
+            editorService.onMouseDown({
+                targetX: 100,
+                targetY: 100,
+                button: 0
+            });
+
+            expect(editorService.currentEntity).toEqual(gameObject);
+        });
+
+        it('Should remove focus from the current entity if no entity at the given position', () => {
+            const resolution = { width: 800, height: 600 };
+            const gameObject = new GameObject();
+            objectPicking._result = undefined;
+
+            editorService.start(context, resolution);
+            editorService.selectEntity(gameObject);
+            editorService.onMouseDown({
+                targetX: 100,
+                targetY: 100,
+                button: 0
+            });
+
+            expect(editorService.currentEntity).not.toBeDefined();
+        });
+
+        it('Should not focus on the entity when not left mouse button', () => {
+            const resolution = { width: 800, height: 600 };
+            const gameObject = new GameObject();
+            objectPicking._result = gameObject;
+
+            editorService.start(context, resolution);
+            editorService.onMouseDown({
+                targetX: 100,
+                targetY: 100,
+                button: 1
+            });
+
+            expect(editorService.currentEntity).not.toBeDefined();
+        });
     })
 
     describe('.selectEntity()', () => {
@@ -172,6 +224,17 @@ describe('EditorService', () => {
 
             expect(editorService.currentScene?.entities).not.toContain(entity);
         });
+
+        it('Should deselect the currentEntity', () => {
+            const resolution = { width: 800, height: 600 };
+            const entity = new GameObject();
+
+            editorService.start(context, resolution);
+            editorService.addNewEntity(entity);
+            editorService.removeEntity(entity.uuid);
+
+            expect(editorService.currentEntity).not.toBeDefined();
+        })
 
         it('Should hide the editorScene', () => {
             const resolution = { width: 800, height: 600 };
