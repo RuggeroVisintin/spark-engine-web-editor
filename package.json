@@ -37,7 +37,7 @@
   "devDependencies": {
     "@commitlint/config-conventional": "^19.8.1",
     "@craco/craco": "^7.1.0",
-    "@types/jest": "^29.5.14",
+    "@types/jest": "^30.0.0",
     "@types/uuid": "^10.0.0",
     "@types/wicg-file-system-access": "^2023.10.6",
     "craco-alias": "^3.0.1",
