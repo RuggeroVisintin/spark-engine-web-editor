@@ -55,13 +55,18 @@ export const EditorLayout = () => {
     const onAddEntity = (entity: IEntity) => {
         editorService.addNewEntity(entity);
         setEntities([...editorService.currentScene?.entities ?? []]);
-        onEntityFocus(entity);
+        setCurrentEntity(editorService.currentEntity);
+    };
+
+    const onEntityFocus = (entity: IEntity) => {
+        editorService.selectEntity(entity);
+        setCurrentEntity(editorService.currentEntity);
     };
 
     const onRemoveEntity = (entity: IEntity) => {
         editorService.removeEntity(entity.uuid);
         setEntities([...editorService.currentScene?.entities ?? []]);
-        setCurrentEntity(undefined);
+        setCurrentEntity(editorService.currentEntity);
     };
 
     const onMaterialUpdate = ({ newDiffuseColor, newOpacity, newDiffuseTexture, removeDiffuseColor }: { newDiffuseColor: Rgb, newOpacity: number, newDiffuseTexture: ImageAsset, removeDiffuseColor: boolean }) => {
@@ -78,11 +83,6 @@ export const EditorLayout = () => {
             material.diffuseTexturePath = `assets/${v4()}.png`;
             material.diffuseTexture = newDiffuseTexture;
         }
-    }
-
-    const onEntityFocus = (target: IEntity) => {
-        editorService.selectEntity(target);
-        editorService.currentEntity && setCurrentEntity(editorService.currentEntity);
     }
 
     const onProjectFileOpen = async () => {

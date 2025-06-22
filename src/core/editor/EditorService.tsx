@@ -99,6 +99,7 @@ export class EditorService {
 
     public addNewEntity(entity: IEntity): void {
         this._currentScene?.registerEntity(entity);
+        this.selectEntity(entity);
     }
 
     public removeEntity(id: string): void {

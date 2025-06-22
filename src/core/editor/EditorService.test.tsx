@@ -211,6 +211,16 @@ describe('EditorService', () => {
 
             expect(editorService.currentScene?.entities).toContain(entity);
         });
+
+        it('Should focus on the new entity', () => {
+            const resolution = { width: 800, height: 600 };
+            const entity = new GameObject();
+
+            editorService.start(context, resolution);
+            editorService.addNewEntity(entity);
+
+            expect(editorService.currentEntity).toEqual(entity);
+        });
     });
 
     describe('.removeEntity()', () => {
