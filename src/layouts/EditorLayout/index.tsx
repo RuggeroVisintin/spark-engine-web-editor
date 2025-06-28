@@ -17,7 +17,7 @@ import { ImageRepository } from '../../core/assets';
 import { v4 } from 'uuid';
 import { EditorService } from '../../core/editor';
 import { ColorObjectPicker } from '../../core/editor/adapters/ColorObjectPicker';
-import { ObjectPickingService } from '../../core/editor/ObjectPickingService';
+import { ObjectPickingService } from '../../core/editor/domain/ObjectPickingService';
 
 let imageRepository: ImageRepository;
 let imageLoader: ImageLoader;
@@ -151,7 +151,8 @@ export const EditorLayout = () => {
                         ></ScenePanel>
                         {currentEntity &&
                             <EntityPropsPanel
-                                entity={currentEntity}
+                                material={currentEntity.getComponent<MaterialComponent>('MaterialComponent')}
+                                transform={currentEntity.getComponent<TransformComponent>('TransformComponent')}
                                 onUpdatePosition={({ newPosition }: { newPosition: Vec2 }) => editorService.updateCurrentEntityPosition(newPosition)}
                                 onUpdateSize={({ newSize }: { newSize: { width: number, height: number } }) => editorService.updateCurrentEntitySize(newSize)}
                                 onMaterialUpdate={onMaterialUpdate}

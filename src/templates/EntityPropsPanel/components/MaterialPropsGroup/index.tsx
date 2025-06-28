@@ -3,18 +3,16 @@ import { ImageAsset, MaterialComponent, Rgb } from "@sparkengine";
 import { FormInput } from "../../../../components";
 import { InputRow } from "../../../../primitives/InputRow";
 import { Box, Button } from "../../../../primitives";
-import { v4 } from 'uuid'
 
 export interface MaterialPropsGroupProps {
     material: MaterialComponent,
-    parentUuid: string,
     onMaterialUpdate?: CallableFunction,
 }
 
-export const MaterialPropsGroup = ({ material, parentUuid, onMaterialUpdate }: MaterialPropsGroupProps) => {
+export const MaterialPropsGroup = ({ material, onMaterialUpdate }: MaterialPropsGroupProps) => {
     const materialDiffuseColorGroup = [
         <FormInput type="color"
-            key={`${parentUuid}${v4()}`}
+            key="material.diffuseColor"
             data-testid="EntityPropsPanel.DiffuseColor"
             defaultValue={material.diffuseColor?.toHexString()}
             onChange={(newDiffuseColor: string) => {
@@ -26,7 +24,7 @@ export const MaterialPropsGroup = ({ material, parentUuid, onMaterialUpdate }: M
 
     const matierialOpacityGroup = [
         <FormInput
-            key={`${parentUuid}${v4()}`}
+            key="material.opacity"
             data-testid="EntityPropsPanel.Opacity"
             defaultValue={material.opacity}
             type="number"
@@ -36,7 +34,7 @@ export const MaterialPropsGroup = ({ material, parentUuid, onMaterialUpdate }: M
 
     const meterialDiffuseTextureGroup = [
         <FormInput
-            key={`${parentUuid}${v4()}`}
+            key="material.diffuseTexture"
             data-testid="EntityPropsPanel.DiffuseTexture"
             type="image"
             label={material.diffuseTexture ? 'Replace' : 'Add'}

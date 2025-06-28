@@ -15,7 +15,7 @@ describe('EntityPropsPanel', () => {
                 const entity = new GameObject();
                 entity.transform.position[prop] = 1;
 
-                render(<EntityPropsPanel entity={entity} />);
+                render(<EntityPropsPanel transform={entity.transform} />);
 
                 const inputFieldX = screen.getByTestId(`EntityPropsPanel.Position.${prop}.InputField`);
 
@@ -26,11 +26,11 @@ describe('EntityPropsPanel', () => {
                 const entity = new GameObject();
                 entity.transform.position[prop] = 1;
 
-                const { rerender } = render(<EntityPropsPanel entity={entity} />);
+                const { rerender } = render(<EntityPropsPanel transform={entity.transform} />);
 
                 const newEntity = new GameObject();
 
-                rerender(<EntityPropsPanel entity={newEntity} />);
+                rerender(<EntityPropsPanel transform={newEntity.transform} />);
 
                 const inputField = screen.getByTestId(`EntityPropsPanel.Position.${prop}.InputField`);
                 expect(inputField).toHaveValue(newEntity.transform.position[prop]);
@@ -44,7 +44,7 @@ describe('EntityPropsPanel', () => {
 
                 const cb = jest.fn();
 
-                render(<EntityPropsPanel entity={entity} onUpdatePosition={cb} />);
+                render(<EntityPropsPanel transform={entity.transform} onUpdatePosition={cb} />);
 
                 const inputField = screen.getByTestId(`EntityPropsPanel.Position.${prop}.InputField`);
                 fireEvent.change(inputField, { target: { value: '23' } })
@@ -60,7 +60,7 @@ describe('EntityPropsPanel', () => {
                 const entity = new GameObject();
                 entity.transform.size[prop] = 1;
 
-                render(<EntityPropsPanel entity={entity} />);
+                render(<EntityPropsPanel transform={entity.transform} />);
 
                 const inputField = screen.getByTestId(`EntityPropsPanel.Size.${prop}.InputField`);
 
@@ -71,11 +71,11 @@ describe('EntityPropsPanel', () => {
                 const entity = new GameObject();
                 entity.transform.size[prop] = 1;
 
-                const { rerender } = render(<EntityPropsPanel entity={entity} />);
+                const { rerender } = render(<EntityPropsPanel transform={entity.transform} />);
 
                 const newEntity = new GameObject();
 
-                rerender(<EntityPropsPanel entity={newEntity} />);
+                rerender(<EntityPropsPanel transform={newEntity.transform} />);
 
                 const inputField = screen.getByTestId(`EntityPropsPanel.Size.${prop}.InputField`);
 
@@ -91,7 +91,7 @@ describe('EntityPropsPanel', () => {
 
                 const cb = jest.fn();
 
-                render(<EntityPropsPanel entity={entity} onUpdateSize={cb} />);
+                render(<EntityPropsPanel transform={entity.transform} onUpdateSize={cb} />);
 
                 const inputField = screen.getByTestId(`EntityPropsPanel.Size.${prop}.InputField`);
                 fireEvent.change(inputField, { target: { value: '23' } })
@@ -109,7 +109,7 @@ describe('EntityPropsPanel', () => {
                 const entity = new GameObject();
                 entity.material.diffuseColor = new Rgb(123, 233, 111);
 
-                render(<EntityPropsPanel entity={entity} />);
+                render(<EntityPropsPanel material={entity.material} />);
 
                 const inputFieldX = screen.getByTestId(`EntityPropsPanel.DiffuseColor.InputField`);
 
@@ -120,12 +120,12 @@ describe('EntityPropsPanel', () => {
                 const entity = new GameObject();
                 entity.material.diffuseColor = new Rgb(123, 233, 111);
 
-                const { rerender } = render(<EntityPropsPanel entity={entity} />);
+                const { rerender } = render(<EntityPropsPanel material={entity.material} />);
 
                 const newEntity = new GameObject();
                 newEntity.material.diffuseColor = new Rgb(222, 111, 121);
 
-                rerender(<EntityPropsPanel entity={newEntity} />);
+                rerender(<EntityPropsPanel material={newEntity.material} />);
 
                 const inputField = screen.getByTestId(`EntityPropsPanel.DiffuseColor.InputField`);
                 expect(inputField).toHaveValue(newEntity.material.diffuseColor.toHexString());
@@ -140,7 +140,7 @@ describe('EntityPropsPanel', () => {
 
                 const cb = jest.fn();
 
-                render(<EntityPropsPanel entity={entity} onMaterialUpdate={cb} />);
+                render(<EntityPropsPanel material={entity.material} onMaterialUpdate={cb} />);
 
                 const inputField = screen.getByTestId(`EntityPropsPanel.DiffuseColor.InputField`);
                 fireEvent.change(inputField, { target: { value: result.toHexString() } })
@@ -154,7 +154,7 @@ describe('EntityPropsPanel', () => {
 
                 const cb = jest.fn();
 
-                render(<EntityPropsPanel entity={entity} onMaterialUpdate={cb} />);
+                render(<EntityPropsPanel material={entity.material} onMaterialUpdate={cb} />);
 
                 const button = screen.getByTestId(`EntityPropsPanel.RemoveDiffuseColor`);
                 fireEvent.click(button);
@@ -168,7 +168,7 @@ describe('EntityPropsPanel', () => {
                 const entity = new GameObject();
                 entity.material.opacity = 0.5;
 
-                render(<EntityPropsPanel entity={entity} />);
+                render(<EntityPropsPanel material={entity.material} />);
 
                 const inputField = screen.getByTestId(`EntityPropsPanel.Opacity.InputField`);
 
@@ -179,12 +179,12 @@ describe('EntityPropsPanel', () => {
                 const entity = new GameObject();
                 entity.material.opacity = 0.5;
 
-                const { rerender } = render(<EntityPropsPanel entity={entity} />);
+                const { rerender } = render(<EntityPropsPanel material={entity.material} />);
 
                 const newEntity = new GameObject();
                 newEntity.material.opacity = 50;
 
-                rerender(<EntityPropsPanel entity={newEntity} />);
+                rerender(<EntityPropsPanel material={entity.material} />);
 
                 const inputField = screen.getByTestId(`EntityPropsPanel.Opacity.InputField`);
                 expect(inputField).toHaveValue(newEntity.material.opacity);
@@ -196,7 +196,7 @@ describe('EntityPropsPanel', () => {
 
                 const cb = jest.fn();
 
-                render(<EntityPropsPanel entity={entity} onMaterialUpdate={cb} />);
+                render(<EntityPropsPanel material={entity.material} onMaterialUpdate={cb} />);
                 const inputField = screen.getByTestId(`EntityPropsPanel.Opacity.InputField`);
 
                 expect(inputField).toHaveValue(entity.material.opacity);
@@ -210,7 +210,7 @@ describe('EntityPropsPanel', () => {
                 const entity = new GameObject();
                 entity.material.diffuseTexturePath = 'test.png';
 
-                render(<EntityPropsPanel entity={entity} />);
+                render(<EntityPropsPanel material={entity.material} />);
 
                 const inputField = screen.getByTestId(`EntityPropsPanel.DiffuseTexture.InputField`);
 
@@ -222,7 +222,7 @@ describe('EntityPropsPanel', () => {
                 entity.material.diffuseTexturePath = 'test.png';
                 entity.material.diffuseTexture = new ImageAsset(new FakeBitmap(), 'test.png');
 
-                render(<EntityPropsPanel entity={entity} />);
+                render(<EntityPropsPanel material={entity.material} />);
 
                 const inputField = screen.getByTestId(`EntityPropsPanel.DiffuseTexture.InputField`);
 
@@ -236,7 +236,7 @@ describe('EntityPropsPanel', () => {
                 setMockedFile('assets/test.png');
 
                 const promise = new Promise((resolve) => {
-                    render(<EntityPropsPanel entity={entity} onMaterialUpdate={({ newDiffuseTexture }: { newDiffuseTexture: ImageAsset }) => {
+                    render(<EntityPropsPanel material={entity.material} onMaterialUpdate={({ newDiffuseTexture }: { newDiffuseTexture: ImageAsset }) => {
                         expect(newDiffuseTexture).toBeInstanceOf(ImageAsset);
                         resolve(null);
                     }} />);

@@ -1,12 +1,12 @@
 import { CanvasDevice, DOMImageLoader, GameObject, IEntity, Renderer, RenderSystem, Scene, Vec2 } from "sparkengineweb";
 import { EditorService } from "./EditorService";
-import { FileSystemImageRepository } from "../assets";
-import { ProjectRepository } from "../project/ports";
-import { Project } from "../project/models";
-import { SceneRepositoryTestDouble } from "../../__mocks__/core/scene/SceneRepositoryTestDouble";
-import { Optional, WeakRef } from "../common";
+import { FileSystemImageRepository } from "../../assets";
+import { ProjectRepository } from "../../project/ports";
+import { Project } from "../../project/models";
+import { SceneRepositoryTestDouble } from "../../../__mocks__/core/scene/SceneRepositoryTestDouble";
+import { Optional, WeakRef } from "../../common";
 import { ObjectPickingService } from "./ObjectPickingService";
-import { ColorObjectPicker } from "./adapters/ColorObjectPicker";
+import { ColorObjectPicker } from "../adapters/ColorObjectPicker";
 
 
 class ProjectRepositoryTestDouble implements ProjectRepository {

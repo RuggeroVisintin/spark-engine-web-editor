@@ -1,1 +1,1 @@
-export * from './EditorService';
+export * from './domain';

@@ -6,7 +6,8 @@ import { InputRow } from "../../primitives/InputRow";
 import { MaterialPropsGroup } from "./components/MaterialPropsGroup";
 
 interface EntityPropsPanelProps {
-    entity: IEntity;
+    transform?: TransformComponent,
+    material?: MaterialComponent,
     onUpdatePosition?: CallableFunction,
     onUpdateSize?: CallableFunction,
     onMaterialUpdate?: CallableFunction
@@ -72,10 +73,7 @@ const TransformPropsGroup = ({ transform, onUpdateSize, onUpdatePosition }: Tran
     )
 };
 
-export const EntityPropsPanel = ({ entity, onUpdatePosition, onUpdateSize, onMaterialUpdate }: EntityPropsPanelProps) => {
-    const transform = entity.getComponent<TransformComponent>('TransformComponent');
-    const material = entity.getComponent<MaterialComponent>('MaterialComponent');
-
+export const EntityPropsPanel = ({ transform, material, onUpdatePosition, onUpdateSize, onMaterialUpdate }: EntityPropsPanelProps) => {
     return (
         <Box $size={1} $scroll $divide $spacing={Spacing.lg}>
             {transform && <TransformPropsGroup
@@ -83,7 +81,6 @@ export const EntityPropsPanel = ({ entity, onUpdatePosition, onUpdateSize, onMat
             <hr />
             {material && <MaterialPropsGroup
                 material={material}
-                parentUuid={entity.uuid}
                 onMaterialUpdate={onMaterialUpdate}
             />}
         </Box>
