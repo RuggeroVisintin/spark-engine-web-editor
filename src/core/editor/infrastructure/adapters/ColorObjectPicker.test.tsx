@@ -1,8 +1,8 @@
 import { BlendMethod, CanvasDevice, DOMImageLoader, DrawPrimitiveCommand, GameObject, PrimitiveType, RenderCommand, Renderer, SetBlendingMethodCommand, SetTransformMatrixCommand, ShapeComponent } from "sparkengineweb";
 import { ColorObjectPicker } from "./ColorObjectPicker";
-import { uuidToRgb } from "../../common/uuidToRgb";
-import Pivot from "../../debug/Pivot";
-import { EntityOutline } from "../../debug";
+import { uuidToRgb } from "../../../common/uuidToRgb";
+import Pivot from "../../../debug/Pivot";
+import { EntityOutline } from "../../../debug";
 
 class RendererTestDouble extends Renderer {
     public renderCommands: RenderCommand[] = [];

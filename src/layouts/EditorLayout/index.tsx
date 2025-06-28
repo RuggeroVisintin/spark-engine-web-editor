@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { GameEngine, IEntity, ImageAsset, ImageLoader, MaterialComponent, Renderer, Rgb, Scene, TransformComponent, Vec2 } from '@sparkengine';
+import { GameEngine, IEntity, ImageAsset, ImageLoader, MaterialComponent, Renderer, Rgb, Scene, TransformComponent, TransformComponentProps, Vec2 } from '@sparkengine';
 import { EngineView } from '../../components';
 import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
@@ -16,7 +16,7 @@ import { Optional, WeakRef } from '../../core/common';
 import { ImageRepository } from '../../core/assets';
 import { v4 } from 'uuid';
 import { EditorService } from '../../core/editor';
-import { ColorObjectPicker } from '../../core/editor/adapters/ColorObjectPicker';
+import { ColorObjectPicker } from '../../core/editor';
 import { ObjectPickingService } from '../../core/editor/domain/ObjectPickingService';
 
 let imageRepository: ImageRepository;

@@ -6,8 +6,7 @@ import { Project } from "../../project/models";
 import { SceneRepositoryTestDouble } from "../../../__mocks__/core/scene/SceneRepositoryTestDouble";
 import { Optional, WeakRef } from "../../common";
 import { ObjectPickingService } from "./ObjectPickingService";
-import { ColorObjectPicker } from "../adapters/ColorObjectPicker";
-
+import { ColorObjectPicker } from "../infrastructure";
 
 class ProjectRepositoryTestDouble implements ProjectRepository {
     public read(): Promise<Project> {
