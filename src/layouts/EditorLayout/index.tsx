@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { GameEngine, IEntity, ImageAsset, ImageLoader, MaterialComponent, Renderer, Rgb, Scene, TransformComponent, TransformComponentProps, Vec2 } from '@sparkengine';
+import React, { useEffect, useRef, useState } from 'react';
+import { BaseEntity, GameEngine, IEntity, ImageAsset, ImageLoader, MaterialComponent, Renderer, Rgb, Scene, TransformComponent, TransformComponentProps, Vec2 } from '@sparkengine';
 import { EngineView } from '../../components';
 import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
@@ -39,7 +39,14 @@ export const EditorLayout = () => {
     const [debuggerScene, setDebuggerScene] = useState<Scene>();
     const [entities, setEntities] = useState<IEntity[]>([]);
     const [currentEntity, setCurrentEntity] = useState<Optional<IEntity>>(undefined);
+    const [transform, setTransform] = useState<Optional<TransformComponentProps>>(undefined);
+    const [material, setMaterial] = useState<Optional<MaterialComponent>>(undefined);
     const engine = useRef<GameEngine>();
+
+    useEffect(() => {
+        setTransform(currentEntity?.getComponent<TransformComponent>('TransformComponent'));
+        setMaterial(currentEntity?.getComponent<MaterialComponent>('MaterialComponent'));
+    }, [currentEntity])
 
     const onEngineViewReady = async ({ context, resolution }: OnEngineViewReadyCBProps) => {
         editorService.start(context, resolution);
@@ -133,6 +140,8 @@ export const EditorLayout = () => {
         if (!transform) return;
 
         editorService.updateCurrentEntityPosition(new Vec2(transform.position.x + e.deltaX, transform.position.y + e.deltaY));
+
+        transform && setTransform(transform.toJson());
     };
 
     return (
@@ -151,9 +160,9 @@ export const EditorLayout = () => {
                         ></ScenePanel>
                         {currentEntity &&
                             <EntityPropsPanel
-                                material={currentEntity.getComponent<MaterialComponent>('MaterialComponent')}
-                                transform={currentEntity.getComponent<TransformComponent>('TransformComponent')}
-                                onUpdatePosition={({ newPosition }: { newPosition: Vec2 }) => editorService.updateCurrentEntityPosition(newPosition)}
+                                material={material}
+                                transform={transform}
+                                onUpdatePosition={({ newPosition }: { newPosition: Vec2 }) => { editorService.updateCurrentEntityPosition(newPosition); setTransform(editorService.currentEntity?.getComponent<TransformComponent>('TransformComponent')?.toJson()) }}
                                 onUpdateSize={({ newSize }: { newSize: { width: number, height: number } }) => editorService.updateCurrentEntitySize(newSize)}
                                 onMaterialUpdate={onMaterialUpdate}
                             ></EntityPropsPanel>}

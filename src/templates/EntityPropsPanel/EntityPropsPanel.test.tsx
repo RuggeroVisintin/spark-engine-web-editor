@@ -184,7 +184,7 @@ describe('EntityPropsPanel', () => {
                 const newEntity = new GameObject();
                 newEntity.material.opacity = 50;
 
-                rerender(<EntityPropsPanel material={entity.material} />);
+                rerender(<EntityPropsPanel material={newEntity.material} />);
 
                 const inputField = screen.getByTestId(`EntityPropsPanel.Opacity.InputField`);
                 expect(inputField).toHaveValue(newEntity.material.opacity);
