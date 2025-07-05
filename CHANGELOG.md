@@ -8,12 +8,6 @@
 * **editor:** add entity focus on left click ([#155](https://github.com/RuggeroVisintin/spark-engine-web-editor/issues/155)) ([097885b](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/097885b8fbeb0e37da57793625009e78c4ea999a))
 * **editor:** add entity position editing through drag & drop ([#156](https://github.com/RuggeroVisintin/spark-engine-web-editor/issues/156)) ([1712fa0](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/1712fa0155b89861c16f00061390502ae7e8edc6))
 
-
-### Bug Fixes
-
-* **editor:** fix transform update when drag & drop editing ([#164](https://github.com/RuggeroVisintin/spark-engine-web-editor/issues/164)) ([019e6fd](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/019e6fdbd3e3117d16146db5ce988a8074f7ee9d))
-* fix unwanted change ([35e8f67](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/35e8f67cb5f2ad09cd0988e45631ef3f5320ec7b))
-
 ## [0.0.8](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.7...sparkenginewebeditor-v0.0.8) (2025-05-01)
 
 
