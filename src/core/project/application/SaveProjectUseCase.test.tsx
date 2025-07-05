@@ -1,8 +1,7 @@
 import { FakeBitmap } from "../../../__mocks__/bitmap.mock";
 import { WeakRef } from "../../common";
 import { SceneRepository } from "../../scene";
-import { Project } from "../domain";
-import { ProjectRepository } from "../ports";
+import { Project, ProjectRepository } from "../domain";
 import { SaveProjectUseCase } from "./SaveProjectUseCase";
 import { GameObject, ImageAsset, Scene } from "@sparkengine";
 

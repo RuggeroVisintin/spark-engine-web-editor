@@ -1,12 +1,14 @@
 import { CanvasDevice, DOMImageLoader, GameObject, IEntity, Renderer, RenderSystem, Scene, Vec2 } from "sparkengineweb";
 import { EditorService } from "./EditorService";
 import { FileSystemImageRepository } from "../../assets";
-import { ProjectRepository } from "../../project/ports";
+import { ProjectRepository } from "../../project/domain";
 import { Project } from "../../project/domain";
 import { SceneRepositoryTestDouble } from "../../../__mocks__/core/scene/SceneRepositoryTestDouble";
 import { Optional, WeakRef } from "../../common";
-import { ObjectPickingService } from "./ObjectPickingService";
+import { ObjectPickingService } from "../domain/ObjectPickingService";
 import { ColorObjectPicker } from "../infrastructure";
+import { ReactStateRepository } from "../infrastructure/adapters/ReactStateRepository";
+import { StateRepository } from "./StateRepository";
 
 class ProjectRepositoryTestDouble implements ProjectRepository {
     public read(): Promise<Project> {
@@ -39,7 +41,8 @@ describe('EditorService', () => {
     let context: CanvasRenderingContext2D;
     let projectRepositoryDouble: ProjectRepositoryTestDouble;
     let sceneRepository: SceneRepositoryTestDouble;
-    let objectPicking: ObjectPickingServiceTestDouble
+    let objectPicking: ObjectPickingServiceTestDouble;
+    let appState: StateRepository;
 
     beforeEach(() => {
         projectRepositoryDouble = new ProjectRepositoryTestDouble();
@@ -47,7 +50,9 @@ describe('EditorService', () => {
         context = new CanvasRenderingContext2D();
         imageLoader = new FileSystemImageRepository();
         objectPicking = new ObjectPickingServiceTestDouble(new ColorObjectPicker(() => new Renderer(new CanvasDevice(), { width: 0, height: 0 }, context), { width: 0, height: 0 }, imageLoader));
-        editorService = new EditorService(imageLoader, projectRepositoryDouble, sceneRepository, objectPicking);
+        appState = new ReactStateRepository();
+
+        editorService = new EditorService(imageLoader, imageLoader, projectRepositoryDouble, sceneRepository, objectPicking, appState);
 
         sceneRepository.save(sceneToLoad, { path: 'test-scene.spark.json', accessScope: new WeakRef<null>(null) });
     })
@@ -137,7 +142,7 @@ describe('EditorService', () => {
             objectPicking._result = gameObject;
 
             editorService.start(context, resolution);
-            editorService.onMouseDown({
+            editorService.handleMouseClick({
                 targetX: 100,
                 targetY: 100,
                 button: 0
@@ -153,7 +158,7 @@ describe('EditorService', () => {
 
             editorService.start(context, resolution);
             editorService.selectEntity(gameObject);
-            editorService.onMouseDown({
+            editorService.handleMouseClick({
                 targetX: 100,
                 targetY: 100,
                 button: 0
@@ -168,7 +173,7 @@ describe('EditorService', () => {
             objectPicking._result = gameObject;
 
             editorService.start(context, resolution);
-            editorService.onMouseDown({
+            editorService.handleMouseClick({
                 targetX: 100,
                 targetY: 100,
                 button: 1
@@ -197,6 +202,22 @@ describe('EditorService', () => {
             expect(editorService.editorScene?.shouldDraw).toBe(true);
         })
 
+        it('Should trigger an update on the given subscriber with the current entity', () => {
+            const subscriber = jest.fn();
+            appState.subscribe(subscriber)
+
+            const resolution = { width: 800, height: 600 };
+
+            editorService.start(context, resolution);
+
+            const entity = new GameObject();
+            editorService.selectEntity(entity);
+
+            expect(subscriber).toHaveBeenCalledWith(expect.objectContaining({
+                currentEntity: entity
+            }));
+        });
+
         it.todo('Should match the editor entities to the new entity');
     });
 
@@ -206,7 +227,7 @@ describe('EditorService', () => {
             const entity = new GameObject();
 
             editorService.start(context, resolution);
-            editorService.addNewEntity(entity);
+            editorService.addEntity(entity);
 
             expect(editorService.currentScene?.entities).toContain(entity);
         });
@@ -216,9 +237,25 @@ describe('EditorService', () => {
             const entity = new GameObject();
 
             editorService.start(context, resolution);
-            editorService.addNewEntity(entity);
+            editorService.addEntity(entity);
 
             expect(editorService.currentEntity).toEqual(entity);
+        });
+
+        it('Should trigger an update on the given subscriber with the new entity', () => {
+            const subscriber = jest.fn();
+            appState.subscribe(subscriber);
+
+            const resolution = { width: 800, height: 600 };
+            const entity = new GameObject();
+
+            editorService.start(context, resolution);
+            editorService.addEntity(entity);
+
+            expect(subscriber).toHaveBeenCalledWith(expect.objectContaining({
+                currentEntity: entity,
+                entities: expect.arrayContaining([entity]),
+            }));
         });
     });
 
@@ -228,7 +265,7 @@ describe('EditorService', () => {
             const entity = new GameObject();
 
             editorService.start(context, resolution);
-            editorService.addNewEntity(entity);
+            editorService.addEntity(entity);
             editorService.removeEntity(entity.uuid);
 
             expect(editorService.currentScene?.entities).not.toContain(entity);
@@ -239,7 +276,7 @@ describe('EditorService', () => {
             const entity = new GameObject();
 
             editorService.start(context, resolution);
-            editorService.addNewEntity(entity);
+            editorService.addEntity(entity);
             editorService.removeEntity(entity.uuid);
 
             expect(editorService.currentEntity).not.toBeDefined();
@@ -250,11 +287,28 @@ describe('EditorService', () => {
             const entity = new GameObject();
 
             editorService.start(context, resolution);
-            editorService.addNewEntity(entity);
+            editorService.addEntity(entity);
             editorService.removeEntity(entity.uuid);
 
             expect(editorService.editorScene?.shouldDraw).toBe(false);
-        })
+        });
+
+        it('Should trigger an update on the given subscriber with the new entity', () => {
+            const subscriber = jest.fn();
+            appState.subscribe(subscriber);
+
+            const resolution = { width: 800, height: 600 };
+            const entity = new GameObject();
+
+            editorService.start(context, resolution);
+            editorService.addEntity(entity);
+            editorService.removeEntity(entity.uuid);
+
+            expect(subscriber).toHaveBeenCalledWith(expect.objectContaining({
+                currentEntity: undefined,
+                entities: expect.not.arrayContaining([entity]),
+            }));
+        });
     })
 
     describe('.updateCurrentEntitySize()', () => {
@@ -265,6 +319,24 @@ describe('EditorService', () => {
             editorService.updateCurrentEntitySize({ width: 200, height: 200 });
 
             expect((editorService.currentEntity as GameObject)?.transform.size).toEqual({ width: 200, height: 200 });
+        });
+
+        it('Should trigger an update on the given subscriber with the new size', () => {
+            const subscriber = jest.fn();
+            appState.subscribe(subscriber);
+
+            const entity = new GameObject();
+
+            editorService.selectEntity(entity);
+            editorService.updateCurrentEntitySize({ width: 200, height: 200 });
+
+            expect(subscriber).toHaveBeenCalledWith(expect.objectContaining({
+                currentEntity: expect.objectContaining({
+                    transform: expect.objectContaining({
+                        size: { width: 200, height: 200 }
+                    })
+                })
+            }));
         });
 
         it.todo('Should match the editor entities to the new size');
@@ -279,6 +351,24 @@ describe('EditorService', () => {
 
             expect((editorService.currentEntity as GameObject)?.transform.position).toEqual({ x: 200, y: 200 });
         });
+
+        it('Should trigger an update on the given subscriber with the new position', () => {
+            const subscriber = jest.fn();
+            appState.subscribe(subscriber);
+
+            const entity = new GameObject();
+
+            editorService.selectEntity(entity);
+            editorService.updateCurrentEntityPosition(new Vec2(200, 200));
+
+            expect(subscriber).toHaveBeenCalledWith(expect.objectContaining({
+                currentEntity: expect.objectContaining({
+                    transform: expect.objectContaining({
+                        position: { x: 200, y: 200 }
+                    })
+                })
+            }));
+        })
 
         it.todo('Should match the editor entities to the new position');
     });

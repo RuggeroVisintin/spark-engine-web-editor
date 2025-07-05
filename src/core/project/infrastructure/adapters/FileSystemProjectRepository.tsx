@@ -1,6 +1,6 @@
 import { WeakRef } from "../../../common";
 import { Project } from "../../domain";
-import { ProjectRepository } from "../../ports";
+import { ProjectRepository } from "../../domain";
 
 export class FileSystemProjectRepository implements ProjectRepository {
     public async read(): Promise<Project> {

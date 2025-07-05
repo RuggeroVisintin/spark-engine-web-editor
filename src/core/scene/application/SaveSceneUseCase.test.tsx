@@ -1,6 +1,6 @@
 import { Scene } from "@sparkengine";
 import testSceneJson from '../../../__mocks__/assets/test-scene.json';
-import { SceneRepository } from "../ports";
+import { SceneRepository } from "../domain";
 import { SaveSceneUseCase } from "./SaveSceneUseCase";
 
 class MockSceneRepository implements SceneRepository {
