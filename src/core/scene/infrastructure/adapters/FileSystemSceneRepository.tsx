@@ -1,6 +1,6 @@
 import { Scene } from "@sparkengine";
-import { SceneRepository } from "../ports";
-import { FileSystemRepository, LocationParameters } from "../../common";
+import { SceneRepository } from "../../domain";
+import { FileSystemRepository, LocationParameters } from "../../../common";
 
 export class FileSystemSceneRepository extends FileSystemRepository implements SceneRepository {
     public async read(location?: LocationParameters): Promise<Scene> {

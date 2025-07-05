@@ -1,5 +1,5 @@
 import { Scene } from "@sparkengine";
-import { SceneRepository } from "../ports";
+import { SceneRepository } from "../domain";
 
 export class SaveSceneUseCase {
     constructor(private readonly sceneRepo: SceneRepository) { }

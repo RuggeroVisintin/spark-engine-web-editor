@@ -1,3 +1,3 @@
-export * from './ports';
-export * from './adapters';
-export * from './usecases';
+export * from './domain';
+export * from './infrastructure';
+export * from './application';

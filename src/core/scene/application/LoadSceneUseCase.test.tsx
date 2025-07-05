@@ -1,7 +1,7 @@
 import { Scene } from "@sparkengine";
 import { LoadSceneUseCase } from "./LoadSceneUseCase";
 import testSceneJson from '../../../__mocks__/assets/test-scene.json';
-import { SceneRepository } from "../ports";
+import { SceneRepository } from "../domain";
 
 class MockSceneRepository implements SceneRepository {
     read = jest.fn().mockImplementation(() => {

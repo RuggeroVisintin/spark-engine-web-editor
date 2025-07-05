@@ -5,7 +5,7 @@ import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
 import { ActionMenu } from '../../templates/ActionMenu';
 import { EntityPropsPanel } from '../../templates/EntityPropsPanel';
-import { FileSystemSceneRepository } from '../../core/scene/adapters';
+import { FileSystemSceneRepository } from '../../core/scene/infrastructure/adapters';
 import { FileSystemProjectRepository } from '../../core/project/infrastructure/adapters';
 import { SaveProjectUseCase } from '../../core/project/application';
 import { Project } from '../../core/project/models';
