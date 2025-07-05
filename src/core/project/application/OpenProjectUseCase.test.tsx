@@ -1,8 +1,7 @@
-import { ProjectRepository } from "../ports";
 import testProjectJson from "../../../__mocks__/assets/test-project.json";
 import { OpenProjectUseCase } from "./OpenProjectUseCase";
-import { Project } from "../domain";
-import { SceneRepository } from "../../scene/ports";
+import { SceneRepository } from "../../scene";
+import { ProjectRepository, Project } from "../domain";
 import testSceneJson from '../../../__mocks__/assets/test-scene.json';
 import { Scene } from "@sparkengine";
 
