@@ -7,7 +7,6 @@ import Pivot from "../../debug/Pivot";
 import { ProjectRepository } from "../../project/domain";
 import { SceneRepository } from "../../scene";
 import { ObjectPickingService } from "../domain/ObjectPickingService";
-import { EditorApplicationService } from "./EditorApplicationService";
 import { StateRepository } from "./StateRepository";
 import { v4 } from 'uuid';
 import { SaveProjectUseCase } from "../../project/application";
@@ -15,7 +14,7 @@ import { FileSystemImageRepository } from "../../assets/image/adapters";
 import { WeakRef } from "../../common";
 import { ImageRepository } from "../../assets";
 
-export class EditorService implements EditorApplicationService {
+export class EditorService {
     private _currentEntity?: IEntity;
     private _currentScene?: Scene;
     private _editorScene?: Scene;
