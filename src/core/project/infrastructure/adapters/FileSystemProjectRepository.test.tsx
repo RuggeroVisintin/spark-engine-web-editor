@@ -1,8 +1,8 @@
-import { createDirectoryHandleMock, FileSystemWritableFileStreamMock, setMockedFile } from "../../../__mocks__/fs-api.mock";
-import testProjectJson from "../../../__mocks__/assets/test-project.json";
+import { createDirectoryHandleMock, FileSystemWritableFileStreamMock, setMockedFile } from "../../../../__mocks__/fs-api.mock";
+import testProjectJson from "../../../../__mocks__/assets/test-project.json";
 import { FileSystemProjectRepository } from "./FileSystemProjectRepository";
-import { Project } from "../models";
-import { WeakRef } from "../../common";
+import { Project } from "../../models";
+import { WeakRef } from "../../../common";
 
 describe('core/project/adapters/FileSystemProjectRepository', () => {
     describe('read', () => {
