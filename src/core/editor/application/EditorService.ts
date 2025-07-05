@@ -107,12 +107,18 @@ export class EditorService {
             if (this.objectPicking.selectedEntity) {
                 this.selectEntity(this.objectPicking.selectedEntity);
             } else {
-                this.deselectCurrentEntity()
+                this.deselectCurrentEntity();
             }
         } else if (event.button === 2) {
             const { targetX, targetY } = event;
             EditorService.editorEntities.originPivot.transform.position = new Vec2(targetX, targetY);
+       
+            this.stateRepository.update({
+                spawnPoint: EditorService.editorEntities.originPivot.transform.position,
+            });
         }
+
+       
     }
 
     public handleMouseDrag(event: MouseDragEvent): void {

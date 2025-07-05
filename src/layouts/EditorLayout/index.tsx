@@ -45,10 +45,6 @@ export const EditorLayout = () => {
         engine.current = newEngine;
     };
 
-    const onProjectFileSave = async () => {
-        await editorService.saveProject();
-    };
-
     const onEngineViewClick = (e: MouseClickEvent) => {
         if (e.button === 2) {
             const { targetX, targetY } = e;
@@ -71,9 +67,9 @@ export const EditorLayout = () => {
 
     return (
         <FlexBox $fill={true}>
-            <ActionMenu onProjectFileOpen={async () => await editorService.openProject()} onProjectFileSave={onProjectFileSave}></ActionMenu>
+            <ActionMenu onProjectFileOpen={async () => await editorService.openProject()} onProjectFileSave={() => editorService.saveProject()}></ActionMenu>
             <FlexBox $direction='row' $fill style={{ overflow: 'hidden' }}>
-                <EntityFactoryPanel onAddEntity={(entity: IEntity) => editorService.addEntity(entity)} spawnPoint={spawnPoint}></EntityFactoryPanel>
+                <EntityFactoryPanel onAddEntity={(entity: IEntity) => editorService.addEntity(entity)} spawnPoint={editorState.spawnPoint}></EntityFactoryPanel>
                 <EngineView onEngineViewReady={onEngineViewReady} onClick={onEngineViewClick} onMouseDown={(e) => editorService.handleMouseClick(e)} onMouseDragging={onEngineViewMouseDragging}></EngineView>
                 <Box $size={0.25}>
                     <FlexBox $fill={true}>
