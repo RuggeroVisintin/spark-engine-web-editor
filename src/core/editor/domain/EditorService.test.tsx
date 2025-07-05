@@ -2,7 +2,7 @@ import { CanvasDevice, DOMImageLoader, GameObject, IEntity, Renderer, RenderSyst
 import { EditorService } from "./EditorService";
 import { FileSystemImageRepository } from "../../assets";
 import { ProjectRepository } from "../../project/ports";
-import { Project } from "../../project/models";
+import { Project } from "../../project/domain";
 import { SceneRepositoryTestDouble } from "../../../__mocks__/core/scene/SceneRepositoryTestDouble";
 import { Optional, WeakRef } from "../../common";
 import { ObjectPickingService } from "./ObjectPickingService";
