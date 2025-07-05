@@ -16,7 +16,6 @@ export const MaterialPropsGroup = ({ material, onMaterialUpdate }: MaterialProps
             data-testid="EntityPropsPanel.DiffuseColor"
             defaultValue={material.diffuseColor?.toHexString()}
             onChange={(newDiffuseColor: string) => {
-                console.log('newDiffuseColor', newDiffuseColor);
                 onMaterialUpdate?.({ newDiffuseColor: Rgb.fromHex(newDiffuseColor) })
             }}
         ></FormInput>
