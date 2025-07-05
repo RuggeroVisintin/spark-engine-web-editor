@@ -1,5 +1,5 @@
 import { SceneRepository } from "../../scene";
-import { Project } from "../models";
+import { Project } from "../domain";
 import { ProjectRepository } from "../ports";
 
 export class OpenProjectUseCase {

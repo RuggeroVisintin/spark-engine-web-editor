@@ -1,4 +1,4 @@
-import { Project } from "../models";
+import { Project } from "../Project";
 
 export interface ProjectRepository {
     read(): Promise<Project>;
