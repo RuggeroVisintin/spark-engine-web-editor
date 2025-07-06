@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { GameEngine, IEntity, ImageLoader, MaterialComponent, Renderer, TransformComponent, Vec2 } from '@sparkengine';
 import { EngineView } from '../../components';
 import { Box, FlexBox } from '../../primitives';
@@ -9,7 +9,6 @@ import { FileSystemSceneRepository } from '../../core/scene/infrastructure/adapt
 import { FileSystemProjectRepository } from '../../core/project/infrastructure/adapters';
 import { Project } from '../../core/project/domain';
 import { OnEngineViewReadyCBProps } from '../../components/EngineView';
-import { MouseClickEvent, MouseDragEvent } from '../../core/common/events/mouse';
 import { FileSystemImageRepository } from '../../core/assets/image/adapters';
 import { WeakRef } from '../../core/common';
 import { ImageRepository } from '../../core/assets';
@@ -34,7 +33,6 @@ const appState = new ReactStateRepository();
 const editorService = new EditorService(imageLoader, imageRepository, projectRepo, sceneRepo, objectPickingService, appState);
 
 export const EditorLayout = () => {
-    const [spawnPoint, setSpawnPoint] = useState<Vec2>(new Vec2(55, 55));
     const engine = useRef<GameEngine>();
     const [editorState] = useEditorState(appState);
 
@@ -45,32 +43,23 @@ export const EditorLayout = () => {
         engine.current = newEngine;
     };
 
-    const onEngineViewClick = (e: MouseClickEvent) => {
-        if (e.button === 2) {
-            const { targetX, targetY } = e;
-
-            EditorService.editorEntities.originPivot.transform.position = new Vec2(targetX, targetY);
-
-            setSpawnPoint(EditorService.editorEntities.originPivot.transform.position);
-        }
-    }
-
-    const onEngineViewMouseDragging = (e: MouseDragEvent) => {
-        if (!editorService.currentEntity) return;
-
-        const transform = editorService.currentEntity.getComponent<TransformComponent>('TransformComponent');
-
-        if (!transform) return;
-
-        editorService.updateCurrentEntityPosition(new Vec2(transform.position.x + e.deltaX, transform.position.y + e.deltaY));
-    };
-
     return (
         <FlexBox $fill={true}>
-            <ActionMenu onProjectFileOpen={async () => await editorService.openProject()} onProjectFileSave={() => editorService.saveProject()}></ActionMenu>
+            <ActionMenu
+                onProjectFileOpen={() => editorService.openProject()}
+                onProjectFileSave={() => editorService.saveProject()}
+            />
             <FlexBox $direction='row' $fill style={{ overflow: 'hidden' }}>
-                <EntityFactoryPanel onAddEntity={(entity: IEntity) => editorService.addEntity(entity)} spawnPoint={editorState.spawnPoint}></EntityFactoryPanel>
-                <EngineView onEngineViewReady={onEngineViewReady} onClick={onEngineViewClick} onMouseDown={(e) => editorService.handleMouseClick(e)} onMouseDragging={onEngineViewMouseDragging}></EngineView>
+                <EntityFactoryPanel
+                    onAddEntity={(entity: IEntity) => editorService.addEntity(entity)}
+                    spawnPoint={editorState.spawnPoint}
+                />
+                <EngineView
+                    onEngineViewReady={onEngineViewReady}
+                    onClick={(e) => editorService.handleMouseClick(e)}
+                    onMouseDown={(e) => editorService.handleMouseClick(e)}
+                    onMouseDragging={(e) => editorService.handleMouseDrag(e)}
+                />
                 <Box $size={0.25}>
                     <FlexBox $fill={true}>
                         <ScenePanel
