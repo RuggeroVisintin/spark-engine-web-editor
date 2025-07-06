@@ -197,7 +197,7 @@ describe('EngineView', () => {
 
             const canvas = await screen.findByTestId('EngineView.canvas');
             fireEvent.mouseDown(canvas, { button: 0 });
-            // first onw is not going to trigger dragging but dragStart
+            // first one is not going to trigger dragging but dragStart
             fireEvent.mouseMove(canvas, { clientX: 100, clientY: 200 });
             // second one is going to trigger dragging
             fireEvent.mouseMove(canvas, { clientX: 102, clientY: 200 });
@@ -205,6 +205,26 @@ describe('EngineView', () => {
 
             expect(onMouseDragging).toHaveBeenCalled();
         });
+
+        it('Should propagate the button being dragged', async () => {
+            const onMouseDragging = jest.fn();
+            const onEngineReady = jest.fn();
+
+            const engineView = <EngineView onEngineViewReady={onEngineReady} onMouseDragging={onMouseDragging} />;
+            render(engineView);
+
+            const canvas = await screen.findByTestId('EngineView.canvas');
+            fireEvent.mouseDown(canvas, { button: 1 });
+            // first one is not going to trigger dragging but dragStart
+            fireEvent.mouseMove(canvas, { clientX: 100, clientY: 200 });
+            // second one is going to trigger dragging
+            fireEvent.mouseMove(canvas, { clientX: 102, clientY: 200 });
+            fireEvent.mouseUp(canvas, { button: 1 });
+
+            expect(onMouseDragging).toHaveBeenCalledWith(expect.objectContaining({
+                button: 1
+            }));
+        })
 
         it('Should not execute upon initiating the action', async () => {
             const onMouseDragging = jest.fn();

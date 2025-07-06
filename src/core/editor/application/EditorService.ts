@@ -117,14 +117,13 @@ export class EditorService {
                 spawnPoint: EditorService.editorEntities.originPivot.transform.position,
             });
         }
-
-       
     }
 
     public handleMouseDrag(event: MouseDragEvent): void {
-        if (!this._currentEntity) return;
+        if (event.button !== 0 || !this._currentEntity) return;
 
         const transform = this._currentEntity.getComponent<TransformComponent>('TransformComponent');
+
         if (!transform) return;
 
         this.updateCurrentEntityPosition(new Vec2(transform.position.x + event.deltaX, transform.position.y + event.deltaY));

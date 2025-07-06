@@ -26,7 +26,7 @@ export const EngineView = memo(({ onEngineViewReady, onClick, onMouseDragging, o
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     let isEngineInit = false;
-    let isMouseDown = false;
+    let lastMouseButton = -1;
     let isMouseDragging = false;
 
     const width = 1920;
@@ -55,7 +55,7 @@ export const EngineView = memo(({ onEngineViewReady, onClick, onMouseDragging, o
         return {
             targetX: Math.round((e.clientX - rect.left) * scaleFactorX),
             targetY: Math.round((e.clientY - rect.top) * scaleFactorY),
-            button: e.button,
+            button: lastMouseButton,
             deltaX: Math.round(e.movementX * scaleFactorX),
             deltaY: Math.round(e.movementY * scaleFactorX)
         }
@@ -88,14 +88,14 @@ export const EngineView = memo(({ onEngineViewReady, onClick, onMouseDragging, o
                 width={width}
                 height={height}
                 onMouseDown={(e) => {
-                    isMouseDown = true;
+                    lastMouseButton = e.button;
                     onMouseDown?.(mouseEventToMouseClickEvent(e.nativeEvent));
                 }}
                 // need to use setTimeout to avoid the mouseup event being triggered immediately after mousedown when the mouse is moving
-                onMouseUp={() => setTimeout(() => { isMouseDown = false; isMouseDragging = false; }, 0)}
+                onMouseUp={() => setTimeout(() => { lastMouseButton = -1; isMouseDragging = false; }, 0)}
                 onMouseMove={(e) => {
                     const wasMouseDragging = isMouseDragging;
-                    isMouseDragging = isMouseDown && true;
+                    isMouseDragging = lastMouseButton !== -1 && true;
 
                     if (!wasMouseDragging && isMouseDragging) {
                         onMouseDragStart?.(mouseEventToMouseDragEvent(e.nativeEvent));

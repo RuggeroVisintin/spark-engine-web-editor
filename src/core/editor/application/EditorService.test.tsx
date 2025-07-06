@@ -135,7 +135,7 @@ describe('EditorService', () => {
 
     });
 
-    describe('.onMouseDown()', () => {
+    describe('.handleMouseClick()', () => {
         it('Should focus on the entity at the given position if any and left mouse button', () => {
             const resolution = { width: 800, height: 600 };
             const gameObject = new GameObject();
@@ -180,6 +180,46 @@ describe('EditorService', () => {
             });
 
             expect(editorService.currentEntity).not.toBeDefined();
+        });
+    });
+
+    describe('.handleMouseDrag()', () => {
+        it('Should update the position of the current entity', () => {
+            const resolution = { width: 800, height: 600 };
+            const gameObject = new GameObject();
+            gameObject.transform.position = new Vec2(50, 50);
+
+            editorService.start(context, resolution);
+            editorService.selectEntity(gameObject);
+
+            editorService.handleMouseDrag({
+                targetX: 100,
+                targetY: 100,
+                button: 0,
+                deltaX: 20,
+                deltaY: 20
+            });
+
+            expect(gameObject.transform.position).toEqual(new Vec2(70, 70));
+        });
+
+        it('Should not update the position when not using left mouse button', () => {
+            const resolution = { width: 800, height: 600 };
+            const gameObject = new GameObject();
+            gameObject.transform.position = new Vec2(50, 50);
+
+            editorService.start(context, resolution);
+            editorService.selectEntity(gameObject);
+
+            editorService.handleMouseDrag({
+                targetX: 100,
+                targetY: 100,
+                button: 1,
+                deltaX: 20,
+                deltaY: 20
+            });
+
+            expect(gameObject.transform.position).toEqual(new Vec2(50, 50));
         });
     })
 
