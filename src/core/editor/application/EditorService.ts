@@ -1,9 +1,9 @@
 import { GameEngine, IEntity, ImageLoader, Scene, TransformComponent, Vec2, Rgb, ImageAsset, MaterialComponent } from "sparkengineweb";
-import { SetDebuggerEntityUseCase } from "../../debug/usecases";
+import { SetDebuggerEntityUseCase } from "../../contextual-ui/usecases";
 import { MouseClickEvent, MouseDragEvent, Optional } from "../../common";
 import { Project } from "../../project/domain";
-import { EntityOutline } from "../../debug";
-import Pivot from "../../debug/Pivot";
+import { EntityOutline } from "../../contextual-ui";
+import Pivot from "../../contextual-ui/Pivot";
 import { ProjectRepository } from "../../project/domain";
 import { SceneRepository } from "../../scene";
 import { ObjectPickingService } from "../domain/ObjectPickingService";
