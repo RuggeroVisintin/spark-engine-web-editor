@@ -17,6 +17,7 @@ import { ColorObjectPicker } from '../../core/editor';
 import { ObjectPickingService } from '../../core/editor/domain/ObjectPickingService';
 import { ReactStateRepository } from '../../core/editor/infrastructure/adapters/ReactStateRepository';
 import { useEditorState } from '../../hooks';
+import { ContextualUiService } from '../../core/editor/domain/ContextualUiService';
 
 let imageRepository: ImageRepository;
 let imageLoader: ImageLoader;
@@ -28,9 +29,18 @@ const sceneRepo = new FileSystemSceneRepository();
 imageLoader = imageRepository = new FileSystemImageRepository(project.scopeRef as WeakRef<FileSystemDirectoryHandle>);
 const objectPikcer = new ColorObjectPicker((...params) => new Renderer(...params), { width: 1920, height: 1080 }, imageLoader);
 const objectPickingService = new ObjectPickingService(objectPikcer);
+const contextualUiService = new ContextualUiService();
 
 const appState = new ReactStateRepository();
-const editorService = new EditorService(imageLoader, imageRepository, projectRepo, sceneRepo, objectPickingService, appState);
+const editorService = new EditorService(
+    imageLoader,
+    imageRepository,
+    projectRepo,
+    sceneRepo,
+    objectPickingService,
+    appState,
+    contextualUiService
+);
 
 export const EditorLayout = () => {
     const engine = useRef<GameEngine>();
