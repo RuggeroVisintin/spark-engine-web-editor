@@ -9,6 +9,7 @@ import { ObjectPickingService } from "../domain/ObjectPickingService";
 import { ColorObjectPicker } from "../infrastructure";
 import { ReactStateRepository } from "../infrastructure/adapters/ReactStateRepository";
 import { StateRepository } from "./StateRepository";
+import { ContextualUiService } from "../domain/ContextualUiService";
 
 class ProjectRepositoryTestDouble implements ProjectRepository {
     public read(): Promise<Project> {
@@ -21,7 +22,6 @@ class ProjectRepositoryTestDouble implements ProjectRepository {
     public project?: Project;
 }
 
-
 class ObjectPickingServiceTestDouble extends ObjectPickingService {
     public _result?: IEntity;
 
@@ -31,6 +31,28 @@ class ObjectPickingServiceTestDouble extends ObjectPickingService {
 
     handleMouseClick = jest.fn();
     getRenderSystem = jest.fn(() => new RenderSystem(new Renderer(new CanvasDevice(), { width: 0, height: 0 }, new CanvasRenderingContext2D()), new DOMImageLoader()))
+}
+
+class ContextualUiServiceTestDouble extends ContextualUiService {
+    public currentScene?: Scene;
+    public lastFocusedEntity?: IEntity;
+    public currentSpawnPosition?: Vec2;
+
+    public start(contextualUiScene: Scene): void {
+        this.currentScene = contextualUiScene;
+    }
+
+    public focusOnEntity(entity: IEntity): void {
+        this.lastFocusedEntity = entity;
+    }
+
+    public loseFocus(): void {
+        this.lastFocusedEntity = undefined;
+    }
+
+    public moveSpawnOrigin(position: Vec2): void {
+        this.currentSpawnPosition = position;
+    }
 }
 
 const sceneToLoad = new Scene();
@@ -43,6 +65,7 @@ describe('EditorService', () => {
     let sceneRepository: SceneRepositoryTestDouble;
     let objectPicking: ObjectPickingServiceTestDouble;
     let appState: StateRepository;
+    let contextualUiServiceDouble: ContextualUiServiceTestDouble;
 
     beforeEach(() => {
         projectRepositoryDouble = new ProjectRepositoryTestDouble();
@@ -51,11 +74,20 @@ describe('EditorService', () => {
         imageLoader = new FileSystemImageRepository();
         objectPicking = new ObjectPickingServiceTestDouble(new ColorObjectPicker(() => new Renderer(new CanvasDevice(), { width: 0, height: 0 }, context), { width: 0, height: 0 }, imageLoader));
         appState = new ReactStateRepository();
+        contextualUiServiceDouble = new ContextualUiServiceTestDouble();
 
-        editorService = new EditorService(imageLoader, imageLoader, projectRepositoryDouble, sceneRepository, objectPicking, appState);
+        editorService = new EditorService(
+            imageLoader,
+            imageLoader,
+            projectRepositoryDouble,
+            sceneRepository,
+            objectPicking,
+            appState,
+            contextualUiServiceDouble
+        );
 
         sceneRepository.save(sceneToLoad, { path: 'test-scene.spark.json', accessScope: new WeakRef<null>(null) });
-    })
+    });
 
     describe('.start()', () => {
         it('Should create a new engine with the given configuration', () => {
@@ -89,8 +121,6 @@ describe('EditorService', () => {
             editorService.start(context, resolution);
 
             expect(editorService.editorScene).toBeDefined();
-            expect(editorService?.editorScene?.entities).toContain(EditorService.editorEntities.originPivot);
-            expect(editorService?.editorScene?.entities).toContain(EditorService.editorEntities.outline);
         });
 
         it('Should draw the editor scene', () => {
@@ -110,6 +140,14 @@ describe('EditorService', () => {
             expect(editorService.project?.scenes).toContain(editorService.currentScene);
             expect(editorService.project?.scenes).toContain(editorService.editorScene);
         });
+
+        it('Should start the contextual ui service with the editor scene', () => {
+            const resolution = { width: 800, height: 600 };
+
+            editorService.start(context, resolution);
+
+            expect(contextualUiServiceDouble.currentScene?.uuid).toEqual(editorService.editorScene?.uuid);
+        })
 
         // Cannot test this yet as cannot retrieve the default wireframe thickness of the engine renderer once set
         it.todo('Should set the default wireframe thickness of the engine renderer');
@@ -136,50 +174,70 @@ describe('EditorService', () => {
     });
 
     describe('.handleMouseClick()', () => {
-        it('Should focus on the entity at the given position if any and left mouse button', () => {
-            const resolution = { width: 800, height: 600 };
-            const gameObject = new GameObject();
-            objectPicking._result = gameObject;
+        describe('left mouse button', () => {
+            it('Should focus on the entity at the given position if any and left mouse button', () => {
+                const resolution = { width: 800, height: 600 };
+                const gameObject = new GameObject();
+                objectPicking._result = gameObject;
 
-            editorService.start(context, resolution);
-            editorService.handleMouseClick({
-                targetX: 100,
-                targetY: 100,
-                button: 0
+                editorService.start(context, resolution);
+                editorService.handleMouseClick({
+                    targetX: 100,
+                    targetY: 100,
+                    button: 0
+                });
+
+                expect(editorService.currentEntity).toEqual(gameObject);
+                expect(contextualUiServiceDouble.lastFocusedEntity).toEqual(gameObject);
             });
 
-            expect(editorService.currentEntity).toEqual(gameObject);
+            it('Should remove focus from the current entity if no entity at the given position', () => {
+                const resolution = { width: 800, height: 600 };
+                const gameObject = new GameObject();
+                objectPicking._result = undefined;
+
+                editorService.start(context, resolution);
+                editorService.selectEntity(gameObject);
+                editorService.handleMouseClick({
+                    targetX: 100,
+                    targetY: 100,
+                    button: 0
+                });
+
+                expect(editorService.currentEntity).not.toBeDefined();
+                expect(contextualUiServiceDouble.lastFocusedEntity).toBeUndefined();
+            });
+
+            it('Should not focus on the entity when not left mouse button', () => {
+                const resolution = { width: 800, height: 600 };
+                const gameObject = new GameObject();
+                objectPicking._result = gameObject;
+
+                editorService.start(context, resolution);
+                editorService.handleMouseClick({
+                    targetX: 100,
+                    targetY: 100,
+                    button: 1
+                });
+
+                expect(editorService.currentEntity).not.toBeDefined();
+                expect(contextualUiServiceDouble.lastFocusedEntity).toBeUndefined();
+            });
         });
 
-        it('Should remove focus from the current entity if no entity at the given position', () => {
-            const resolution = { width: 800, height: 600 };
-            const gameObject = new GameObject();
-            objectPicking._result = undefined;
+        describe('right mouse button', () => {
+            it('Should set the origin pivot position to the given coordinates', () => {
+                const resolution = { width: 800, height: 600 };
 
-            editorService.start(context, resolution);
-            editorService.selectEntity(gameObject);
-            editorService.handleMouseClick({
-                targetX: 100,
-                targetY: 100,
-                button: 0
+                editorService.start(context, resolution);
+                editorService.handleMouseClick({
+                    targetX: 100,
+                    targetY: 200,
+                    button: 2
+                });
+
+                expect(contextualUiServiceDouble.currentSpawnPosition).toEqual(new Vec2(100, 200));
             });
-
-            expect(editorService.currentEntity).not.toBeDefined();
-        });
-
-        it('Should not focus on the entity when not left mouse button', () => {
-            const resolution = { width: 800, height: 600 };
-            const gameObject = new GameObject();
-            objectPicking._result = gameObject;
-
-            editorService.start(context, resolution);
-            editorService.handleMouseClick({
-                targetX: 100,
-                targetY: 100,
-                button: 1
-            });
-
-            expect(editorService.currentEntity).not.toBeDefined();
         });
     });
 
@@ -320,17 +378,6 @@ describe('EditorService', () => {
             editorService.removeEntity(entity.uuid);
 
             expect(editorService.currentEntity).not.toBeDefined();
-        })
-
-        it('Should hide the editorScene', () => {
-            const resolution = { width: 800, height: 600 };
-            const entity = new GameObject();
-
-            editorService.start(context, resolution);
-            editorService.addEntity(entity);
-            editorService.removeEntity(entity.uuid);
-
-            expect(editorService.editorScene?.shouldDraw).toBe(false);
         });
 
         it('Should trigger an update on the given subscriber with the new entity', () => {

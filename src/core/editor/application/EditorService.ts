@@ -1,9 +1,8 @@
 import { GameEngine, IEntity, ImageLoader, Scene, TransformComponent, Vec2, Rgb, ImageAsset, MaterialComponent } from "sparkengineweb";
-import { SetDebuggerEntityUseCase } from "../../debug/usecases";
 import { MouseClickEvent, MouseDragEvent, Optional } from "../../common";
 import { Project } from "../../project/domain";
-import { EntityOutline } from "../../debug";
-import Pivot from "../../debug/Pivot";
+import { EntityOutline } from "../domain/entities";
+import Pivot from "../domain/entities/Pivot";
 import { ProjectRepository } from "../../project/domain";
 import { SceneRepository } from "../../scene";
 import { ObjectPickingService } from "../domain/ObjectPickingService";
@@ -13,6 +12,7 @@ import { SaveProjectUseCase } from "../../project/application";
 import { FileSystemImageRepository } from "../../assets/image/adapters";
 import { WeakRef } from "../../common";
 import { ImageRepository } from "../../assets";
+import { ContextualUiService } from "../domain/ContextualUiService";
 
 export class EditorService {
     private _currentEntity?: IEntity;
@@ -20,11 +20,6 @@ export class EditorService {
     private _editorScene?: Scene;
     private _engine?: GameEngine;
     private _project?: Project;
-
-    public static editorEntities = {
-        outline: new EntityOutline(),
-        originPivot: new Pivot()
-    }
 
     public get currentEntity(): Optional<IEntity> {
         return this._currentEntity;
@@ -52,7 +47,8 @@ export class EditorService {
         private readonly projectRepository: ProjectRepository,
         private readonly sceneRepository: SceneRepository,
         private readonly objectPicking: ObjectPickingService,
-        private readonly stateRepository: StateRepository
+        private readonly stateRepository: StateRepository,
+        private readonly contextualUiService: ContextualUiService
     ) {
     }
 
@@ -67,7 +63,7 @@ export class EditorService {
         this._currentScene.draw(this._engine);
         this._project.addScene(this._currentScene);
 
-        this.initEditorScene();
+        this.initContextualUi();
 
         this._engine.run();
     }
@@ -91,7 +87,7 @@ export class EditorService {
             entities: this._currentScene?.entities || [],
             currentScene: this._currentScene,
             currentEntity: undefined
-        })
+        });
     }
 
     public async saveProject(): Promise<void> {
@@ -111,10 +107,10 @@ export class EditorService {
             }
         } else if (event.button === 2) {
             const { targetX, targetY } = event;
-            EditorService.editorEntities.originPivot.transform.position = new Vec2(targetX, targetY);
+            this.contextualUiService.moveSpawnOrigin(new Vec2(targetX, targetY));
        
             this.stateRepository.update({
-                spawnPoint: EditorService.editorEntities.originPivot.transform.position,
+                spawnPoint: this.contextualUiService.spawnPivot.position,
             });
         }
     }
@@ -132,7 +128,7 @@ export class EditorService {
     public selectEntity(entity: IEntity): void {
         this._currentEntity = entity;
 
-        this._editorScene && new SetDebuggerEntityUseCase(this._editorScene).execute(this._currentEntity);
+        this._editorScene && this.contextualUiService.focusOnEntity(entity);
         this._engine && this._editorScene?.shouldDraw === false && this._editorScene?.draw(this._engine);
 
         this.stateRepository.update({
@@ -142,7 +138,7 @@ export class EditorService {
 
     private deselectCurrentEntity(): void {
         this._currentEntity = undefined;
-        this._editorScene?.hide();
+        this.contextualUiService.loseFocus();
 
         this.stateRepository.update({
             currentEntity: undefined
@@ -174,7 +170,7 @@ export class EditorService {
 
         transform.size = newSize;
 
-        this._editorScene && new SetDebuggerEntityUseCase(this._editorScene).execute(this._currentEntity!);
+        this._editorScene && this.contextualUiService.focusOnEntity(this._currentEntity!);
 
         this.stateRepository.update({
             currentEntity: this._currentEntity
@@ -187,7 +183,7 @@ export class EditorService {
         if (!transform) return;
 
         transform.position = newPosition;
-        this._editorScene && new SetDebuggerEntityUseCase(this._editorScene).execute(this._currentEntity!);
+        this._editorScene && this.contextualUiService.focusOnEntity(this._currentEntity!);
 
         this.stateRepository.update({
             currentEntity: this._currentEntity
@@ -219,12 +215,12 @@ export class EditorService {
         });
     }
 
-    private initEditorScene(): void {
+    private initContextualUi(): void {
         this._editorScene = new Scene();
-        this._editorScene.registerEntity(EditorService.editorEntities.outline);
-        this._editorScene.registerEntity(EditorService.editorEntities.originPivot);
-        this._project!.addScene(this._editorScene);
 
+        this.contextualUiService.start(this._editorScene);
+
+        this._project!.addScene(this._editorScene);
         this._editorScene.draw(this._engine!);
     }
 

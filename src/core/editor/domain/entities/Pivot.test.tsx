@@ -1,4 +1,4 @@
-import { GameObject, Vec2 } from "sparkengineweb";
+import { GameObject, Rgb, Vec2 } from "sparkengineweb";
 import Pivot from "./Pivot";
 
 describe('core/debug/Pivot', () => {
@@ -11,7 +11,7 @@ describe('core/debug/Pivot', () => {
                 }
             });
 
-            const pivot = new Pivot();
+            const pivot = new Pivot({ diffuseColor: new Rgb(255, 0, 0) });
             pivot.match(target);
 
             expect(pivot.transform.position).toEqual(target.transform.position);
