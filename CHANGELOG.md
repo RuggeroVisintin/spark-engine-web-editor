@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.0.10](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.9...sparkenginewebeditor-v0.0.10) (2025-07-18)
+
+
+### Features
+
+* **editor:** add dedicated pivot contextual ui for spawn origin ([#169](https://github.com/RuggeroVisintin/spark-engine-web-editor/issues/169)) ([ee2a4c2](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/ee2a4c20e1d232ba206f6e8e320f452389b1ab32))
+
+
+### Bug Fixes
+
+* **engine-view:** prevent entity position mouse drag update when not left mouse drag ([d3e876d](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/d3e876dff0f32c726fe99a4a099cb5277ed89023))
+* fix spawn point selection ([0e3f6bc](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/0e3f6bc6bda943bad30315c8f9419b654e3150d9))
+
 ## [0.0.9](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.8...sparkenginewebeditor-v0.0.9) (2025-07-05)
 
 
