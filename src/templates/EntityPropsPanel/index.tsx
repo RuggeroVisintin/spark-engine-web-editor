@@ -1,7 +1,7 @@
 import React from "react";
 import { IEntity, MaterialComponent, TransformComponent, TransformComponentProps, typeOf, Vec2 } from "@sparkengine";
 import { FormInput } from "../../components";
-import { Box, Spacing } from "../../primitives";
+import { Box, Button, Spacing } from "../../primitives";
 import { InputRow } from "../../primitives/InputRow";
 import { MaterialPropsGroup } from "./components/MaterialPropsGroup";
 import { Link } from "react-router";
@@ -88,9 +88,11 @@ export const EntityPropsPanel = ({ currentEntity, onUpdatePosition, onUpdateSize
             />}
             {typeOf(currentEntity) === 'TriggerEntity' && (
                 <Box data-testid="EntityPropsPanel.TriggerEntity.ScriptingProp">
-                    <Link to={'/scripting/'} data-testid="EntityPropsPanel.TriggerEntity.ScriptingLink" target="_blank" rel="noopener noreferrer">
-                        Open Scripting
-                    </Link>
+                    <Button>
+                        <Link to={'/scripting/'} data-testid="EntityPropsPanel.TriggerEntity.ScriptingLink" target="_blank" rel="noopener noreferrer">
+                            <Box> Open Scripting </Box>
+                        </Link>
+                    </Button>
                 </Box>
             )}
         </Box>

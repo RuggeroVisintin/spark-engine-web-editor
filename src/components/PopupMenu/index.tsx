@@ -32,7 +32,7 @@ export const PopupMenu = (props: PopupMenuProps) => {
                 text={props.label}
                 flex={false}
                 data-testid={`${props["data-testid"]}.trigger`}
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={() => props.action ? props.action() : setIsOpen(!isOpen)}
                 isAcitve={isOpen} />
             {isOpen && props.items &&
                 <PopupMenuBody $direction="column">
