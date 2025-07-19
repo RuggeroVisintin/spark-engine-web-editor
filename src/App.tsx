@@ -1,8 +1,14 @@
 import React from 'react';
-import { EditorLayout } from './layouts/EditorLayout';
+import { Routes, Route } from 'react-router';
+import { Editor } from './pages/Editor';
+import { Scripting } from './pages';
 
 export const App = () => {
     return (
-        <EditorLayout />
+        <Routes>
+            <Route path="/" element={<Editor />} />
+            <Route path="/scripting" element={<Scripting />} />
+            {/* Add more routes as needed */}
+        </Routes>
     );
 }

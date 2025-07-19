@@ -1,4 +1,4 @@
-describe('EditorLayout', () => {
+describe('pages/Editor', () => {
     describe('onEngineReady', () => {
         it.todo('Should create a new scene when the engine is ready');
         it.todo('Should start the egine');

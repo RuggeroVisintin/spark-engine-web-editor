@@ -50,6 +50,11 @@ export class EditorService {
         private readonly stateRepository: StateRepository,
         private readonly contextualUiService: ContextualUiService
     ) {
+        const bc = new BroadcastChannel("scripting");
+
+        bc.onmessage = (event) => {
+            console.log('Received message:', event.data);
+        };
     }
 
     public start(context: CanvasRenderingContext2D, resolution: { width: number, height: number }): void {

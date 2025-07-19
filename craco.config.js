@@ -17,4 +17,13 @@ module.exports = {
         // Use our eslint config instead
         enable: false,
     },
+    webpack: {
+        configure: (webpackConfig) => {
+            // Ignore source map warnings for Monaco editor
+            webpackConfig.ignoreWarnings = [
+                /Failed to parse source map/,
+            ];
+            return webpackConfig;
+        },
+    },
 }
