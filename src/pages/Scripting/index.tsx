@@ -84,5 +84,5 @@ export const Scripting: FC = () => {
         return undefined;
     }, []);
 
-    return <FlexBox $fill={true} ref={monacoEl} />
+    return <FlexBox $fill={true} ref={monacoEl} data-testid="ScriptingPage" />
 };

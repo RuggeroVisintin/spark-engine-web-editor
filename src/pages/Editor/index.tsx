@@ -80,8 +80,7 @@ export const Editor = () => {
                         ></ScenePanel>
                         {editorState.currentEntity &&
                             <EntityPropsPanel
-                                material={editorState.currentEntity.getComponent<MaterialComponent>('MaterialComponent')}
-                                transform={editorState.currentEntity?.getComponent<TransformComponent>('TransformComponent')}
+                                currentEntity={editorState.currentEntity}
                                 onUpdatePosition={({ newPosition }: { newPosition: Vec2 }) => editorService.updateCurrentEntityPosition(newPosition)}
                                 onUpdateSize={({ newSize }: { newSize: { width: number, height: number } }) => editorService.updateCurrentEntitySize(newSize)}
                                 onMaterialUpdate={(materialProps: any) => editorService.updateCurrentEntityMaterial(materialProps)}

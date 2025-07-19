@@ -1,13 +1,13 @@
 import React from "react";
-import { MaterialComponent, TransformComponent, TransformComponentProps, Vec2 } from "@sparkengine";
+import { IEntity, MaterialComponent, TransformComponent, TransformComponentProps, typeOf, Vec2 } from "@sparkengine";
 import { FormInput } from "../../components";
 import { Box, Spacing } from "../../primitives";
 import { InputRow } from "../../primitives/InputRow";
 import { MaterialPropsGroup } from "./components/MaterialPropsGroup";
+import { Link } from "react-router";
 
 interface EntityPropsPanelProps {
-    transform?: TransformComponentProps,
-    material?: MaterialComponent,
+    currentEntity?: IEntity,
     onUpdatePosition?: CallableFunction,
     onUpdateSize?: CallableFunction,
     onMaterialUpdate?: CallableFunction
@@ -73,7 +73,10 @@ const TransformPropsGroup = ({ transform, onUpdateSize, onUpdatePosition }: Tran
     )
 };
 
-export const EntityPropsPanel = ({ transform, material, onUpdatePosition, onUpdateSize, onMaterialUpdate }: EntityPropsPanelProps) => {
+export const EntityPropsPanel = ({ currentEntity, onUpdatePosition, onUpdateSize, onMaterialUpdate }: EntityPropsPanelProps) => {
+    const transform = currentEntity?.getComponent<TransformComponent>('TransformComponent');
+    const material = currentEntity?.getComponent<MaterialComponent>('MaterialComponent');
+
     return (
         <Box $size={1} $scroll $divide $spacing={Spacing.lg}>
             {transform && <TransformPropsGroup
@@ -83,6 +86,13 @@ export const EntityPropsPanel = ({ transform, material, onUpdatePosition, onUpda
                 material={material}
                 onMaterialUpdate={onMaterialUpdate}
             />}
+            {typeOf(currentEntity) === 'TriggerEntity' && (
+                <Box data-testid="EntityPropsPanel.TriggerEntity.ScriptingProp">
+                    <Link to={'/scripting/'} data-testid="EntityPropsPanel.TriggerEntity.ScriptingLink" target="_blank" rel="noopener noreferrer">
+                        Open Scripting
+                    </Link>
+                </Box>
+            )}
         </Box>
     )
 }
