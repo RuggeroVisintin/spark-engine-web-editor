@@ -19,30 +19,30 @@ import { ReactStateRepository } from '../../core/editor/infrastructure/adapters/
 import { useEditorState } from '../../hooks';
 import { ContextualUiService } from '../../core/editor/domain/ContextualUiService';
 
-let imageRepository: ImageRepository;
-let imageLoader: ImageLoader;
-
-const project = new Project({ name: 'my-project', scenes: [] });
-const projectRepo = new FileSystemProjectRepository();
-const sceneRepo = new FileSystemSceneRepository();
-
-imageLoader = imageRepository = new FileSystemImageRepository(project.scopeRef as WeakRef<FileSystemDirectoryHandle>);
-const objectPikcer = new ColorObjectPicker((...params) => new Renderer(...params), { width: 1920, height: 1080 }, imageLoader);
-const objectPickingService = new ObjectPickingService(objectPikcer);
-const contextualUiService = new ContextualUiService();
-
-const appState = new ReactStateRepository();
-const editorService = new EditorService(
-    imageLoader,
-    imageRepository,
-    projectRepo,
-    sceneRepo,
-    objectPickingService,
-    appState,
-    contextualUiService
-);
-
 export const Editor = () => {
+    let imageRepository: ImageRepository;
+    let imageLoader: ImageLoader;
+
+    const project = new Project({ name: 'my-project', scenes: [] });
+    const projectRepo = new FileSystemProjectRepository();
+    const sceneRepo = new FileSystemSceneRepository();
+
+    imageLoader = imageRepository = new FileSystemImageRepository(project.scopeRef as WeakRef<FileSystemDirectoryHandle>);
+    const objectPikcer = new ColorObjectPicker((...params) => new Renderer(...params), { width: 1920, height: 1080 }, imageLoader);
+    const objectPickingService = new ObjectPickingService(objectPikcer);
+    const contextualUiService = new ContextualUiService();
+
+    const appState = new ReactStateRepository();
+    const editorService = new EditorService(
+        imageLoader,
+        imageRepository,
+        projectRepo,
+        sceneRepo,
+        objectPickingService,
+        appState,
+        contextualUiService
+    );
+
     const engine = useRef<GameEngine>();
     const [editorState] = useEditorState(appState);
 
