@@ -2,7 +2,7 @@ import { FC, useRef, useState, useEffect } from 'react';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import React from 'react';
 import { FlexBox } from '../../primitives';
-// Import syntax highlighting for TypeScript
+// Import only basic TypeScript syntax highlighting
 import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution';
 
 export const Scripting: FC = () => {
@@ -12,12 +12,12 @@ export const Scripting: FC = () => {
     useEffect(() => {
         if (monacoEl.current) {
             const newEditor = monaco.editor.create(monacoEl.current, {
-                value: '// Example TypeScript code with syntax highlighting\nfunction greet(name: string): string {\n  return `Hello, ${name}!`;\n}\n\nconst result = greet("World");\nconsole.log(result);',
+                value: '// Example code\nfunction greet(name: string): string {\n  return `Hello, ${name}!`;\n}\n\nconst result = greet("World");\nconsole.log(result);',
                 language: 'typescript',
                 minimap: { enabled: false },
                 automaticLayout: true,
-                theme: 'vs-dark', // Use dark theme for better syntax highlighting
-                renderValidationDecorations: 'on'
+                theme: 'vs-dark',
+                renderValidationDecorations: 'on',
             });
 
             setEditor(newEditor);
