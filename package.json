@@ -29,6 +29,7 @@
     "@testing-library/user-event": "^14.6.1",
     "react": "^19.0.0",
     "react-dom": "^19.1.0",
+    "react-router-dom": "^7.7.0",
     "sparkengineweb": "https://github.com/RuggeroVisintin/SparkEngineWeb/releases/download/sparkengineweb-v0.15.1/sparkengineweb-v0.15.1-lib.tar.gz",
     "styled-components": "^6.1.19",
     "uuid": "^11.1.0",
