@@ -42,7 +42,7 @@ const editorService = new EditorService(
     contextualUiService
 );
 
-export const EditorLayout = () => {
+export const Editor = () => {
     const engine = useRef<GameEngine>();
     const [editorState] = useEditorState(appState);
 

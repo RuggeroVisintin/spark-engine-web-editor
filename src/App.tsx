@@ -1,8 +1,8 @@
 import React from 'react';
-import { EditorLayout } from './layouts/EditorLayout';
+import { Editor } from './pages/Editor';
 
 export const App = () => {
     return (
-        <EditorLayout />
+        <Editor />
     );
 }
