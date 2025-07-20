@@ -5,6 +5,8 @@ import { Box, Button, Spacing } from "../../primitives";
 import { InputRow } from "../../primitives/InputRow";
 import { MaterialPropsGroup } from "./components/MaterialPropsGroup";
 import { Link } from "react-router";
+import { EventBusWithBrowserBroadcast } from "../../core/scripting/infrastructure";
+import { OpenScriptingEditorCommand } from "../../core/scripting/domain/commands";
 
 interface EntityPropsPanelProps {
     currentEntity?: IEntity,
@@ -76,6 +78,7 @@ const TransformPropsGroup = ({ transform, onUpdateSize, onUpdatePosition }: Tran
 export const EntityPropsPanel = ({ currentEntity, onUpdatePosition, onUpdateSize, onMaterialUpdate }: EntityPropsPanelProps) => {
     const transform = currentEntity?.getComponent<TransformComponent>('TransformComponent');
     const material = currentEntity?.getComponent<MaterialComponent>('MaterialComponent');
+    const eventBus = new EventBusWithBrowserBroadcast('scripting');
 
     return (
         <Box $size={1} $scroll $divide $spacing={Spacing.lg}>
@@ -89,7 +92,16 @@ export const EntityPropsPanel = ({ currentEntity, onUpdatePosition, onUpdateSize
             {typeOf(currentEntity) === 'TriggerEntity' && (
                 <Box data-testid="EntityPropsPanel.TriggerEntity.ScriptingProp">
                     <Button>
-                        <Link to={'/scripting/'} data-testid="EntityPropsPanel.TriggerEntity.ScriptingLink" target="_blank" rel="noopener noreferrer">
+                        <Link
+                            to={'/scripting/'}
+                            data-testid="EntityPropsPanel.TriggerEntity.ScriptingLink"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => eventBus.publish<OpenScriptingEditorCommand>('OpenScriptingEditorCommand', {
+                                currentScript: 'console.log("hello world");',
+                                entityUuid: 'test-entity-uuid'
+                            })}
+                        >
                             <Box> Open Scripting </Box>
                         </Link>
                     </Button>

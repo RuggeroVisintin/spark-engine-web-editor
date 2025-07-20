@@ -8,6 +8,8 @@ import globals from "globals/globals.json";
 // Import only basic TypeScript syntax highlighting
 import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution';
 import { PopupMenu } from '../../components/PopupMenu';
+import { ScriptEditorService } from '../../core/scripting/application';
+import { EventBusWithBrowserBroadcast } from '../../core/scripting/infrastructure';
 
 const loadESLintConfig = async (editor: monaco.editor.IStandaloneCodeEditor) => {
     const linter = new Linter({
@@ -54,10 +56,18 @@ export const Scripting: FC = () => {
     const monacoEl = useRef(null);
     const bc = new BroadcastChannel("scripting");
 
+    const scriptingEditorService = new ScriptEditorService(
+        new EventBusWithBrowserBroadcast("scripting"),
+        'test-entity-uuid'
+    );
+
+    // TODO -- introduce application state based to set the current value of the script
     useEffect(() => {
         if (monacoEl.current) {
+            const defaultValue = '// Write your code here';
+
             const newEditor = monaco.editor.create(monacoEl.current, {
-                value: '// Example code with various ESLint issues\nfunction greet(name) {\n  const greeting = "Hello" // Missing semicolon\n  return greeting + ", " + name + "!"\n}\n\nconst result = greet("World") // Double quotes and missing semicolon\nconsole.log(result) // Console statement and missing semicolon',
+                value: defaultValue,
                 language: 'javascript',
                 minimap: { enabled: false },
                 automaticLayout: true,
