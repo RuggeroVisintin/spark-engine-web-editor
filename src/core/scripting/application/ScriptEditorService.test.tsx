@@ -1,6 +1,8 @@
+import { ReactStateRepository } from "../../editor";
 import { OpenScriptingEditorCommand } from "../domain/commands";
 import { EventBus } from "./ports/EventBus";
 import { ScriptEditorService } from "./ScriptEditorService";
+import { ScriptEditorState } from "./ScriptEditorState";
 
 class InMemoryEventBusDouble implements EventBus {
     private subscribers: { [key: string]: ((event: any) => void)[] } = {};
@@ -24,10 +26,12 @@ describe('core/scripting/application/ScriptEditorService', () => {
     let service: ScriptEditorService;
     let entityUuid = 'test-entity-uuid';
     let eventBus: InMemoryEventBusDouble;
+    let state: ReactStateRepository<ScriptEditorState>;
 
     beforeEach(() => {
         eventBus = new InMemoryEventBusDouble();
-        service = new ScriptEditorService(eventBus, entityUuid);
+        state = new ReactStateRepository<ScriptEditorState>();
+        service = new ScriptEditorService(eventBus, entityUuid, state);
     })
 
     describe('on OpenScriptingEditorCommand', () => {
@@ -58,5 +62,21 @@ describe('core/scripting/application/ScriptEditorService', () => {
 
             expect(service.currentScript).toBe(undefined);
         });
+
+        it('Should trigger a state update', () => {
+            const command: OpenScriptingEditorCommand = {
+                entityUuid: 'test-entity-uuid',
+                currentScript: 'console.log("Hello World");',
+            };
+
+            const cb = jest.fn();
+            state.subscribe(cb)
+
+            eventBus.publish('OpenScriptingEditorCommand', command);
+
+            expect(cb).toHaveBeenCalledWith({
+                currentScript: 'console.log("Hello World");',
+            });
+        })
     });
 });

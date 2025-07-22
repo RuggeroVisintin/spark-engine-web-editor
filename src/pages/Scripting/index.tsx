@@ -8,9 +8,7 @@ import globals from "globals/globals.json";
 // Import only basic TypeScript syntax highlighting
 import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution';
 import { PopupMenu } from '../../components/PopupMenu';
-import { ScriptEditorService } from '../../core/scripting/application';
-import { EventBusWithBrowserBroadcast } from '../../core/scripting/infrastructure';
-import { useOnInit } from '../../hooks';
+import { useScriptEditorService } from '../../hooks';
 
 const loadESLintConfig = async (editor: monaco.editor.IStandaloneCodeEditor) => {
     const linter = new Linter({
@@ -53,17 +51,12 @@ const loadESLintConfig = async (editor: monaco.editor.IStandaloneCodeEditor) => 
 };
 
 export const Scripting: FC = () => {
+    console.log('SCripting',)
     const [__, setEditor] = useState<monaco.editor.IStandaloneCodeEditor | null>(null);
     const monacoEl = useRef(null);
     const bc = new BroadcastChannel("scripting");
 
-    useOnInit(() => {
-        const scriptingEditorService = new ScriptEditorService(
-            new EventBusWithBrowserBroadcast("scripting"),
-            'test-entity-uuid'
-        );
-    });
-
+    const [service, state] = useScriptEditorService();
 
     // TODO -- introduce application state based to set the current value of the script
     useEffect(() => {
@@ -71,7 +64,7 @@ export const Scripting: FC = () => {
             const defaultValue = '// Write your code here';
 
             const newEditor = monaco.editor.create(monacoEl.current, {
-                value: defaultValue,
+                value: state.currentScript ?? defaultValue,
                 language: 'javascript',
                 minimap: { enabled: false },
                 automaticLayout: true,
@@ -98,7 +91,7 @@ export const Scripting: FC = () => {
             return () => newEditor.dispose();
         }
         return undefined;
-    }, []);
+    }, [state.currentScript]);
 
     return <FlexBox $fill={true} data-testid="ScriptingPage">
         <FlexBox style={{ height: '40px', background: BackgroundColor.Primary, borderBottom: `1px solid ${TextColor.Primary}` }}

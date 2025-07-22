@@ -5,7 +5,7 @@ import { withStrictMode } from "./withStrictMode";
 
 const Util = ({ cb, number }: { cb: Function, number: number }) => {
     useOnInit(() => { cb() });
-    return number;
+    return <></>;
 }
 
 describe('hooks/useOnInit', () => {

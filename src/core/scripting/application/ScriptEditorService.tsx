@@ -1,6 +1,8 @@
 import { Optional } from "../../common";
+import { StateRepository } from "../../common/StateRepository";
 import { OpenScriptingEditorCommand } from "../domain/commands/OpenScriptingEditor";
 import { EventBus } from "./ports/EventBus";
+import { ScriptEditorState } from "./ScriptEditorState";
 
 
 export class ScriptEditorService {
@@ -12,7 +14,8 @@ export class ScriptEditorService {
 
     constructor(
         private readonly eventBus: EventBus,
-        private readonly entityUuid: string
+        private readonly entityUuid: string,
+        private readonly state: StateRepository<ScriptEditorState>
     ) {
         this.eventBus.subscribe<OpenScriptingEditorCommand>('OpenScriptingEditorCommand', this.handle.bind(this));
     }
@@ -25,5 +28,9 @@ export class ScriptEditorService {
         }
 
         this._currentScript = message.currentScript;
+
+        this.state.update({
+            currentScript: this._currentScript
+        });
     }
 }

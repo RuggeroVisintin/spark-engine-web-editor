@@ -15,9 +15,10 @@ import { ImageRepository } from '../../core/assets';
 import { EditorService } from '../../core/editor/application';
 import { ColorObjectPicker } from '../../core/editor';
 import { ObjectPickingService } from '../../core/editor/domain/ObjectPickingService';
-import { ReactStateRepository } from '../../core/editor/infrastructure/adapters/ReactStateRepository';
-import { useEditorState } from '../../hooks';
+import { ReactStateRepository } from '../../core/common/ReactStateRepository';
+import { useAppState } from '../../hooks';
 import { ContextualUiService } from '../../core/editor/domain/ContextualUiService';
+import { EditorState } from '../../core/editor/application/EditorState';
 
 export const Editor = () => {
     let imageRepository: ImageRepository;
@@ -32,7 +33,7 @@ export const Editor = () => {
     const objectPickingService = new ObjectPickingService(objectPikcer);
     const contextualUiService = new ContextualUiService();
 
-    const appState = new ReactStateRepository();
+    const appState = new ReactStateRepository<EditorState>();
     const editorService = new EditorService(
         imageLoader,
         imageRepository,
@@ -44,7 +45,7 @@ export const Editor = () => {
     );
 
     const engine = useRef<GameEngine>();
-    const [editorState] = useEditorState(appState);
+    const [editorState] = useAppState(appState);
 
     const onEngineViewReady = async ({ context, resolution }: OnEngineViewReadyCBProps) => {
         editorService.start(context, resolution);

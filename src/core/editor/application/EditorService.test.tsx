@@ -7,9 +7,10 @@ import { SceneRepositoryTestDouble } from "../../../__mocks__/core/scene/SceneRe
 import { Optional, WeakRef } from "../../common";
 import { ObjectPickingService } from "../domain/ObjectPickingService";
 import { ColorObjectPicker } from "../infrastructure";
-import { ReactStateRepository } from "../infrastructure/adapters/ReactStateRepository";
-import { StateRepository } from "./StateRepository";
+import { ReactStateRepository } from "../../common/ReactStateRepository";
+import { StateRepository } from "../../common/StateRepository";
 import { ContextualUiService } from "../domain/ContextualUiService";
+import { EditorState } from "./EditorState";
 
 class ProjectRepositoryTestDouble implements ProjectRepository {
     public read(): Promise<Project> {
@@ -64,7 +65,7 @@ describe('EditorService', () => {
     let projectRepositoryDouble: ProjectRepositoryTestDouble;
     let sceneRepository: SceneRepositoryTestDouble;
     let objectPicking: ObjectPickingServiceTestDouble;
-    let appState: StateRepository;
+    let appState: StateRepository<EditorState>;
     let contextualUiServiceDouble: ContextualUiServiceTestDouble;
 
     beforeEach(() => {
@@ -73,7 +74,7 @@ describe('EditorService', () => {
         context = new CanvasRenderingContext2D();
         imageLoader = new FileSystemImageRepository();
         objectPicking = new ObjectPickingServiceTestDouble(new ColorObjectPicker(() => new Renderer(new CanvasDevice(), { width: 0, height: 0 }, context), { width: 0, height: 0 }, imageLoader));
-        appState = new ReactStateRepository();
+        appState = new ReactStateRepository<EditorState>();
         contextualUiServiceDouble = new ContextualUiServiceTestDouble();
 
         editorService = new EditorService(

@@ -6,13 +6,14 @@ import Pivot from "../domain/entities/Pivot";
 import { ProjectRepository } from "../../project/domain";
 import { SceneRepository } from "../../scene";
 import { ObjectPickingService } from "../domain/ObjectPickingService";
-import { StateRepository } from "./StateRepository";
+import { StateRepository } from "../../common/StateRepository";
 import { v4 } from 'uuid';
 import { SaveProjectUseCase } from "../../project/application";
 import { FileSystemImageRepository } from "../../assets/image/adapters";
 import { WeakRef } from "../../common";
 import { ImageRepository } from "../../assets";
 import { ContextualUiService } from "../domain/ContextualUiService";
+import { EditorState } from "./EditorState";
 
 export class EditorService {
     private _currentEntity?: IEntity;
@@ -47,7 +48,7 @@ export class EditorService {
         private readonly projectRepository: ProjectRepository,
         private readonly sceneRepository: SceneRepository,
         private readonly objectPicking: ObjectPickingService,
-        private readonly stateRepository: StateRepository,
+        private readonly stateRepository: StateRepository<EditorState>,
         private readonly contextualUiService: ContextualUiService
     ) {
         // const bc = new BroadcastChannel("scripting");
