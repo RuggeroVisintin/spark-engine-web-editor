@@ -10,6 +10,7 @@ import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution'
 import { PopupMenu } from '../../components/PopupMenu';
 import { ScriptEditorService } from '../../core/scripting/application';
 import { EventBusWithBrowserBroadcast } from '../../core/scripting/infrastructure';
+import { useOnInit } from '../../hooks';
 
 const loadESLintConfig = async (editor: monaco.editor.IStandaloneCodeEditor) => {
     const linter = new Linter({
@@ -56,10 +57,13 @@ export const Scripting: FC = () => {
     const monacoEl = useRef(null);
     const bc = new BroadcastChannel("scripting");
 
-    const scriptingEditorService = new ScriptEditorService(
-        new EventBusWithBrowserBroadcast("scripting"),
-        'test-entity-uuid'
-    );
+    useOnInit(() => {
+        const scriptingEditorService = new ScriptEditorService(
+            new EventBusWithBrowserBroadcast("scripting"),
+            'test-entity-uuid'
+        );
+    });
+
 
     // TODO -- introduce application state based to set the current value of the script
     useEffect(() => {
