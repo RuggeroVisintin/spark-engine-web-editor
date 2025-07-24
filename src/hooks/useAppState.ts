@@ -6,7 +6,6 @@ export const useAppState = <T>(repository: ReactStateRepository<T>): [T] => {
 
     useEffect(() => {
         return repository.subscribe((state) => {
-            console.log('SET STATE', state);
             setState(state)
         });
     }, [repository]);
