@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.11](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.10...sparkenginewebeditor-v0.0.11) (2025-07-24)
+
+
+### Features
+
+* **editor:** add scripting editor open action to trigger entities ([#172](https://github.com/RuggeroVisintin/spark-engine-web-editor/issues/172)) ([627642e](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/627642efd53a19e1fd5ff6f79824e5ffebb19428))
+
 ## [0.0.10](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.9...sparkenginewebeditor-v0.0.10) (2025-07-18)
 
 
