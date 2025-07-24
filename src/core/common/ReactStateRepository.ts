@@ -1,11 +1,12 @@
 import { StateRepository } from './StateRepository';
-import { Optional } from './utils';
 
 export class ReactStateRepository<T> implements StateRepository<T> {
   private subscribers = new Set<(currentState: T) => void>();
   private currentState?: T;
 
   constructor(initialState?: T) {
+    console.log('New React State Repository')
+
     if (initialState) {
       this.currentState = { ...initialState};
     }
@@ -17,6 +18,8 @@ export class ReactStateRepository<T> implements StateRepository<T> {
   }
 
   update(state: T): void {
+    console.log('UPDATE', this.currentState, state);
+
     this.currentState = { ...this.currentState, ...state };
     this.subscribers.forEach(callback => callback(this.currentState!));
   }
