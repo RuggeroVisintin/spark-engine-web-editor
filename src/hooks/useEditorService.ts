@@ -10,12 +10,14 @@ import { FileSystemProjectRepository } from "../core/project/infrastructure/adap
 import { FileSystemSceneRepository } from "../core/scene";
 import { ContextualUiService } from "../core/editor/domain/ContextualUiService";
 import { WeakRef } from "../core/common";
+import { EventBusWithBrowserBroadcast } from "../core/scripting/infrastructure";
 
 export const useEditorService = (): [EditorService, EditorState] => {
     const [stateRepo] = useState(() => new ReactStateRepository<EditorState>());
     const [appState] = useAppState(stateRepo);
 
     const [service] = useState(() => {
+        console.log('STATE')
         const project = new Project({ name: 'my-project', scenes: [] });
         const projectRepo = new FileSystemProjectRepository();
         const sceneRepo = new FileSystemSceneRepository();
@@ -23,6 +25,7 @@ export const useEditorService = (): [EditorService, EditorState] => {
         const objectPikcer = new ColorObjectPicker((...params) => new Renderer(...params), { width: 1920, height: 1080 }, imageRepository);
         const objectPickingService = new ObjectPickingService(objectPikcer);
         const contextualUiService = new ContextualUiService();
+        const eventBus = new EventBusWithBrowserBroadcast('scripting');
 
         return new EditorService(
             imageRepository,
@@ -31,7 +34,8 @@ export const useEditorService = (): [EditorService, EditorState] => {
             sceneRepo,
             objectPickingService,
             stateRepo,
-            contextualUiService
+            contextualUiService,
+            eventBus
         );
     });
 

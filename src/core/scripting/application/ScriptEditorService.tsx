@@ -1,8 +1,8 @@
 import { Optional } from "../../common";
-import { StateRepository } from "../../common/StateRepository";
+import { StateRepository } from "../../common/ports/StateRepository";
 import { OpenScriptingEditorCommand } from "../domain/commands/OpenScriptingEditor";
 import { ScriptingEditorReady } from "../domain/events";
-import { EventBus } from "./ports/EventBus";
+import { EventBus } from "../../common/ports/EventBus";
 import { ScriptEditorState } from "./ScriptEditorState";
 export class ScriptEditorService {
     private _currentScript: Optional<string>;

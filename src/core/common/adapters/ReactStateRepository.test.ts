@@ -1,6 +1,5 @@
 import { GameObject } from 'sparkengineweb';
 import { ReactStateRepository } from './ReactStateRepository';
-import { EditorState } from '../editor/application/EditorState';
 
 interface TestState {
   currentEntity?: GameObject

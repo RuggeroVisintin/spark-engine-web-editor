@@ -1,4 +1,4 @@
-import { StateRepository } from './StateRepository';
+import { StateRepository } from '../ports/StateRepository';
 
 export class ReactStateRepository<T> implements StateRepository<T> {
   private subscribers = new Set<(currentState: T) => void>();
@@ -8,7 +8,7 @@ export class ReactStateRepository<T> implements StateRepository<T> {
     console.log('New React State Repository')
 
     if (initialState) {
-      this.currentState = { ...initialState};
+      this.currentState = { ...initialState };
     }
   }
 

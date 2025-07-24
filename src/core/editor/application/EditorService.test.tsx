@@ -7,10 +7,11 @@ import { SceneRepositoryTestDouble } from "../../../__mocks__/core/scene/SceneRe
 import { Optional, WeakRef } from "../../common";
 import { ObjectPickingService } from "../domain/ObjectPickingService";
 import { ColorObjectPicker } from "../infrastructure";
-import { ReactStateRepository } from "../../common/ReactStateRepository";
-import { StateRepository } from "../../common/StateRepository";
+import { ReactStateRepository } from "../../common/adapters/ReactStateRepository";
+import { StateRepository } from "../../common/ports/StateRepository";
 import { ContextualUiService } from "../domain/ContextualUiService";
 import { EditorState } from "./EditorState";
+import { InMemoryEventBusDouble } from "../../../__mocks__/InMemoryEventBusDouble";
 
 class ProjectRepositoryTestDouble implements ProjectRepository {
     public read(): Promise<Project> {
@@ -67,6 +68,7 @@ describe('EditorService', () => {
     let objectPicking: ObjectPickingServiceTestDouble;
     let appState: StateRepository<EditorState>;
     let contextualUiServiceDouble: ContextualUiServiceTestDouble;
+    let eventBus: InMemoryEventBusDouble;
 
     beforeEach(() => {
         projectRepositoryDouble = new ProjectRepositoryTestDouble();
@@ -76,6 +78,7 @@ describe('EditorService', () => {
         objectPicking = new ObjectPickingServiceTestDouble(new ColorObjectPicker(() => new Renderer(new CanvasDevice(), { width: 0, height: 0 }, context), { width: 0, height: 0 }, imageLoader));
         appState = new ReactStateRepository<EditorState>();
         contextualUiServiceDouble = new ContextualUiServiceTestDouble();
+        eventBus = new InMemoryEventBusDouble();
 
         editorService = new EditorService(
             imageLoader,
@@ -84,7 +87,8 @@ describe('EditorService', () => {
             sceneRepository,
             objectPicking,
             appState,
-            contextualUiServiceDouble
+            contextualUiServiceDouble,
+            eventBus
         );
 
         sceneRepository.save(sceneToLoad, { path: 'test-scene.spark.json', accessScope: new WeakRef<null>(null) });

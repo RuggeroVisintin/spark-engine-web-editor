@@ -1,12 +1,10 @@
 import { GameEngine, IEntity, ImageLoader, Scene, TransformComponent, Vec2, Rgb, ImageAsset, MaterialComponent } from "sparkengineweb";
 import { MouseClickEvent, MouseDragEvent, Optional } from "../../common";
 import { Project } from "../../project/domain";
-import { EntityOutline } from "../domain/entities";
-import Pivot from "../domain/entities/Pivot";
 import { ProjectRepository } from "../../project/domain";
 import { SceneRepository } from "../../scene";
 import { ObjectPickingService } from "../domain/ObjectPickingService";
-import { StateRepository } from "../../common/StateRepository";
+import { StateRepository } from "../../common/ports/StateRepository";
 import { v4 } from 'uuid';
 import { SaveProjectUseCase } from "../../project/application";
 import { FileSystemImageRepository } from "../../assets/image/adapters";
@@ -14,6 +12,8 @@ import { WeakRef } from "../../common";
 import { ImageRepository } from "../../assets";
 import { ContextualUiService } from "../domain/ContextualUiService";
 import { EditorState } from "./EditorState";
+import { EventBus } from "../../common/ports/EventBus";
+import { ScriptingEditorReady } from "../../scripting/domain/events";
 
 export class EditorService {
     private _currentEntity?: IEntity;
@@ -49,13 +49,14 @@ export class EditorService {
         private readonly sceneRepository: SceneRepository,
         private readonly objectPicking: ObjectPickingService,
         private readonly stateRepository: StateRepository<EditorState>,
-        private readonly contextualUiService: ContextualUiService
+        private readonly contextualUiService: ContextualUiService,
+        private readonly eventBus: EventBus,
     ) {
-        // const bc = new BroadcastChannel("scripting");
+        console.log('INIT')
 
-        // bc.onmessage = (event) => {
-        //     console.log('Received message:', event.data);
-        // };
+        eventBus.subscribe('ScriptingEditorReady', (event: ScriptingEditorReady) => {
+            console.log('ScriptingEditorReady', event);
+        });
     }
 
     public start(context: CanvasRenderingContext2D, resolution: { width: number, height: number }): void {
@@ -114,7 +115,7 @@ export class EditorService {
         } else if (event.button === 2) {
             const { targetX, targetY } = event;
             this.contextualUiService.moveSpawnOrigin(new Vec2(targetX, targetY));
-       
+
             this.stateRepository.update({
                 spawnPoint: this.contextualUiService.spawnPivot.position,
             });
@@ -196,11 +197,11 @@ export class EditorService {
         });
     }
 
-    public updateCurrentEntityMaterial({ newDiffuseColor, newOpacity, newDiffuseTexture, removeDiffuseColor }: { 
-        newDiffuseColor?: Rgb, 
-        newOpacity?: number, 
-        newDiffuseTexture?: ImageAsset, 
-        removeDiffuseColor?: boolean 
+    public updateCurrentEntityMaterial({ newDiffuseColor, newOpacity, newDiffuseTexture, removeDiffuseColor }: {
+        newDiffuseColor?: Rgb,
+        newOpacity?: number,
+        newDiffuseTexture?: ImageAsset,
+        removeDiffuseColor?: boolean
     }): void {
         const material = this._currentEntity?.getComponent<MaterialComponent>('MaterialComponent');
 
