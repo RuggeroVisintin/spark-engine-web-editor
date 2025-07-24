@@ -1,9 +1,13 @@
 import { GameObject } from 'sparkengineweb';
 import { ReactStateRepository } from './ReactStateRepository';
 
+interface TestState {
+  currentEntity?: GameObject
+}
+
 describe('StateRepository', () => {
   it('Should trigger the subscribers on a state update', () => {
-    const stateRepo = new ReactStateRepository();
+    const stateRepo = new ReactStateRepository<TestState>();
     const subscriber = jest.fn();
     const subscriber2 = jest.fn();
 

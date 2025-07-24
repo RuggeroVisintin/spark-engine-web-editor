@@ -6,8 +6,13 @@ import '@testing-library/jest-dom';
 import 'jest-canvas-mock';
 import './__mocks__/fs-api.mock';
 import './__mocks__/utils/image.mock';
+import './__mocks__/broadcast.mock';
+
+import { TextEncoder } from 'text-encoding';
 
 jest.disableAutomock();
+
+global.TextEncoder = TextEncoder;
 
 // jest.mock('@sparkengine')
 

@@ -1,54 +1,21 @@
 import React, { useRef } from 'react';
-import { GameEngine, IEntity, ImageLoader, MaterialComponent, Renderer, TransformComponent, Vec2 } from '@sparkengine';
+import { GameEngine, IEntity, Vec2 } from '@sparkengine';
 import { EngineView } from '../../components';
 import { Box, FlexBox } from '../../primitives';
 import { EntityFactoryPanel, ScenePanel } from '../../templates';
 import { ActionMenu } from '../../templates/ActionMenu';
 import { EntityPropsPanel } from '../../templates/EntityPropsPanel';
-import { FileSystemSceneRepository } from '../../core/scene/infrastructure/adapters';
-import { FileSystemProjectRepository } from '../../core/project/infrastructure/adapters';
-import { Project } from '../../core/project/domain';
 import { OnEngineViewReadyCBProps } from '../../components/EngineView';
-import { FileSystemImageRepository } from '../../core/assets/image/adapters';
-import { WeakRef } from '../../core/common';
-import { ImageRepository } from '../../core/assets';
-import { EditorService } from '../../core/editor/application';
-import { ColorObjectPicker } from '../../core/editor';
-import { ObjectPickingService } from '../../core/editor/domain/ObjectPickingService';
-import { ReactStateRepository } from '../../core/editor/infrastructure/adapters/ReactStateRepository';
-import { useEditorState } from '../../hooks';
-import { ContextualUiService } from '../../core/editor/domain/ContextualUiService';
+import { useEditorService } from '../../hooks/useEditorService';
 
-let imageRepository: ImageRepository;
-let imageLoader: ImageLoader;
-
-const project = new Project({ name: 'my-project', scenes: [] });
-const projectRepo = new FileSystemProjectRepository();
-const sceneRepo = new FileSystemSceneRepository();
-
-imageLoader = imageRepository = new FileSystemImageRepository(project.scopeRef as WeakRef<FileSystemDirectoryHandle>);
-const objectPikcer = new ColorObjectPicker((...params) => new Renderer(...params), { width: 1920, height: 1080 }, imageLoader);
-const objectPickingService = new ObjectPickingService(objectPikcer);
-const contextualUiService = new ContextualUiService();
-
-const appState = new ReactStateRepository();
-const editorService = new EditorService(
-    imageLoader,
-    imageRepository,
-    projectRepo,
-    sceneRepo,
-    objectPickingService,
-    appState,
-    contextualUiService
-);
-
-export const EditorLayout = () => {
+export const Editor = () => {
     const engine = useRef<GameEngine>();
-    const [editorState] = useEditorState(appState);
+
+    const [editorService, editorState] = useEditorService();
 
     const onEngineViewReady = async ({ context, resolution }: OnEngineViewReadyCBProps) => {
         editorService.start(context, resolution);
-        const newEngine = editorService.engine!;
+        const newEngine = editorService.engine;
 
         engine.current = newEngine;
     };
@@ -80,8 +47,7 @@ export const EditorLayout = () => {
                         ></ScenePanel>
                         {editorState.currentEntity &&
                             <EntityPropsPanel
-                                material={editorState.currentEntity.getComponent<MaterialComponent>('MaterialComponent')}
-                                transform={editorState.currentEntity?.getComponent<TransformComponent>('TransformComponent')}
+                                currentEntity={editorState.currentEntity}
                                 onUpdatePosition={({ newPosition }: { newPosition: Vec2 }) => editorService.updateCurrentEntityPosition(newPosition)}
                                 onUpdateSize={({ newSize }: { newSize: { width: number, height: number } }) => editorService.updateCurrentEntitySize(newSize)}
                                 onMaterialUpdate={(materialProps: any) => editorService.updateCurrentEntityMaterial(materialProps)}

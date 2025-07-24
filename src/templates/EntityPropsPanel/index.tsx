@@ -1,13 +1,12 @@
 import React from "react";
-import { MaterialComponent, TransformComponent, TransformComponentProps, Vec2 } from "@sparkengine";
+import { IEntity, MaterialComponent, TransformComponent, TransformComponentProps, typeOf, Vec2 } from "@sparkengine";
 import { FormInput } from "../../components";
-import { Box, Spacing } from "../../primitives";
+import { Box, Button, Spacing } from "../../primitives";
 import { InputRow } from "../../primitives/InputRow";
 import { MaterialPropsGroup } from "./components/MaterialPropsGroup";
 
 interface EntityPropsPanelProps {
-    transform?: TransformComponentProps,
-    material?: MaterialComponent,
+    currentEntity?: IEntity,
     onUpdatePosition?: CallableFunction,
     onUpdateSize?: CallableFunction,
     onMaterialUpdate?: CallableFunction
@@ -73,7 +72,10 @@ const TransformPropsGroup = ({ transform, onUpdateSize, onUpdatePosition }: Tran
     )
 };
 
-export const EntityPropsPanel = ({ transform, material, onUpdatePosition, onUpdateSize, onMaterialUpdate }: EntityPropsPanelProps) => {
+export const EntityPropsPanel = ({ currentEntity, onUpdatePosition, onUpdateSize, onMaterialUpdate }: EntityPropsPanelProps) => {
+    const transform = currentEntity?.getComponent<TransformComponent>('TransformComponent');
+    const material = currentEntity?.getComponent<MaterialComponent>('MaterialComponent');
+
     return (
         <Box $size={1} $scroll $divide $spacing={Spacing.lg}>
             {transform && <TransformPropsGroup
@@ -83,6 +85,23 @@ export const EntityPropsPanel = ({ transform, material, onUpdatePosition, onUpda
                 material={material}
                 onMaterialUpdate={onMaterialUpdate}
             />}
-        </Box>
+            {typeOf(currentEntity) === 'TriggerEntity' && (
+                <Box data-testid="EntityPropsPanel.TriggerEntity.ScriptingProp">
+                    <Button
+                        data-testid="EntityPropsPanel.TriggerEntity.ScriptingLink"
+                        onClick={() => {
+                            const namedWindow = window.open('/scripting', 'scripting');
+
+                            if (namedWindow) {
+                                namedWindow.focus();
+                            }
+                        }}
+                    >
+                        <Box> Open Scripting </Box>
+                    </Button>
+                </Box>
+            )
+            }
+        </Box >
     )
 }

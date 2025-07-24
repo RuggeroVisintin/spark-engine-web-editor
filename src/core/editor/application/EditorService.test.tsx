@@ -7,9 +7,11 @@ import { SceneRepositoryTestDouble } from "../../../__mocks__/core/scene/SceneRe
 import { Optional, WeakRef } from "../../common";
 import { ObjectPickingService } from "../domain/ObjectPickingService";
 import { ColorObjectPicker } from "../infrastructure";
-import { ReactStateRepository } from "../infrastructure/adapters/ReactStateRepository";
-import { StateRepository } from "./StateRepository";
+import { ReactStateRepository } from "../../common/adapters/ReactStateRepository";
+import { StateRepository } from "../../common/ports/StateRepository";
 import { ContextualUiService } from "../domain/ContextualUiService";
+import { EditorState } from "./EditorState";
+import { InMemoryEventBusDouble } from "../../../__mocks__/InMemoryEventBusDouble";
 
 class ProjectRepositoryTestDouble implements ProjectRepository {
     public read(): Promise<Project> {
@@ -64,8 +66,9 @@ describe('EditorService', () => {
     let projectRepositoryDouble: ProjectRepositoryTestDouble;
     let sceneRepository: SceneRepositoryTestDouble;
     let objectPicking: ObjectPickingServiceTestDouble;
-    let appState: StateRepository;
+    let appState: StateRepository<EditorState>;
     let contextualUiServiceDouble: ContextualUiServiceTestDouble;
+    let eventBus: InMemoryEventBusDouble;
 
     beforeEach(() => {
         projectRepositoryDouble = new ProjectRepositoryTestDouble();
@@ -73,8 +76,9 @@ describe('EditorService', () => {
         context = new CanvasRenderingContext2D();
         imageLoader = new FileSystemImageRepository();
         objectPicking = new ObjectPickingServiceTestDouble(new ColorObjectPicker(() => new Renderer(new CanvasDevice(), { width: 0, height: 0 }, context), { width: 0, height: 0 }, imageLoader));
-        appState = new ReactStateRepository();
+        appState = new ReactStateRepository<EditorState>();
         contextualUiServiceDouble = new ContextualUiServiceTestDouble();
+        eventBus = new InMemoryEventBusDouble();
 
         editorService = new EditorService(
             imageLoader,
@@ -83,7 +87,8 @@ describe('EditorService', () => {
             sceneRepository,
             objectPicking,
             appState,
-            contextualUiServiceDouble
+            contextualUiServiceDouble,
+            eventBus
         );
 
         sceneRepository.save(sceneToLoad, { path: 'test-scene.spark.json', accessScope: new WeakRef<null>(null) });

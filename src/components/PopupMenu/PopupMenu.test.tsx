@@ -71,4 +71,29 @@ describe('PopupMenu', () => {
 
         expect(testAction).toHaveBeenCalled();
     });
+
+    it('Should invoke the main action when defined', () => {
+        const testAction = jest.fn();
+        const popupMenu = <PopupMenu data-testid='test-popup-menu-file' label="File" action={testAction}></PopupMenu>;
+
+        render(popupMenu);
+        fireEvent.click(screen.getByTestId(`test-popup-menu-file.trigger`));
+
+        expect(testAction).toHaveBeenCalled();
+    });
+
+    it('Should not open the children menu when main action is defined', () => {
+        const testAction = jest.fn();
+        const popupMenu = <PopupMenu data-testid='test-popup-menu-file' label="File" action={testAction} items={[{
+            label: 'Open'
+        }, {
+            label: 'Save'
+        }]}></PopupMenu>;
+
+        render(popupMenu);
+        fireEvent.click(screen.getByTestId('test-popup-menu-file.trigger'));
+
+        expect(testAction).toHaveBeenCalled();
+        expect(screen.queryAllByTestId('test-popup-menu-file.item')).toEqual([]);
+    })
 })
