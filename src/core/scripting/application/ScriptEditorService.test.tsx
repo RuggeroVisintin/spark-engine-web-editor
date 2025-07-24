@@ -79,4 +79,15 @@ describe('core/scripting/application/ScriptEditorService', () => {
             });
         })
     });
+
+    describe('.onEditorReady', () => {
+        it('Should emit an ScriptingEditorReady event', () => {
+            const cb = jest.fn();
+            eventBus.subscribe('ScriptingEditorReady', cb);
+
+            service.onEditorReady();
+
+            expect(cb).toHaveBeenCalledWith({ entityUuid });
+        })
+    })
 });

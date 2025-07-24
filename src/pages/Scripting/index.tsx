@@ -1,7 +1,7 @@
 import { FC, useRef, useState, useEffect } from 'react';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import React from 'react';
-import { BackgroundColor, Box, FlexBox, TextColor } from '../../primitives';
+import { BackgroundColor, FlexBox, TextColor } from '../../primitives';
 import { Linter } from "eslint-linter-browserify";
 import eslint from "@eslint/js";
 import globals from "globals/globals.json";
@@ -45,6 +45,7 @@ const loadESLintConfig = async (editor: monaco.editor.IStandaloneCodeEditor) => 
 
     // Set markers for the current model
     const model = editor.getModel();
+
     if (model) {
         monaco.editor.setModelMarkers(model, 'eslint', markers);
     }
@@ -53,7 +54,6 @@ const loadESLintConfig = async (editor: monaco.editor.IStandaloneCodeEditor) => 
 export const Scripting: FC = () => {
     const [__, setEditor] = useState<monaco.editor.IStandaloneCodeEditor | null>(null);
     const monacoEl = useRef(null);
-    const bc = new BroadcastChannel("scripting");
 
     const [service, state] = useScriptEditorService();
 
@@ -85,11 +85,12 @@ export const Scripting: FC = () => {
             }
 
             setEditor(newEditor);
+            service.onEditorReady();
 
             return () => newEditor.dispose();
         }
         return undefined;
-    }, [state.currentScript]);
+    }, [state.currentScript, monacoEl]);
 
     return <FlexBox $fill={true} data-testid="ScriptingPage">
         <FlexBox style={{ height: '40px', background: BackgroundColor.Primary, borderBottom: `1px solid ${TextColor.Primary}` }}
@@ -97,10 +98,6 @@ export const Scripting: FC = () => {
             <PopupMenu
                 data-testid="action-menu.file"
                 label="Save"
-                action={() => {
-                    console.log('Send Message to BroadcastChannel');
-                    bc.postMessage('test-message');
-                }}
             />
         </FlexBox>
         <FlexBox $fill={true} ref={monacoEl} />
