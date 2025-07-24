@@ -51,14 +51,12 @@ const loadESLintConfig = async (editor: monaco.editor.IStandaloneCodeEditor) => 
 };
 
 export const Scripting: FC = () => {
-    console.log('SCripting',)
     const [__, setEditor] = useState<monaco.editor.IStandaloneCodeEditor | null>(null);
     const monacoEl = useRef(null);
     const bc = new BroadcastChannel("scripting");
 
     const [service, state] = useScriptEditorService();
 
-    // TODO -- introduce application state based to set the current value of the script
     useEffect(() => {
         if (monacoEl.current) {
             const defaultValue = '// Write your code here';
