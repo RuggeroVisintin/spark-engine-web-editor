@@ -1,4 +1,4 @@
-import { CanvasDevice, DOMImageLoader, GameObject, IEntity, Renderer, RenderSystem, Scene, Vec2 } from "sparkengineweb";
+import { CanvasDevice, DOMImageLoader, GameObject, IEntity, Renderer, RenderSystem, Scene, TriggerEntity, Vec2 } from "sparkengineweb";
 import { EditorService } from "./EditorService";
 import { FileSystemImageRepository } from "../../assets";
 import { ProjectRepository } from "../../project/domain";
@@ -12,6 +12,8 @@ import { StateRepository } from "../../common/ports/StateRepository";
 import { ContextualUiService } from "../domain/ContextualUiService";
 import { EditorState } from "./EditorState";
 import { InMemoryEventBusDouble } from "../../../__mocks__/core/InMemoryEventBusDouble";
+import { ScriptingEditorReady } from "../../scripting/domain/events";
+import { OpenScriptingEditorCommand } from "../../scripting/domain/commands";
 
 class ProjectRepositoryTestDouble implements ProjectRepository {
     public read(): Promise<Project> {
@@ -464,4 +466,83 @@ describe('EditorService', () => {
 
         it.todo('Should match the editor entities to the new position');
     });
+
+    describe('on ScriptingEditorReady event', () => {
+        it('Should emit an OpenScriptingEditor command w/ the current entity script set', () => {
+            const entity = new TriggerEntity();
+            entity.onTriggerCB = function () {
+                console.log('hello world');
+            }
+
+            const cb = jest.fn();
+            eventBus.subscribe<OpenScriptingEditorCommand>('OpenScriptingEditorCommand', cb);
+
+            editorService.selectEntity(entity);
+
+            eventBus.publish<ScriptingEditorReady>('ScriptingEditorReady', {
+                entityUuid: entity.uuid
+            });
+
+            expect(cb).toHaveBeenCalledWith({
+                currentScript: entity.onTriggerCB.toString(),
+                entityUuid: entity.uuid
+            });
+        });
+
+        it('Should just skip if the currentEntity is not a TriggerEntity', () => {
+            const entity = new GameObject();
+            const cb = jest.fn();
+            eventBus.subscribe<OpenScriptingEditorCommand>('OpenScriptingEditorCommand', cb);
+
+            editorService.selectEntity(entity);
+
+            eventBus.publish<ScriptingEditorReady>('ScriptingEditorReady', {
+                entityUuid: entity.uuid
+            });
+
+            expect(cb).not.toHaveBeenCalled();
+        });
+
+        it('Should skip if currentEntity is not set', () => {
+            const cb = jest.fn();
+            eventBus.subscribe<OpenScriptingEditorCommand>('OpenScriptingEditorCommand', cb);
+
+            eventBus.publish<ScriptingEditorReady>('ScriptingEditorReady', {
+                entityUuid: 'test-entity-uuid'
+            });
+
+            expect(cb).not.toHaveBeenCalled();
+        });
+
+        it('Should skip if the currentEntity id does not match event entityUuid', () => {
+            const entity = new TriggerEntity();
+            const cb = jest.fn();
+            eventBus.subscribe<OpenScriptingEditorCommand>('OpenScriptingEditorCommand', cb);
+
+            editorService.selectEntity(entity);
+
+            eventBus.publish<ScriptingEditorReady>('ScriptingEditorReady', {
+                entityUuid: 'test-entity-uuid'
+            });
+
+            expect(cb).not.toHaveBeenCalled();
+        });
+
+        it('Should sent through a default script if the script is not defined', () => {
+            const entity = new TriggerEntity();
+            const cb = jest.fn();
+            eventBus.subscribe<OpenScriptingEditorCommand>('OpenScriptingEditorCommand', cb);
+
+            editorService.selectEntity(entity);
+
+            eventBus.publish<ScriptingEditorReady>('ScriptingEditorReady', {
+                entityUuid: entity.uuid
+            });
+
+            expect(cb).toHaveBeenCalledWith({
+                currentScript: 'function onTriggerCB() {\n    \n}',
+                entityUuid: entity.uuid
+            });
+        })
+    })
 });

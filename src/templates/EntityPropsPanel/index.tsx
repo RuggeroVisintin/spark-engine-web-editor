@@ -90,7 +90,7 @@ export const EntityPropsPanel = ({ currentEntity, onUpdatePosition, onUpdateSize
                     <Button
                         data-testid="EntityPropsPanel.TriggerEntity.ScriptingLink"
                         onClick={() => {
-                            const namedWindow = window.open('/scripting', 'scripting');
+                            const namedWindow = window.open(`/scripting/${currentEntity?.uuid}`, 'scripting');
 
                             if (namedWindow) {
                                 namedWindow.focus();

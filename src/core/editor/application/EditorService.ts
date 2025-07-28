@@ -1,4 +1,4 @@
-import { GameEngine, IEntity, ImageLoader, Scene, TransformComponent, Vec2, Rgb, ImageAsset, MaterialComponent } from "sparkengineweb";
+import { GameEngine, IEntity, ImageLoader, Scene, TransformComponent, Vec2, Rgb, ImageAsset, MaterialComponent, TriggerEntity, typeOf } from "sparkengineweb";
 import { MouseClickEvent, MouseDragEvent, Optional } from "../../common";
 import { Project } from "../../project/domain";
 import { ProjectRepository } from "../../project/domain";
@@ -14,6 +14,7 @@ import { ContextualUiService } from "../domain/ContextualUiService";
 import { EditorState } from "./EditorState";
 import { EventBus } from "../../common/ports/EventBus";
 import { ScriptingEditorReady } from "../../scripting/domain/events";
+import { OpenScriptingEditorCommand } from "../../scripting/domain/commands";
 
 export class EditorService {
     private _currentEntity?: IEntity;
@@ -52,11 +53,7 @@ export class EditorService {
         private readonly contextualUiService: ContextualUiService,
         private readonly eventBus: EventBus,
     ) {
-        console.log('INIT')
-
-        eventBus.subscribe('ScriptingEditorReady', (event: ScriptingEditorReady) => {
-            console.log('ScriptingEditorReady', event);
-        });
+        eventBus.subscribe('ScriptingEditorReady', this.onScriptingEditorReadyEvent.bind(this));
     }
 
     public start(context: CanvasRenderingContext2D, resolution: { width: number, height: number }): void {
@@ -143,14 +140,6 @@ export class EditorService {
         });
     }
 
-    private deselectCurrentEntity(): void {
-        this._currentEntity = undefined;
-        this.contextualUiService.loseFocus();
-
-        this.stateRepository.update({
-            currentEntity: undefined
-        });
-    }
 
     public addEntity(entity: IEntity): void {
         this._currentScene?.registerEntity(entity);
@@ -219,6 +208,29 @@ export class EditorService {
 
         this.stateRepository.update({
             currentEntity: this._currentEntity
+        });
+    }
+
+    private onScriptingEditorReadyEvent(e: ScriptingEditorReady): void {
+        if (!this.currentEntity ||
+            typeOf(this.currentEntity) !== 'TriggerEntity' ||
+            e.entityUuid !== this.currentEntity.uuid
+        ) return;
+
+        const defaultScript = 'function onTriggerCB() {\n    \n}';
+
+        this.eventBus.publish<OpenScriptingEditorCommand>('OpenScriptingEditorCommand', {
+            currentScript: (<TriggerEntity>this.currentEntity).onTriggerCB?.toString() ?? defaultScript,
+            entityUuid: this.currentEntity?.uuid
+        });
+    }
+
+    private deselectCurrentEntity(): void {
+        this._currentEntity = undefined;
+        this.contextualUiService.loseFocus();
+
+        this.stateRepository.update({
+            currentEntity: undefined
         });
     }
 
