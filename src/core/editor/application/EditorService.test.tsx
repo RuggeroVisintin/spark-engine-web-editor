@@ -11,7 +11,7 @@ import { ReactStateRepository } from "../../common/adapters/ReactStateRepository
 import { StateRepository } from "../../common/ports/StateRepository";
 import { ContextualUiService } from "../domain/ContextualUiService";
 import { EditorState } from "./EditorState";
-import { InMemoryEventBusDouble } from "../../../__mocks__/InMemoryEventBusDouble";
+import { InMemoryEventBusDouble } from "../../../__mocks__/core/InMemoryEventBusDouble";
 
 class ProjectRepositoryTestDouble implements ProjectRepository {
     public read(): Promise<Project> {
