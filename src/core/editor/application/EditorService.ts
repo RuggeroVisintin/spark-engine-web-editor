@@ -217,7 +217,7 @@ export class EditorService {
             e.entityUuid !== this.currentEntity.uuid
         ) return;
 
-        const defaultScript = 'function onTriggerCB() {\n    \n}';
+        const defaultScript = 'export function onTriggerCB() {\n    \n}';
 
         this.eventBus.publish<OpenScriptingEditorCommand>('OpenScriptingEditorCommand', {
             currentScript: (<TriggerEntity>this.currentEntity).onTriggerCB?.toString() ?? defaultScript,

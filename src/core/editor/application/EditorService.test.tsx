@@ -471,7 +471,6 @@ describe('EditorService', () => {
         it('Should emit an OpenScriptingEditor command w/ the current entity script set', () => {
             const entity = new TriggerEntity();
             entity.onTriggerCB = function () {
-                console.log('hello world');
             }
 
             const cb = jest.fn();
@@ -540,9 +539,9 @@ describe('EditorService', () => {
             });
 
             expect(cb).toHaveBeenCalledWith({
-                currentScript: 'function onTriggerCB() {\n    \n}',
+                currentScript: 'export function onTriggerCB() {\n    \n}',
                 entityUuid: entity.uuid
             });
-        })
-    })
+        });
+    });
 });

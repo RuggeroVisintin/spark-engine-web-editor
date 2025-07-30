@@ -42,8 +42,6 @@ const loadESLintConfig = async (editor: monaco.editor.IStandaloneCodeEditor) => 
         source: 'ESLint',
     }));
 
-    console.log('ESLint results:', results);
-
     // Set markers for the current model
     const model = editor.getModel();
 
