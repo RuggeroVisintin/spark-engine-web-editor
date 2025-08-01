@@ -49,6 +49,18 @@
                         "b": 0
                     },
                     "opacity": 100
+                },
+                {
+                    "__type": "BoundingBoxComponent",
+                    "aabb": {
+                        "height": 0,
+                        "width": 0,
+                        "x": 0,
+                        "y": 0
+                    },
+                    "isContainer": false,
+                    "function::onCollisionCb": "function onCollisionCb(other) { console.log('Collision with:', other); }",
+                    "matchContainerTransform": false
                 }
             ]
         },

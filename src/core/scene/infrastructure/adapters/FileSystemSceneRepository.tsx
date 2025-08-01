@@ -1,6 +1,6 @@
 import { Scene } from "@sparkengine";
 import { SceneRepository } from "../../domain";
-import { FileSystemRepository, LocationParameters } from "../../../common";
+import { FileSystemRepository, LocationParameters, parseJsonString, toJsonString } from "../../../common";
 
 export class FileSystemSceneRepository extends FileSystemRepository implements SceneRepository {
     public async read(location?: LocationParameters): Promise<Scene> {
@@ -20,7 +20,7 @@ export class FileSystemSceneRepository extends FileSystemRepository implements S
         }
 
         const result = new Scene();
-        result.loadFromJson(JSON.parse(await (await fileHandle.getFile()).text()));
+        result.loadFromJson(parseJsonString(await (await fileHandle.getFile()).text()));
 
         return result;
     }
@@ -41,7 +41,7 @@ export class FileSystemSceneRepository extends FileSystemRepository implements S
         }
 
         const writable = await fileHandle.createWritable();
-        await writable.write(JSON.stringify(scene.toJson()));
+        await writable.write(toJsonString(scene.toJson()));
         await writable.close();
     }
 }

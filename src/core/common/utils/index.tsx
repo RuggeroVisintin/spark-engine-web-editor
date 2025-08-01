@@ -3,3 +3,4 @@ export * from './testing';
 export * from './weak-ref';
 export * from './image';
 export * from './expressive';
+export * from './json';
