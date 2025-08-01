@@ -30,9 +30,11 @@ export function parseJsonString(jsonString: string): any {
 
     const stringifiedFunctionJsonReplacer = (key: string, value: any): any => {
         if (key in functionKeys) {
-            // Wrap the function string in parentheses to make it a function expression
-            const result = eval(`(${value})`);
-            return result;
+            try {
+                return new Function(`return (${value})`)();
+            } catch (e) {
+                console.warn(`Failed to parse function for key ${key}:`, e);
+            }
         }
 
         return value;
