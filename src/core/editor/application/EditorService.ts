@@ -13,7 +13,7 @@ import { ImageRepository } from "../../assets";
 import { ContextualUiService } from "../domain/ContextualUiService";
 import { EditorState } from "./EditorState";
 import { EventBus } from "../../common/ports/EventBus";
-import { ScriptingEditorReady } from "../../scripting/domain/events";
+import { ScriptingEditorReady, ScriptSaved } from "../../scripting/domain/events";
 import { OpenScriptingEditorCommand } from "../../scripting/domain/commands";
 
 export class EditorService {
@@ -54,6 +54,9 @@ export class EditorService {
         private readonly eventBus: EventBus,
     ) {
         eventBus.subscribe('ScriptingEditorReady', this.onScriptingEditorReadyEvent.bind(this));
+        eventBus.subscribe('ScriptSaved', (e: ScriptSaved) => {
+            console.log('Script Saved Event', e)
+        });
     }
 
     public start(context: CanvasRenderingContext2D, resolution: { width: number, height: number }): void {

@@ -1,14 +1,19 @@
 import { Optional } from "../../common";
 import { StateRepository } from "../../common/ports/StateRepository";
 import { OpenScriptingEditorCommand } from "../domain/commands/OpenScriptingEditor";
-import { ScriptingEditorReady } from "../domain/events";
+import { ScriptingEditorReady, ScriptSaved } from "../domain/events";
 import { EventBus } from "../../common/ports/EventBus";
 import { ScriptEditorState } from "./ScriptEditorState";
 export class ScriptEditorService {
-    private _currentScript: Optional<string>;
 
     get currentScript(): Optional<string> {
-        return this._currentScript;
+        return this.state.get().currentScript;
+    }
+
+    set currentScript(value: Optional<string>) {
+        this.state.update({
+            currentScript: value
+        });
     }
 
     constructor(
@@ -25,15 +30,24 @@ export class ScriptEditorService {
         });
     }
 
+    public edit(script: string): void {
+        this.currentScript = script;
+    }
+
+    public save(): void {
+        console.log('Script Saved');
+
+        this.eventBus.publish<ScriptSaved>('ScriptSaved', {
+            entityUuid: this.entityUuid,
+            script: this.currentScript || ''
+        });
+    }
+
     private handle(message: OpenScriptingEditorCommand): void {
         if (message.entityUuid !== this.entityUuid) {
             return;
         }
 
-        this._currentScript = message.currentScript;
-
-        this.state.update({
-            currentScript: this._currentScript
-        });
+        this.currentScript = message.currentScript;
     }
 }

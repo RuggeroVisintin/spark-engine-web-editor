@@ -71,5 +71,30 @@ describe('core/scripting/application/ScriptEditorService', () => {
 
             expect(cb).toHaveBeenCalledWith({ entityUuid });
         })
+    });
+
+    describe('.onScriptEdited', () => {
+        it('Should update the current script in state', () => {
+            const newScript = 'console.log("Edited Script");';
+            service.edit(newScript);
+
+            expect(service.currentScript).toBe(newScript);
+        });
+    });
+
+    describe('.saveScript', () => {
+        it('Should emit a ScriptSaved event', () => {
+            const cb = jest.fn();
+            eventBus.subscribe('ScriptSaved', cb);
+
+            const newScript = 'console.log("New Script");';
+            service.edit(newScript);
+            service.save();
+
+            expect(cb).toHaveBeenCalledWith({
+                entityUuid,
+                script: newScript,
+            });
+        });
     })
 });

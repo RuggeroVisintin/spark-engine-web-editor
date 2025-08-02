@@ -51,7 +51,7 @@ const loadESLintConfig = async (editor: monaco.editor.IStandaloneCodeEditor) => 
 };
 
 export const Scripting: FC = () => {
-    const [__, setEditor] = useState<monaco.editor.IStandaloneCodeEditor | null>(null);
+    const [editor, setEditor] = useState<monaco.editor.IStandaloneCodeEditor | null>(null);
     const monacoEl = useRef(null);
     const { currentEntityId } = useParams<{ currentEntityId: string }>();
 
@@ -76,10 +76,15 @@ export const Scripting: FC = () => {
             // Update highlighting when content changes
             const model = newEditor.getModel();
             if (model) {
+                let lastTimeout: NodeJS.Timeout | null = null;
+
                 model.onDidChangeContent(() => {
                     // Debounce the linting to avoid performance issues
-                    setTimeout(() => {
+                    lastTimeout && clearTimeout(lastTimeout);
+
+                    lastTimeout = setTimeout(() => {
                         loadESLintConfig(newEditor);
+                        service.edit(newEditor.getValue());
                     }, 300);
                 });
             }
@@ -90,7 +95,16 @@ export const Scripting: FC = () => {
             return () => newEditor.dispose();
         }
         return undefined;
-    }, [state.currentScript, monacoEl]);
+    }, [monacoEl]);
+
+    useEffect(() => {
+        if (state.currentScript !== editor?.getValue()) {
+            const editor = monaco.editor.getModels()[0];
+            if (editor) {
+                editor.setValue(state.currentScript || '');
+            }
+        }
+    }, [state.currentScript, editor]);
 
     return <FlexBox $fill={true} data-testid="ScriptingPage">
         <FlexBox style={{ height: '40px', background: BackgroundColor.Primary, borderBottom: `1px solid ${TextColor.Primary}` }}
@@ -98,6 +112,10 @@ export const Scripting: FC = () => {
             <PopupMenu
                 data-testid="action-menu.file"
                 label="Save"
+                action={() => {
+                    console.log('Save');
+                    service.save();
+                }}
             />
         </FlexBox>
         <FlexBox $fill={true} ref={monacoEl} />
