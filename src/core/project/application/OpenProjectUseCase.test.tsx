@@ -4,6 +4,7 @@ import { SceneRepository } from "../../scene";
 import { ProjectRepository, Project } from "../domain";
 import testSceneJson from '../../../__mocks__/assets/test-scene.json';
 import { Scene } from "@sparkengine";
+import { parseJsonString } from "../../common";
 
 class MockProjectRepository implements ProjectRepository {
     read = jest.fn().mockResolvedValue(new Project(testProjectJson));
@@ -15,7 +16,7 @@ class MockSceneRepository implements SceneRepository {
     read = jest.fn().mockImplementation(async (): Promise<Scene> => {
         return new Promise((resolve) => {
             const scene = new Scene();
-            scene.loadFromJson(testSceneJson);
+            scene.loadFromJson(parseJsonString(JSON.stringify(testSceneJson)));
             resolve(scene);
         });
     });
@@ -29,7 +30,7 @@ describe('core/project/usecases/OpenProjectUseCase', () => {
         expect(result).toBeInstanceOf(Project);
 
         result.scenes.forEach(scene => {
-            expect(scene.toJson()).toEqual(testSceneJson)
+            expect(JSON.stringify(scene.toJson())).toEqual(JSON.stringify(parseJsonString(JSON.stringify(testSceneJson))))
         });
     });
 })

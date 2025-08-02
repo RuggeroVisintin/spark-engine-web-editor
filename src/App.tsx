@@ -7,7 +7,7 @@ export const App = () => {
     return (
         <Routes>
             <Route path="/" element={<Editor />} />
-            <Route path="/scripting" element={<Scripting />} />
+            <Route path="/scripting/:currentEntityId" element={<Scripting />} />
             {/* Add more routes as needed */}
         </Routes>
     );

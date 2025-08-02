@@ -17,7 +17,6 @@ export const useEditorService = (): [EditorService, EditorState] => {
     const [appState] = useAppState(stateRepo);
 
     const [service] = useState(() => {
-        console.log('STATE')
         const project = new Project({ name: 'my-project', scenes: [] });
         const projectRepo = new FileSystemProjectRepository();
         const sceneRepo = new FileSystemSceneRepository();

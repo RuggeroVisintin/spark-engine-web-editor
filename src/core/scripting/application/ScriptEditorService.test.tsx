@@ -2,7 +2,7 @@ import { ReactStateRepository } from "../../editor";
 import { OpenScriptingEditorCommand } from "../domain/commands";
 import { ScriptEditorService } from "./ScriptEditorService";
 import { ScriptEditorState } from "./ScriptEditorState";
-import { InMemoryEventBusDouble } from "../../../__mocks__/InMemoryEventBusDouble";
+import { InMemoryEventBusDouble } from "../../../__mocks__/core/InMemoryEventBusDouble";
 
 describe('core/scripting/application/ScriptEditorService', () => {
     let service: ScriptEditorService;

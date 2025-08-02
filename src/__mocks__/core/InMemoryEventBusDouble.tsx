@@ -1,4 +1,4 @@
-import { EventBus } from "../core/common/ports";
+import { EventBus } from "../../core/common/ports";
 
 export class InMemoryEventBusDouble implements EventBus {
     private subscribers: { [key: string]: ((event: any) => void)[] } = {};

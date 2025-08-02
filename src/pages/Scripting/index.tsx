@@ -9,6 +9,7 @@ import globals from "globals/globals.json";
 import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution';
 import { PopupMenu } from '../../components/PopupMenu';
 import { useScriptEditorService } from '../../hooks';
+import { useParams } from 'react-router';
 
 const loadESLintConfig = async (editor: monaco.editor.IStandaloneCodeEditor) => {
     const linter = new Linter({
@@ -41,8 +42,6 @@ const loadESLintConfig = async (editor: monaco.editor.IStandaloneCodeEditor) => 
         source: 'ESLint',
     }));
 
-    console.log('ESLint results:', results);
-
     // Set markers for the current model
     const model = editor.getModel();
 
@@ -54,8 +53,9 @@ const loadESLintConfig = async (editor: monaco.editor.IStandaloneCodeEditor) => 
 export const Scripting: FC = () => {
     const [__, setEditor] = useState<monaco.editor.IStandaloneCodeEditor | null>(null);
     const monacoEl = useRef(null);
+    const { currentEntityId } = useParams<{ currentEntityId: string }>();
 
-    const [service, state] = useScriptEditorService();
+    const [service, state] = useScriptEditorService(currentEntityId!);
 
     useEffect(() => {
         if (monacoEl.current) {

@@ -1,7 +1,7 @@
 import { Scene } from "@sparkengine";
 import { FileSystemSceneRepository } from "../../scene"
 import { Project } from "./Project"
-import { WeakRef } from "../../common";
+import { parseJsonString, WeakRef } from "../../common";
 import { createDirectoryHandleMock, setMockedFile } from "../../../__mocks__/fs-api.mock";
 import testSceneJson from '../../../__mocks__/assets/test-scene.json';
 
@@ -51,8 +51,10 @@ describe('core/project/models/Project', () => {
 
 
     describe('.loadScenes()', () => {
+        const jsonString = JSON.stringify(testSceneJson);
+
         beforeEach(() => {
-            setMockedFile(JSON.stringify(testSceneJson));
+            setMockedFile(jsonString);
         })
 
         it('Should load the scene files based on the given paths', async () => {
@@ -63,7 +65,7 @@ describe('core/project/models/Project', () => {
 
             await project.loadScenes(sceneRepo);
 
-            expect(project.scenes[0].toJson()).toEqual(testSceneJson);
+            expect(JSON.stringify(project.scenes[0].toJson())).toEqual(JSON.stringify(parseJsonString(jsonString)));
         })
 
         it('Should load the scene files when they are located in a subdirectory', async () => {
@@ -74,7 +76,7 @@ describe('core/project/models/Project', () => {
 
             await project.loadScenes(sceneRepo);
 
-            expect(project.scenes[0].toJson()).toEqual(testSceneJson);
+            expect(JSON.stringify(project.scenes[0].toJson())).toEqual(JSON.stringify(parseJsonString(jsonString)));
         })
     })
 
