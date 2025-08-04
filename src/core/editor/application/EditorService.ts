@@ -1,4 +1,4 @@
-import { GameEngine, IEntity, ImageLoader, Scene, TransformComponent, Vec2, Rgb, ImageAsset, MaterialComponent, TriggerEntity, typeOf } from "sparkengineweb";
+import { GameEngine, IEntity, ImageLoader, Scene, TransformComponent, Vec2, Rgb, ImageAsset, MaterialComponent, TriggerEntity, typeOf, SerializableCallback } from "sparkengineweb";
 import { MouseClickEvent, MouseDragEvent, Optional } from "../../common";
 import { Project } from "../../project/domain";
 import { ProjectRepository } from "../../project/domain";
@@ -54,9 +54,7 @@ export class EditorService {
         private readonly eventBus: EventBus,
     ) {
         eventBus.subscribe('ScriptingEditorReady', this.onScriptingEditorReadyEvent.bind(this));
-        eventBus.subscribe('ScriptSaved', (e: ScriptSaved) => {
-            console.log('Script Saved Event', e)
-        });
+        eventBus.subscribe('ScriptSaved', this.onScriptSavedEvent.bind(this));
     }
 
     public start(context: CanvasRenderingContext2D, resolution: { width: number, height: number }): void {
@@ -220,12 +218,57 @@ export class EditorService {
             e.entityUuid !== this.currentEntity.uuid
         ) return;
 
-        const defaultScript = 'export function onTriggerCB() {\n    \n}';
+        const defaultScript = 'function () {\n    \n}';
 
         this.eventBus.publish<OpenScriptingEditorCommand>('OpenScriptingEditorCommand', {
-            currentScript: (<TriggerEntity>this.currentEntity).onTriggerCB?.toString() ?? defaultScript,
+            currentScript: `export default ${(<TriggerEntity>this.currentEntity).onTriggerCB?.toString() ?? defaultScript}`,
             entityUuid: this.currentEntity?.uuid
         });
+    }
+
+    private onScriptSavedEvent(e: ScriptSaved): void {
+        this.currentScene?.entities.forEach(async entity => {
+            if (entity.uuid === e.entityUuid) {
+                if (typeOf(entity) === 'TriggerEntity') {
+                    try {
+                        // Transform ES6 export syntax to CommonJS
+                        let transformedScript = e.script;
+
+                        // Replace "export default function() {}" with "exports.onTriggerCB = function() {}"
+                        transformedScript = transformedScript.replace(
+                            /export\s+default\s+function\s*\(/g,
+                            'exports.onTriggerCB = function('
+                        );
+
+                        // Replace "export function functionName" with "exports.functionName = function"
+                        transformedScript = transformedScript.replace(
+                            /export\s+function\s+(\w+)/g,
+                            'exports.$1 = function'
+                        );
+
+
+                        const moduleFunction = new Function('exports', `
+                            ${transformedScript}
+                            return exports;
+                        `);
+
+                        const module = moduleFunction({});
+
+                        if (module.onTriggerCB) {
+                            (<TriggerEntity>entity).onTriggerCB = SerializableCallback.fromFunction(module.onTriggerCB);
+                            console.log(`Updated onTriggerCB for entity ${entity.uuid}`);
+                        } else if (module.default) {
+                            // Handle export default case
+                            (<TriggerEntity>entity).onTriggerCB = SerializableCallback.fromFunction(module.onTriggerCB);
+                            console.log(`Updated onTriggerCB (from default export) for entity ${entity.uuid}`);
+                        }
+                    } catch (error) {
+                        console.error('Failed to execute script:', error);
+                        console.error('Script content:', e.script);
+                    }
+                }
+            }
+        })
     }
 
     private deselectCurrentEntity(): void {
