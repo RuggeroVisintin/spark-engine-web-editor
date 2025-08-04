@@ -1,5 +1,1 @@
 set -e
-
-npm run lint || {
-    echo "[warning] Linting failed with errors" >&2
-}

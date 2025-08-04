@@ -1,3 +1,9 @@
 set -e
 
-npm run lint:fix || true
+npm run lint:fix || {
+    echo "[warning] Linting failed with errors" >&2
+}
+
+npm run build || {
+    echo "[warning] Build failed" >&2
+}
