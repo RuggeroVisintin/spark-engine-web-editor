@@ -470,7 +470,7 @@ describe('EditorService', () => {
     describe('on ScriptingEditorReady event', () => {
         it('Should emit an OpenScriptingEditor command w/ the current entity script set', () => {
             const entity = new TriggerEntity();
-            entity.onTriggerCB = () => { };
+            entity.onTriggerCB = SerializableCallback.fromFunction(() => { });
 
             const cb = jest.fn();
             eventBus.subscribe<OpenScriptingEditorCommand>('OpenScriptingEditorCommand', cb);
