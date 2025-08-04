@@ -1,4 +1,4 @@
-import { CanvasDevice, DOMImageLoader, GameObject, IEntity, Renderer, RenderSystem, Scene, TriggerEntity, Vec2 } from "sparkengineweb";
+import { CanvasDevice, DOMImageLoader, GameObject, IEntity, Renderer, RenderSystem, Scene, SerializableCallback, TriggerEntity, Vec2 } from "sparkengineweb";
 import { EditorService } from "./EditorService";
 import { FileSystemImageRepository } from "../../assets";
 import { ProjectRepository } from "../../project/domain";
@@ -547,8 +547,8 @@ describe('EditorService', () => {
     describe('on ScriptSaved event', () => {
         it('Should update the given entity script', async () => {
             const entity = new TriggerEntity();
-            entity.onTriggerCB = function () {
-            }
+            entity.onTriggerCB = SerializableCallback.fromFunction(function () {
+            });
 
             editorService.start(context, { width: 800, height: 600 });
             editorService.currentScene?.registerEntity(entity);
@@ -561,7 +561,7 @@ describe('EditorService', () => {
             });
 
 
-            expect(entity.onTriggerCB()).toEqual(1);
+            expect(entity.onTriggerCB.call(this)).toEqual(1);
         })
     });
 });
