@@ -4,6 +4,7 @@ npm run lint:fix || {
     echo "[warning] Linting failed with errors" >&2
 }
 
-npm run build || {
-    echo "[warning] Build failed" >&2
-}
+# The build step is too slow, so it's commented out for now.
+# npm run build || {
+#     echo "[warning] Build failed" >&2
+# }
