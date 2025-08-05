@@ -138,14 +138,13 @@ describe('EditorService', () => {
             expect(editorService.editorScene?.shouldDraw).toBe(true);
         });
 
-        it('Should create a new project with the editor and game scene', () => {
+        it('Should create a new project with a default game scene', () => {
             const resolution = { width: 800, height: 600 };
 
             editorService.start(context, resolution);
 
             expect(editorService.project).toBeDefined();
             expect(editorService.project?.scenes).toContain(editorService.currentScene);
-            expect(editorService.project?.scenes).toContain(editorService.editorScene);
         });
 
         it('Should start the contextual ui service with the editor scene', () => {

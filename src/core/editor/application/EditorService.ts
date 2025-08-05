@@ -255,7 +255,6 @@ export class EditorService {
 
         this.contextualUiService.start(this._editorScene);
 
-        this._project!.addScene(this._editorScene);
         this._editorScene.draw(this._engine!);
     }
 
