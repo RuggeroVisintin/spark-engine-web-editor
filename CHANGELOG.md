@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.12](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.11...sparkenginewebeditor-v0.0.12) (2025-08-05)
+
+
+### Bug Fixes
+
+* **core:** fix serialized callback not being correctly re-injected in scripting editor ([8ac8426](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/8ac8426062be1d94b835f55548af35d5ef2de6ca))
+
 ## [0.0.11](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.10...sparkenginewebeditor-v0.0.11) (2025-08-05)
 
 
