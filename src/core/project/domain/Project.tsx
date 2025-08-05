@@ -51,7 +51,9 @@ export class Project {
 
     public addScene(scene: Scene): void {
         this.scenes.push(scene);
-        this.scenePaths.push(`scenes/test-scene.spark.json`)
+
+        // TODO: this is a leftover, it should use a generated name instead
+        this.scenePaths.push(`scenes/test-scene.spark.json`);
     }
 
     public toJson(): ProjectJsonProps {

@@ -221,7 +221,7 @@ export class EditorService {
         const defaultScript = 'function () {\n    \n}';
 
         this.eventBus.publish<OpenScriptingEditorCommand>('OpenScriptingEditorCommand', {
-            currentScript: `export default ${(<TriggerEntity>this.currentEntity).onTriggerCB?.toString() ?? defaultScript}`,
+            currentScript: `${(<TriggerEntity>this.currentEntity).onTriggerCB?.toString() ?? defaultScript}`,
             entityUuid: this.currentEntity?.uuid
         });
     }

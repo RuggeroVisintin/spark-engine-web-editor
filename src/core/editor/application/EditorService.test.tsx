@@ -482,7 +482,7 @@ describe('EditorService', () => {
             });
 
             expect(cb).toHaveBeenCalledWith({
-                currentScript: `export default ${entity.onTriggerCB.toString()}`,
+                currentScript: `${entity.onTriggerCB.toString()}`,
                 entityUuid: entity.uuid
             });
         });
@@ -538,7 +538,7 @@ describe('EditorService', () => {
             });
 
             expect(cb).toHaveBeenCalledWith({
-                currentScript: 'export default function () {\n    \n}',
+                currentScript: 'function () {\n    \n}',
                 entityUuid: entity.uuid
             });
         });
