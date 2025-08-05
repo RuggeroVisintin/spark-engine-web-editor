@@ -3,6 +3,8 @@ set -e
 
 npm run license-check
 
+bash ./scripts/install-additional-deps.sh
+
 if [ -f .env ]; then
     echo "Loading environment variables"
     source .env

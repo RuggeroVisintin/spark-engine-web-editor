@@ -21,6 +21,7 @@
     "lint": "eslint . --config .eslintrc.json --ext .tsx",
     "lint:fix": "eslint . --config .eslintrc.json --ext .tsx --fix",
     "postinstall": "bash ./scripts/post-install.sh",
+    "adr": "./vendors/adr-tools/src/adr",
     "prepare": "husky"
   },
   "dependencies": {
