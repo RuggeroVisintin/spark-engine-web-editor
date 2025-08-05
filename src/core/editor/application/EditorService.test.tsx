@@ -553,7 +553,7 @@ describe('EditorService', () => {
             editorService.start(context, { width: 800, height: 600 });
             editorService.currentScene?.registerEntity(entity);
 
-            const script = 'export default function () {\n    return 1;\n}';
+            const script = 'function () {\n    return 1;\n}';
 
             eventBus.publish<ScriptSaved>('ScriptSaved', {
                 entityUuid: entity.uuid,
