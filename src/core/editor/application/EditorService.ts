@@ -227,41 +227,11 @@ export class EditorService {
     }
 
     private onScriptSavedEvent(e: ScriptSaved): void {
-        this.currentScene?.entities.forEach(async entity => {
+        this.currentScene?.entities.forEach(entity => {
             if (entity.uuid === e.entityUuid) {
                 if (typeOf(entity) === 'TriggerEntity') {
                     try {
-                        // Transform ES6 export syntax to CommonJS
-                        let transformedScript = e.script;
-
-                        // Replace "export default function() {}" with "exports.onTriggerCB = function() {}"
-                        transformedScript = transformedScript.replace(
-                            /export\s+default\s+function\s*\(/g,
-                            'exports.onTriggerCB = function('
-                        );
-
-                        // Replace "export function functionName" with "exports.functionName = function"
-                        transformedScript = transformedScript.replace(
-                            /export\s+function\s+(\w+)/g,
-                            'exports.$1 = function'
-                        );
-
-
-                        const moduleFunction = new Function('exports', `
-                            ${transformedScript}
-                            return exports;
-                        `);
-
-                        const module = moduleFunction({});
-
-                        if (module.onTriggerCB) {
-                            (<TriggerEntity>entity).onTriggerCB = SerializableCallback.fromFunction(module.onTriggerCB);
-                            console.log(`Updated onTriggerCB for entity ${entity.uuid}`);
-                        } else if (module.default) {
-                            // Handle export default case
-                            (<TriggerEntity>entity).onTriggerCB = SerializableCallback.fromFunction(module.onTriggerCB);
-                            console.log(`Updated onTriggerCB (from default export) for entity ${entity.uuid}`);
-                        }
+                        (<TriggerEntity>entity).onTriggerCB = SerializableCallback.fromString(e.script);
                     } catch (error) {
                         console.error('Failed to execute script:', error);
                         console.error('Script content:', e.script);
