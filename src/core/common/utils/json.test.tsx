@@ -1,9 +1,10 @@
+import { SerializableCallback } from "sparkengineweb";
 import { parseJsonString, toJsonString } from "./json";
 
 describe('core/common/utiles/json', () => {
     describe('toJsonString', () => {
         it('Should stringify functions and add the "function::" prefix to their keys', () => {
-            const fn = function () { return 'test'; }
+            const fn = SerializableCallback.fromFunction(function () { return 'test'; })
             const obj = {
                 fn
             }
@@ -27,8 +28,8 @@ describe('core/common/utiles/json', () => {
             const jsonString = `{"function::myFunction":"function test() { return 1; }"}`;
             const result = parseJsonString(jsonString);
 
-            expect(result.myFunction).toBeInstanceOf(Function);
-            expect(result.myFunction()).toBe(1);
+            expect(result.myFunction).toBeInstanceOf(SerializableCallback);
+            expect(result.myFunction.call()).toBe(1);
         });
     });
 })

@@ -1,4 +1,4 @@
-import { GameEngine, IEntity, ImageLoader, Scene, TransformComponent, Vec2, Rgb, ImageAsset, MaterialComponent, TriggerEntity, typeOf } from "sparkengineweb";
+import { GameEngine, IEntity, ImageLoader, Scene, TransformComponent, Vec2, Rgb, ImageAsset, MaterialComponent, TriggerEntity, typeOf, SerializableCallback } from "sparkengineweb";
 import { MouseClickEvent, MouseDragEvent, Optional } from "../../common";
 import { Project } from "../../project/domain";
 import { ProjectRepository } from "../../project/domain";
@@ -13,7 +13,7 @@ import { ImageRepository } from "../../assets";
 import { ContextualUiService } from "../domain/ContextualUiService";
 import { EditorState } from "./EditorState";
 import { EventBus } from "../../common/ports/EventBus";
-import { ScriptingEditorReady } from "../../scripting/domain/events";
+import { ScriptingEditorReady, ScriptSaved } from "../../scripting/domain/events";
 import { OpenScriptingEditorCommand } from "../../scripting/domain/commands";
 
 export class EditorService {
@@ -54,6 +54,7 @@ export class EditorService {
         private readonly eventBus: EventBus,
     ) {
         eventBus.subscribe('ScriptingEditorReady', this.onScriptingEditorReadyEvent.bind(this));
+        eventBus.subscribe('ScriptSaved', this.onScriptSavedEvent.bind(this));
     }
 
     public start(context: CanvasRenderingContext2D, resolution: { width: number, height: number }): void {
@@ -217,12 +218,27 @@ export class EditorService {
             e.entityUuid !== this.currentEntity.uuid
         ) return;
 
-        const defaultScript = 'export function onTriggerCB() {\n    \n}';
+        const defaultScript = 'function () {\n    \n}';
 
         this.eventBus.publish<OpenScriptingEditorCommand>('OpenScriptingEditorCommand', {
-            currentScript: (<TriggerEntity>this.currentEntity).onTriggerCB?.toString() ?? defaultScript,
+            currentScript: `export default ${(<TriggerEntity>this.currentEntity).onTriggerCB?.toString() ?? defaultScript}`,
             entityUuid: this.currentEntity?.uuid
         });
+    }
+
+    private onScriptSavedEvent(e: ScriptSaved): void {
+        this.currentScene?.entities.forEach(entity => {
+            if (entity.uuid === e.entityUuid) {
+                if (typeOf(entity) === 'TriggerEntity') {
+                    try {
+                        (<TriggerEntity>entity).onTriggerCB = SerializableCallback.fromString(e.script);
+                    } catch (error) {
+                        console.error('Failed to execute script:', error);
+                        console.error('Script content:', e.script);
+                    }
+                }
+            }
+        })
     }
 
     private deselectCurrentEntity(): void {

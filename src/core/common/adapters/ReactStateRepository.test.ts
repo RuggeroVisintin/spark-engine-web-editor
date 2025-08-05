@@ -5,7 +5,7 @@ interface TestState {
   currentEntity?: GameObject
 }
 
-describe('StateRepository', () => {
+describe('ReactStateRepository', () => {
   it('Should trigger the subscribers on a state update', () => {
     const stateRepo = new ReactStateRepository<TestState>();
     const subscriber = jest.fn();
@@ -39,5 +39,14 @@ describe('StateRepository', () => {
     stateRepo.update(newState);
 
     expect(subscriber).toHaveBeenCalledWith(newState);
+  });
+
+  describe('.get()', () => {
+    it('Should return the current state', () => {
+      const newEntity = new GameObject();
+      const stateRepo = new ReactStateRepository<TestState>({ currentEntity: newEntity });
+
+      expect(stateRepo.get()).toEqual({ currentEntity: newEntity });
+    })
   })
 });

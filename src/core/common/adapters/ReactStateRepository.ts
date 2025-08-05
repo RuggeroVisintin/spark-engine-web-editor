@@ -2,7 +2,7 @@ import { StateRepository } from '../ports/StateRepository';
 
 export class ReactStateRepository<T> implements StateRepository<T> {
   private subscribers = new Set<(currentState: T) => void>();
-  private currentState?: T;
+  private currentState: T = {} as T;
 
   constructor(initialState?: T) {
     if (initialState) {
@@ -18,5 +18,9 @@ export class ReactStateRepository<T> implements StateRepository<T> {
   update(state: T): void {
     this.currentState = { ...this.currentState, ...state };
     this.subscribers.forEach(callback => callback(this.currentState!));
+  }
+
+  get(): T {
+    return this.currentState;
   }
 }

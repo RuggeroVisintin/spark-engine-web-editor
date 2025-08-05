@@ -1,11 +1,16 @@
+import { SerializableCallback } from "sparkengineweb";
+
 export function toJsonString(value: any): string {
     const functionKeys: string[] = [];
 
     const stringifiedFunctionJsonReplacer = (key: string, value: any): any => {
-        if (typeof value === 'function') {
+        if (value instanceof SerializableCallback) {
             functionKeys.push(key);
-            return value.toString();
+
+            const stringified = value.toString();
+            return stringified;
         }
+
         return value;
     };
 
@@ -31,7 +36,7 @@ export function parseJsonString(jsonString: string): any {
     const stringifiedFunctionJsonReplacer = (key: string, value: any): any => {
         if (key in functionKeys) {
             try {
-                return new Function(`return (${value})`)();
+                return SerializableCallback.fromString(value);
             } catch (e) {
                 console.warn(`Failed to parse function for key ${key}:`, e);
             }

@@ -1,4 +1,4 @@
-import { CanvasDevice, DOMImageLoader, GameObject, IEntity, Renderer, RenderSystem, Scene, TriggerEntity, Vec2 } from "sparkengineweb";
+import { CanvasDevice, DOMImageLoader, GameObject, IEntity, Renderer, RenderSystem, Scene, SerializableCallback, TriggerEntity, Vec2 } from "sparkengineweb";
 import { EditorService } from "./EditorService";
 import { FileSystemImageRepository } from "../../assets";
 import { ProjectRepository } from "../../project/domain";
@@ -12,7 +12,7 @@ import { StateRepository } from "../../common/ports/StateRepository";
 import { ContextualUiService } from "../domain/ContextualUiService";
 import { EditorState } from "./EditorState";
 import { InMemoryEventBusDouble } from "../../../__mocks__/core/InMemoryEventBusDouble";
-import { ScriptingEditorReady } from "../../scripting/domain/events";
+import { ScriptingEditorReady, ScriptSaved } from "../../scripting/domain/events";
 import { OpenScriptingEditorCommand } from "../../scripting/domain/commands";
 
 class ProjectRepositoryTestDouble implements ProjectRepository {
@@ -470,8 +470,7 @@ describe('EditorService', () => {
     describe('on ScriptingEditorReady event', () => {
         it('Should emit an OpenScriptingEditor command w/ the current entity script set', () => {
             const entity = new TriggerEntity();
-            entity.onTriggerCB = function () {
-            }
+            entity.onTriggerCB = SerializableCallback.fromFunction(() => { });
 
             const cb = jest.fn();
             eventBus.subscribe<OpenScriptingEditorCommand>('OpenScriptingEditorCommand', cb);
@@ -483,7 +482,7 @@ describe('EditorService', () => {
             });
 
             expect(cb).toHaveBeenCalledWith({
-                currentScript: entity.onTriggerCB.toString(),
+                currentScript: `export default ${entity.onTriggerCB.toString()}`,
                 entityUuid: entity.uuid
             });
         });
@@ -539,9 +538,30 @@ describe('EditorService', () => {
             });
 
             expect(cb).toHaveBeenCalledWith({
-                currentScript: 'export function onTriggerCB() {\n    \n}',
+                currentScript: 'export default function () {\n    \n}',
                 entityUuid: entity.uuid
             });
         });
+    });
+
+    describe('on ScriptSaved event', () => {
+        it('Should update the given entity script', async () => {
+            const entity = new TriggerEntity();
+            entity.onTriggerCB = SerializableCallback.fromFunction(function () {
+            });
+
+            editorService.start(context, { width: 800, height: 600 });
+            editorService.currentScene?.registerEntity(entity);
+
+            const script = 'function () {\n    return 1;\n}';
+
+            eventBus.publish<ScriptSaved>('ScriptSaved', {
+                entityUuid: entity.uuid,
+                script
+            });
+
+
+            expect(entity.onTriggerCB.call(this)).toEqual(1);
+        })
     });
 });
