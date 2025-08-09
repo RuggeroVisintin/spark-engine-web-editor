@@ -1,4 +1,4 @@
-import { GameEngine, IEntity, ImageLoader, Scene, TransformComponent, Vec2, Rgb, ImageAsset, MaterialComponent, TriggerEntity, typeOf, SerializableCallback } from "sparkengineweb";
+import { GameEngine, IEntity, ImageLoader, Scene, TransformComponent, Vec2, Rgb, ImageAsset, MaterialComponent, TriggerEntity, typeOf, SerializableCallback, CameraComponent, GameObject } from "sparkengineweb";
 import { MouseClickEvent, MouseDragEvent, Optional } from "../../common";
 import { Project } from "../../project/domain";
 import { ProjectRepository } from "../../project/domain";
@@ -15,6 +15,7 @@ import { EditorState } from "./EditorState";
 import { EventBus } from "../../common/ports/EventBus";
 import { ScriptingEditorReady, ScriptSaved } from "../../scripting/domain/events";
 import { OpenScriptingEditorCommand } from "../../scripting/domain/commands";
+import { EditorCamera } from "../domain/entities/EditrorCamera";
 
 export class EditorService {
     private _currentEntity?: IEntity;
@@ -22,6 +23,7 @@ export class EditorService {
     private _editorScene?: Scene;
     private _engine?: GameEngine;
     private _project?: Project;
+    private _editorCamera = new EditorCamera()
 
     public get currentEntity(): Optional<IEntity> {
         return this._currentEntity;
@@ -67,6 +69,7 @@ export class EditorService {
         this._currentScene = new Scene();
         this._currentScene.draw(this._engine);
         this._project.addScene(this._currentScene);
+        this._currentScene.registerEntity(this._editorCamera);
 
         this.initContextualUi();
 
@@ -87,6 +90,7 @@ export class EditorService {
         this._engine && newScene?.draw(this._engine);
 
         this._currentScene = newScene;
+        this._currentScene.registerEntity(this._editorCamera);
 
         this.stateRepository.update({
             entities: this._currentScene?.entities || [],
@@ -256,6 +260,7 @@ export class EditorService {
         this.contextualUiService.start(this._editorScene);
 
         this._editorScene.draw(this._engine!);
+        this._editorScene.registerEntity(this._editorCamera);
     }
 
     private initEngine(context: CanvasRenderingContext2D, resolution: { width: number, height: number }): GameEngine {

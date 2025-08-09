@@ -8,4 +8,6 @@ export interface MouseClickEvent {
 export interface MouseDragEvent extends MouseClickEvent {
     deltaX: number;
     deltaY: number;
+
+    // TODO: add modifier button support
 }
