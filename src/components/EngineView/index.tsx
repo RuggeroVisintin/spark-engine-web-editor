@@ -117,7 +117,6 @@ export const EngineView = memo(({ onEngineViewReady, onClick, onMouseDragging, o
                     setLastMouseButton(e.button);
                     onMouseDown?.(mouseEventToMouseClickEvent(e.nativeEvent));
                 }}
-                // need to use setTimeout to avoid the mouseup event being triggered immediately after mousedown when the mouse is moving
                 onMouseUp={() => { setLastMouseButton(-1); setIsMouseDragging(false); }}
                 onMouseMove={(e) => {
                     const wasMouseDragging = isMouseDragging;
