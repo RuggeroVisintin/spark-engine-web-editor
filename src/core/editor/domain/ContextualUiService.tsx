@@ -1,11 +1,13 @@
 import { IEntity, Rgb, Scene, Vec2 } from "sparkengineweb";
 import { EntityOutline } from "./entities";
 import Pivot from "./entities/Pivot";
+import { EditorCamera } from "./entities/EditrorCamera";
 
 export class ContextualUiService {
     private _spawnPivot = new Pivot({ diffuseColor: new Rgb(255, 125, 0) });
     private _currentEntityOriginPivot = new Pivot({ size: { width: 0, height: 0 }, diffuseColor: new Rgb(255, 255, 0) });
     private _currentEntityOutline = new EntityOutline();
+    private _editorCamera: EditorCamera = new EditorCamera;
 
     public get spawnPivot(): Pivot {
         return this._spawnPivot;
@@ -19,10 +21,15 @@ export class ContextualUiService {
         return this._currentEntityOutline;
     }
 
+    public get editorCamera(): EditorCamera {
+        return this._editorCamera;
+    }
+
     public start(contextualUiScene: Scene): void {
         contextualUiScene.registerEntity(this._currentEntityOutline);
         contextualUiScene.registerEntity(this._spawnPivot);
         contextualUiScene.registerEntity(this._currentEntityOriginPivot);
+        contextualUiScene.registerEntity(this._editorCamera);
     }
 
     public moveSpawnOrigin(position: Vec2): void {

@@ -166,6 +166,26 @@ describe('EngineView', () => {
                 targetY: expect.any(Number)
             }));
         });
+
+        it('Should propagate modifier keys being pressed', async () => {
+            const onMouseDown = jest.fn();
+            const onEngineReady = jest.fn();
+
+            const engineView = <EngineView onEngineViewReady={onEngineReady} onMouseDown={onMouseDown} />;
+            render(engineView);
+
+            const canvas = await screen.findByTestId('EngineView.canvas');
+
+            fireEvent.keyDown(window, { code: 'Space' });
+
+            fireEvent.mouseDown(canvas, { button: 0 });
+
+            expect(onMouseDown).toHaveBeenCalledWith(expect.objectContaining({
+                modifiers: expect.objectContaining({
+                    space: true
+                })
+            }));
+        });
     });
 
     describe('.onMouseDragStart()', () => {
@@ -197,6 +217,31 @@ describe('EngineView', () => {
             fireEvent.mouseUp(canvas, { button: 0 });
 
             expect(onMouseDragStart).toHaveBeenCalledTimes(1);
+        });
+
+        it('Should propagate the modifier keys being pressed', async () => {
+            const onMouseDragStart = jest.fn();
+            const onEngineReady = jest.fn();
+
+            const engineView = <EngineView onEngineViewReady={onEngineReady} onMouseDragStart={onMouseDragStart} />;
+            render(engineView);
+
+            const canvas = await screen.findByTestId('EngineView.canvas');
+
+            fireEvent.keyDown(window, { code: 'Space' });
+
+            fireEvent.mouseDown(canvas, { button: 0 });
+            fireEvent.mouseMove(canvas, { clientX: 100, clientY: 200 });
+            // second one is going to trigger dragging
+
+            fireEvent.mouseUp(canvas, { button: 0 });
+
+            expect(onMouseDragStart).toHaveBeenCalled();
+            expect(onMouseDragStart).toHaveBeenCalledWith(expect.objectContaining({
+                modifiers: expect.objectContaining({
+                    space: true
+                })
+            }));
         });
     });
 

@@ -50,21 +50,7 @@ export const EngineView = memo(({ onEngineViewReady, onClick, onMouseDragging, o
     const width = 1920;
     const height = 1080;
 
-    function mouseEventToMouseClickEvent(e: MouseEvent): MouseClickEvent {
-        const rect = (e.target as HTMLElement).getBoundingClientRect();
-
-        const scaleFactorX = rect.width ? width / rect.width : 1;
-        const scaleFactorY = rect.height ? height / rect.height : 1;
-
-        return {
-            targetX: Math.round((e.clientX - rect.left) * scaleFactorX),
-            targetY: Math.round((e.clientY - rect.top) * scaleFactorY),
-            button: e.button
-        }
-    }
-
-    function mouseEventToMouseDragEvent(e: MouseEvent, currentModifierButtons: ModifierButtons): MouseDragEvent {
-
+    function mouseEventToMouseClickEvent(e: MouseEvent, currentModifierButtons: ModifierButtons): MouseClickEvent {
         const rect = (e.target as HTMLElement).getBoundingClientRect();
 
         const scaleFactorX = rect.width ? width / rect.width : 1;
@@ -81,10 +67,23 @@ export const EngineView = memo(({ onEngineViewReady, onClick, onMouseDragging, o
         return {
             targetX: Math.round((e.clientX - rect.left) * scaleFactorX),
             targetY: Math.round((e.clientY - rect.top) * scaleFactorY),
-            button: lastMouseButton,
             modifiers,
+            button: e.button
+        }
+    }
+
+    function mouseEventToMouseDragEvent(e: MouseEvent, currentModifierButtons: ModifierButtons): MouseDragEvent {
+
+        const rect = (e.target as HTMLElement).getBoundingClientRect();
+
+        const scaleFactorX = rect.width ? width / rect.width : 1;
+        const scaleFactorY = rect.height ? height / rect.height : 1;
+
+        return {
+            ...mouseEventToMouseClickEvent(e, currentModifierButtons),
+            button: lastMouseButton,
             deltaX: Math.round(e.movementX * scaleFactorX),
-            deltaY: Math.round(e.movementY * scaleFactorX)
+            deltaY: Math.round(e.movementY * scaleFactorY)
         }
     }
 
@@ -100,7 +99,7 @@ export const EngineView = memo(({ onEngineViewReady, onClick, onMouseDragging, o
             canvasRef.current.addEventListener(`contextmenu`, (e) => {
                 if (onClick) {
                     e.preventDefault();
-                    onClick(mouseEventToMouseClickEvent(e));
+                    onClick(mouseEventToMouseClickEvent(e, currentModifierButtons));
                 }
             });
         }
@@ -138,7 +137,7 @@ export const EngineView = memo(({ onEngineViewReady, onClick, onMouseDragging, o
                 height={height}
                 onMouseDown={(e) => {
                     setLastMouseButton(e.button);
-                    onMouseDown?.(mouseEventToMouseClickEvent(e.nativeEvent));
+                    onMouseDown?.(mouseEventToMouseClickEvent(e.nativeEvent, currentModifierButtons));
                 }}
                 onMouseUp={() => { setLastMouseButton(-1); setIsMouseDragging(false); }}
                 onMouseMove={(e) => {
@@ -154,7 +153,7 @@ export const EngineView = memo(({ onEngineViewReady, onClick, onMouseDragging, o
 
                     currentIsMouseDragging && onMouseDragging?.(mouseEventToMouseDragEvent(e.nativeEvent, currentModifierButtons));
                 }}
-                onClick={(e) => !isMouseDragging && onClick?.(mouseEventToMouseClickEvent(e.nativeEvent))}
+                onClick={(e) => !isMouseDragging && onClick?.(mouseEventToMouseClickEvent(e.nativeEvent, currentModifierButtons))}
             ></RenderingCanvas>
         </Box>
     )

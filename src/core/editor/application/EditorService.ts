@@ -23,7 +23,6 @@ export class EditorService {
     private _editorScene?: Scene;
     private _engine?: GameEngine;
     private _project?: Project;
-    private _editorCamera = new EditorCamera();
 
     public get currentEntity(): Optional<IEntity> {
         return this._currentEntity;
@@ -42,7 +41,7 @@ export class EditorService {
     }
 
     public get editorCamera(): EditorCamera {
-        return this._editorCamera;
+        return this.contextualUiService.editorCamera;
     }
 
     public get project(): Optional<Project> {
@@ -73,9 +72,6 @@ export class EditorService {
         this._currentScene = new Scene();
         this._currentScene.draw(this._engine);
         this._project.addScene(this._currentScene);
-
-        // by registering the camera component this way we sistematically ensure that the editor camera is always present in the editor scene
-        this._engine.renderSystems.forEach(renderSystem => renderSystem.registerComponent(this._editorCamera.getComponent<CameraComponent>('CameraComponent')!));
 
         this.initContextualUi();
 
@@ -111,7 +107,7 @@ export class EditorService {
     }
 
     public handleMouseClick(event: MouseClickEvent): void {
-        if (event.button === 0) {
+        if (event.button === 0 && !event.modifiers.space) {
             this.objectPicking.handleMouseClick(event);
 
             if (this.objectPicking.selectedEntity) {
@@ -121,7 +117,7 @@ export class EditorService {
             }
         } else if (event.button === 2) {
             const { targetX, targetY } = event;
-            const editorCameraPosition = this._editorCamera.getComponent<TransformComponent>('TransformComponent')?.position ?? new Vec2(0, 0);
+            const editorCameraPosition = this.editorCamera.getComponent<TransformComponent>('TransformComponent')?.position ?? new Vec2(0, 0);
 
             this.contextualUiService.moveSpawnOrigin(new Vec2(targetX + editorCameraPosition.x, targetY + editorCameraPosition.y));
 
@@ -133,7 +129,7 @@ export class EditorService {
 
     public handleMouseDrag(event: MouseDragEvent): void {
         if (event.button === 0 && event.modifiers.space) {
-            const editorCameraTransform = this._editorCamera.getComponent<TransformComponent>('TransformComponent');
+            const editorCameraTransform = this.editorCamera.getComponent<TransformComponent>('TransformComponent');
 
             if (!editorCameraTransform) return;
 

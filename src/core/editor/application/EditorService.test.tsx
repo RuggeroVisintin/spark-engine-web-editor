@@ -190,6 +190,7 @@ describe('EditorService', () => {
                 editorService.handleMouseClick({
                     targetX: 100,
                     targetY: 100,
+                    modifiers: {},
                     button: 0
                 });
 
@@ -207,6 +208,7 @@ describe('EditorService', () => {
                 editorService.handleMouseClick({
                     targetX: 100,
                     targetY: 100,
+                    modifiers: {},
                     button: 0
                 });
 
@@ -229,6 +231,23 @@ describe('EditorService', () => {
                 expect(editorService.currentEntity).not.toBeDefined();
                 expect(contextualUiServiceDouble.lastFocusedEntity).toBeUndefined();
             });
+
+            it('Should not focus on the entity when spacebar modifier is pressed', () => {
+                const resolution = { width: 800, height: 600 };
+                const gameObject = new GameObject();
+                objectPicking._result = gameObject;
+
+                editorService.start(context, resolution);
+                editorService.handleMouseClick({
+                    targetX: 100,
+                    targetY: 100,
+                    button: 0,
+                    modifiers: { space: true }
+                });
+
+                expect(editorService.currentEntity).not.toBeDefined();
+                expect(contextualUiServiceDouble.lastFocusedEntity).toBeUndefined();
+            });
         });
 
         describe('right mouse button', () => {
@@ -239,6 +258,7 @@ describe('EditorService', () => {
                 editorService.handleMouseClick({
                     targetX: 100,
                     targetY: 200,
+                    modifiers: {},
                     button: 2
                 });
 
@@ -253,6 +273,7 @@ describe('EditorService', () => {
                 editorService.handleMouseClick({
                     targetX: 100,
                     targetY: 200,
+                    modifiers: {},
                     button: 2
                 });
 
