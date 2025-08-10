@@ -225,6 +225,7 @@ describe('EditorService', () => {
                 editorService.handleMouseClick({
                     targetX: 100,
                     targetY: 100,
+                    modifiers: {},
                     button: 1
                 });
 

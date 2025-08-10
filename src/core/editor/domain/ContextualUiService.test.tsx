@@ -1,4 +1,4 @@
-import { GameObject, Scene, Vec2 } from "sparkengineweb";
+import { GameObject, Scene, TransformComponent, Vec2 } from "sparkengineweb";
 import { ContextualUiService } from "./ContextualUiService";
 
 describe('core/editor/ContextualUiService', () => {
@@ -61,6 +61,20 @@ describe('core/editor/ContextualUiService', () => {
             service.focusOnEntity(entity);
 
             expect(service.currentEntityOriginPivot.transform.size).toEqual({ width: 10, height: 10 });
+        });
+
+        it('Should center the camera on the entity if not in viewport', () => {
+            const entity = new GameObject();
+            entity.transform.size.height = 50;
+            entity.transform.size.width = 100;
+
+            service.focusOnEntity(entity);
+
+            const cameraPosition = service.editorCamera.getComponent<TransformComponent>('TransformComponent')?.position;
+            expect(cameraPosition).toEqual(expect.objectContaining({
+                x: entity.transform.position.x,
+                y: entity.transform.position.y
+            }));
         });
     })
 
