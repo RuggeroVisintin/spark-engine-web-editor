@@ -9,6 +9,8 @@ export interface OnEngineViewReadyCBProps {
     resolution: { width: number, height: number };
 }
 
+type ModifierButtons = Map<string, boolean>;
+
 interface EngineViewProps {
     onEngineViewReady: Function<OnEngineViewReadyCBProps>;
     onClick?: Function<MouseClickEvent>;
@@ -39,7 +41,7 @@ const RenderingCanvas = styled.canvas<RenderingCanvasProps>`
 
 export const EngineView = memo(({ onEngineViewReady, onClick, onMouseDragging, onMouseDragStart, onMouseDown }: EngineViewProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [currentModifierButtons, setCurrentModifierButtons] = React.useState<{ [key: string]: boolean }>({});
+    const [currentModifierButtons, setCurrentModifierButtons] = React.useState<ModifierButtons>(new Map<string, boolean>());
     const [isMouseDragging, setIsMouseDragging] = React.useState(false);
     const [lastMouseButton, setLastMouseButton] = React.useState(-1);
 
@@ -61,17 +63,26 @@ export const EngineView = memo(({ onEngineViewReady, onClick, onMouseDragging, o
         }
     }
 
-    function mouseEventToMouseDragEvent(e: MouseEvent): MouseDragEvent {
+    function mouseEventToMouseDragEvent(e: MouseEvent, currentModifierButtons: ModifierButtons): MouseDragEvent {
 
         const rect = (e.target as HTMLElement).getBoundingClientRect();
 
         const scaleFactorX = rect.width ? width / rect.width : 1;
         const scaleFactorY = rect.height ? height / rect.height : 1;
 
+        const modifiers: Record<string, true> = {};
+
+        currentModifierButtons.forEach((value, key) => {
+            if (value) {
+                modifiers[key.toLowerCase()] = true;
+            }
+        });
+
         return {
             targetX: Math.round((e.clientX - rect.left) * scaleFactorX),
             targetY: Math.round((e.clientY - rect.top) * scaleFactorY),
             button: lastMouseButton,
+            modifiers,
             deltaX: Math.round(e.movementX * scaleFactorX),
             deltaY: Math.round(e.movementY * scaleFactorX)
         }
@@ -95,19 +106,30 @@ export const EngineView = memo(({ onEngineViewReady, onClick, onMouseDragging, o
 
     }, [canvasRef, onEngineViewReady, onClick]);
 
-    window.onkeydown = (e: KeyboardEvent) => {
-        setCurrentModifierButtons(prev => ({ ...prev, [e.code]: true }));
-    }
 
-    window.onkeyup = (e: KeyboardEvent) => {
-        setCurrentModifierButtons(prev => ({ ...prev, [e.code]: false }));
-    }
+    useEffect(() => {
+        window.addEventListener('keydown', (e) => {
+            setCurrentModifierButtons(prev => {
+                const newModifiers = new Map(prev);
+                newModifiers.set(e.code, true);
+                return newModifiers;
+            });
+        });
+
+        window.addEventListener('keyup', (e) => {
+            setCurrentModifierButtons(prev => {
+                const newModifiers = new Map(prev);
+                newModifiers.set(e.code, false);
+                return newModifiers;
+            });
+        });
+    }, []);
 
     return (
         <Box>
             <RenderingCanvas
                 $isMouseDragging={lastMouseButton !== -1}
-                $isSpaceBarPressed={currentModifierButtons['Space'] ?? false}
+                $isSpaceBarPressed={currentModifierButtons.get('Space') ?? false}
                 ref={canvasRef}
                 id="canvas"
                 data-testid="EngineView.canvas"
@@ -125,11 +147,11 @@ export const EngineView = memo(({ onEngineViewReady, onClick, onMouseDragging, o
                     if (!wasMouseDragging && currentIsMouseDragging) {
                         setIsMouseDragging(true);
 
-                        onMouseDragStart?.(mouseEventToMouseDragEvent(e.nativeEvent));
+                        onMouseDragStart?.(mouseEventToMouseDragEvent(e.nativeEvent, currentModifierButtons));
                         return;
                     }
 
-                    currentIsMouseDragging && onMouseDragging?.(mouseEventToMouseDragEvent(e.nativeEvent));
+                    currentIsMouseDragging && onMouseDragging?.(mouseEventToMouseDragEvent(e.nativeEvent, currentModifierButtons));
                 }}
                 onClick={(e) => !isMouseDragging && onClick?.(mouseEventToMouseClickEvent(e.nativeEvent))}
             ></RenderingCanvas>

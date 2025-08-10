@@ -1,4 +1,4 @@
-import { CanvasDevice, DOMImageLoader, GameObject, IEntity, Renderer, RenderSystem, Scene, SerializableCallback, TriggerEntity, Vec2 } from "sparkengineweb";
+import { CanvasDevice, DOMImageLoader, GameObject, IEntity, Renderer, RenderSystem, Scene, SerializableCallback, TransformComponent, TriggerEntity, Vec2 } from "sparkengineweb";
 import { EditorService } from "./EditorService";
 import { FileSystemImageRepository } from "../../assets";
 import { ProjectRepository } from "../../project/domain";
@@ -248,43 +248,89 @@ describe('EditorService', () => {
     });
 
     describe('.handleMouseDrag()', () => {
-        it('Should update the position of the current entity', () => {
-            const resolution = { width: 800, height: 600 };
-            const gameObject = new GameObject();
-            gameObject.transform.position = new Vec2(50, 50);
+        describe('on left mouse button pressed', () => {
+            it('Should update the position of the current entity', () => {
+                const resolution = { width: 800, height: 600 };
+                const gameObject = new GameObject();
+                gameObject.transform.position = new Vec2(50, 50);
 
-            editorService.start(context, resolution);
-            editorService.selectEntity(gameObject);
+                editorService.start(context, resolution);
+                editorService.selectEntity(gameObject);
 
-            editorService.handleMouseDrag({
-                targetX: 100,
-                targetY: 100,
-                button: 0,
-                deltaX: 20,
-                deltaY: 20
+                editorService.handleMouseDrag({
+                    targetX: 100,
+                    targetY: 100,
+                    button: 0,
+                    modifiers: {},
+                    deltaX: 20,
+                    deltaY: 20
+                });
+
+                expect(gameObject.transform.position).toEqual(new Vec2(70, 70));
             });
 
-            expect(gameObject.transform.position).toEqual(new Vec2(70, 70));
+            it('Should not update the position when not using left mouse button', () => {
+                const resolution = { width: 800, height: 600 };
+                const gameObject = new GameObject();
+                gameObject.transform.position = new Vec2(50, 50);
+
+                editorService.start(context, resolution);
+                editorService.selectEntity(gameObject);
+
+                editorService.handleMouseDrag({
+                    targetX: 100,
+                    targetY: 100,
+                    button: 1,
+                    modifiers: {},
+                    deltaX: 20,
+                    deltaY: 20
+                });
+
+                expect(gameObject.transform.position).toEqual(new Vec2(50, 50));
+            });
         });
 
-        it('Should not update the position when not using left mouse button', () => {
-            const resolution = { width: 800, height: 600 };
-            const gameObject = new GameObject();
-            gameObject.transform.position = new Vec2(50, 50);
+        describe('on left mouse and spacebar modifier pressed', () => {
+            it('Should update the position of the current camera based on the mouse drag', () => {
+                const resolution = { width: 800, height: 600 };
+                const gameObject = new GameObject();
+                gameObject.transform.position = new Vec2(50, 50);
 
-            editorService.start(context, resolution);
-            editorService.selectEntity(gameObject);
+                editorService.start(context, resolution);
+                editorService.selectEntity(gameObject);
 
-            editorService.handleMouseDrag({
-                targetX: 100,
-                targetY: 100,
-                button: 1,
-                deltaX: 20,
-                deltaY: 20
+                editorService.handleMouseDrag({
+                    targetX: 100,
+                    targetY: 100,
+                    button: 0,
+                    modifiers: { space: true },
+                    deltaX: 20,
+                    deltaY: 20
+                });
+
+                expect(editorService.editorCamera.getComponent<TransformComponent>('TransformComponent')?.position).toEqual(new Vec2(-20, -20));
             });
 
-            expect(gameObject.transform.position).toEqual(new Vec2(50, 50));
-        });
+            it('Should not update the position of the current entity', () => {
+                const resolution = { width: 800, height: 600 };
+                const gameObject = new GameObject();
+                gameObject.transform.position = new Vec2(50, 50);
+
+                editorService.start(context, resolution);
+                editorService.selectEntity(gameObject);
+
+                editorService.handleMouseDrag({
+                    targetX: 100,
+                    targetY: 100,
+                    button: 0,
+                    modifiers: { space: true },
+                    deltaX: 20,
+                    deltaY: 20
+                });
+
+                expect(gameObject.transform.position).toEqual(new Vec2(50, 50));
+            });
+        })
     })
 
     describe('.selectEntity()', () => {

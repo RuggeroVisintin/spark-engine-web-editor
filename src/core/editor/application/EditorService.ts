@@ -23,7 +23,7 @@ export class EditorService {
     private _editorScene?: Scene;
     private _engine?: GameEngine;
     private _project?: Project;
-    private _editorCamera = new EditorCamera()
+    private _editorCamera = new EditorCamera();
 
     public get currentEntity(): Optional<IEntity> {
         return this._currentEntity;
@@ -39,6 +39,10 @@ export class EditorService {
 
     public get engine(): Optional<GameEngine> {
         return this._engine;
+    }
+
+    public get editorCamera(): EditorCamera {
+        return this._editorCamera;
     }
 
     public get project(): Optional<Project> {
@@ -69,7 +73,9 @@ export class EditorService {
         this._currentScene = new Scene();
         this._currentScene.draw(this._engine);
         this._project.addScene(this._currentScene);
-        this._currentScene.registerEntity(this._editorCamera);
+
+        // by registering the camera component this way we sistematically ensure that the editor camera is always present in the editor scene
+        this._engine.renderSystems.forEach(renderSystem => renderSystem.registerComponent(this._editorCamera.getComponent<CameraComponent>('CameraComponent')!));
 
         this.initContextualUi();
 
@@ -90,7 +96,6 @@ export class EditorService {
         this._engine && newScene?.draw(this._engine);
 
         this._currentScene = newScene;
-        this._currentScene.registerEntity(this._editorCamera);
 
         this.stateRepository.update({
             entities: this._currentScene?.entities || [],
@@ -125,13 +130,22 @@ export class EditorService {
     }
 
     public handleMouseDrag(event: MouseDragEvent): void {
-        if (event.button !== 0 || !this._currentEntity) return;
+        if (event.button === 0 && event.modifiers.space) {
+            const editorCameraTransform = this._editorCamera.getComponent<TransformComponent>('TransformComponent');
 
-        const transform = this._currentEntity.getComponent<TransformComponent>('TransformComponent');
+            if (!editorCameraTransform) return;
 
-        if (!transform) return;
+            editorCameraTransform.position = new Vec2(
+                editorCameraTransform.position.x - event.deltaX,
+                editorCameraTransform.position.y - event.deltaY
+            );
+        } else if (event.button === 0 && this._currentEntity) {
+            const transform = this._currentEntity.getComponent<TransformComponent>('TransformComponent');
 
-        this.updateCurrentEntityPosition(new Vec2(transform.position.x + event.deltaX, transform.position.y + event.deltaY));
+            if (!transform) return;
+
+            this.updateCurrentEntityPosition(new Vec2(transform.position.x + event.deltaX, transform.position.y + event.deltaY));
+        }
     }
 
     public selectEntity(entity: IEntity): void {
@@ -260,7 +274,6 @@ export class EditorService {
         this.contextualUiService.start(this._editorScene);
 
         this._editorScene.draw(this._engine!);
-        this._editorScene.registerEntity(this._editorCamera);
     }
 
     private initEngine(context: CanvasRenderingContext2D, resolution: { width: number, height: number }): GameEngine {
