@@ -7,7 +7,7 @@ export class ContextualUiService {
     private _spawnPivot = new Pivot({ diffuseColor: new Rgb(255, 125, 0) });
     private _currentEntityOriginPivot = new Pivot({ size: { width: 0, height: 0 }, diffuseColor: new Rgb(255, 255, 0) });
     private _currentEntityOutline = new EntityOutline();
-    private _editorCamera: EditorCamera = new EditorCamera;
+    private _editorCamera = new EditorCamera();
 
     public get spawnPivot(): Pivot {
         return this._spawnPivot;
