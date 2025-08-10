@@ -1,4 +1,4 @@
-import { GameEngine, IEntity, ImageLoader, Scene, TransformComponent, Vec2, Rgb, ImageAsset, MaterialComponent, TriggerEntity, typeOf, SerializableCallback } from "sparkengineweb";
+import { GameEngine, IEntity, ImageLoader, Scene, TransformComponent, Vec2, Rgb, ImageAsset, MaterialComponent, TriggerEntity, typeOf, SerializableCallback, CameraComponent, GameObject } from "sparkengineweb";
 import { MouseClickEvent, MouseDragEvent, Optional } from "../../common";
 import { Project } from "../../project/domain";
 import { ProjectRepository } from "../../project/domain";
@@ -15,6 +15,7 @@ import { EditorState } from "./EditorState";
 import { EventBus } from "../../common/ports/EventBus";
 import { ScriptingEditorReady, ScriptSaved } from "../../scripting/domain/events";
 import { OpenScriptingEditorCommand } from "../../scripting/domain/commands";
+import { EditorCamera } from "../domain/entities/EditrorCamera";
 
 export class EditorService {
     private _currentEntity?: IEntity;
@@ -22,6 +23,7 @@ export class EditorService {
     private _editorScene?: Scene;
     private _engine?: GameEngine;
     private _project?: Project;
+    private _editorCamera = new EditorCamera();
 
     public get currentEntity(): Optional<IEntity> {
         return this._currentEntity;
@@ -37,6 +39,10 @@ export class EditorService {
 
     public get engine(): Optional<GameEngine> {
         return this._engine;
+    }
+
+    public get editorCamera(): EditorCamera {
+        return this._editorCamera;
     }
 
     public get project(): Optional<Project> {
@@ -67,6 +73,9 @@ export class EditorService {
         this._currentScene = new Scene();
         this._currentScene.draw(this._engine);
         this._project.addScene(this._currentScene);
+
+        // by registering the camera component this way we sistematically ensure that the editor camera is always present in the editor scene
+        this._engine.renderSystems.forEach(renderSystem => renderSystem.registerComponent(this._editorCamera.getComponent<CameraComponent>('CameraComponent')!));
 
         this.initContextualUi();
 
@@ -112,7 +121,9 @@ export class EditorService {
             }
         } else if (event.button === 2) {
             const { targetX, targetY } = event;
-            this.contextualUiService.moveSpawnOrigin(new Vec2(targetX, targetY));
+            const editorCameraPosition = this._editorCamera.getComponent<TransformComponent>('TransformComponent')?.position ?? new Vec2(0, 0);
+
+            this.contextualUiService.moveSpawnOrigin(new Vec2(targetX + editorCameraPosition.x, targetY + editorCameraPosition.y));
 
             this.stateRepository.update({
                 spawnPoint: this.contextualUiService.spawnPivot.position,
@@ -121,13 +132,22 @@ export class EditorService {
     }
 
     public handleMouseDrag(event: MouseDragEvent): void {
-        if (event.button !== 0 || !this._currentEntity) return;
+        if (event.button === 0 && event.modifiers.space) {
+            const editorCameraTransform = this._editorCamera.getComponent<TransformComponent>('TransformComponent');
 
-        const transform = this._currentEntity.getComponent<TransformComponent>('TransformComponent');
+            if (!editorCameraTransform) return;
 
-        if (!transform) return;
+            editorCameraTransform.position = new Vec2(
+                editorCameraTransform.position.x - event.deltaX,
+                editorCameraTransform.position.y - event.deltaY
+            );
+        } else if (event.button === 0 && this._currentEntity) {
+            const transform = this._currentEntity.getComponent<TransformComponent>('TransformComponent');
 
-        this.updateCurrentEntityPosition(new Vec2(transform.position.x + event.deltaX, transform.position.y + event.deltaY));
+            if (!transform) return;
+
+            this.updateCurrentEntityPosition(new Vec2(transform.position.x + event.deltaX, transform.position.y + event.deltaY));
+        }
     }
 
     public selectEntity(entity: IEntity): void {

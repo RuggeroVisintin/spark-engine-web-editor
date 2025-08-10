@@ -1,9 +1,8 @@
 import { FileSystemSceneRepository } from "./FileSystemSceneRepository";
 import testSceneJson from '../../../../__mocks__/assets/test-scene.json';
 import { createDirectoryHandleMock, FileSystemWritableFileStreamMock, setMockedFile } from "../../../../__mocks__/fs-api.mock";
-import { parseJsonString, toJsonString, WeakRef } from "../../../common";
-import { Scene, TriggerEntity } from "sparkengineweb";
-import { parse } from "uuid";
+import { parseJsonString, WeakRef } from "../../../common";
+import { Scene } from "sparkengineweb";
 
 describe('core/scene/adapters/FileSystemSceneRepository', () => {
     afterEach(() => {

@@ -1,7 +1,20 @@
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
+import user from "@testing-library/user-event";
 import { EngineView } from ".";
 
+
+const hoverWithCSS = async (element: HTMLElement) => {
+    await user.hover(element);
+    // Manually apply the style for testing
+    element.setAttribute('data-test-hover', 'true');
+};
+
+const leaveWithCSS = async (element: HTMLElement) => {
+    await user.unhover(element);
+    // Manually remove the style for testing
+    element.removeAttribute('data-test-hover');
+}
 
 const pause = (timeout = 0) => new Promise(resolve => setTimeout(resolve, timeout));
 
@@ -185,7 +198,7 @@ describe('EngineView', () => {
 
             expect(onMouseDragStart).toHaveBeenCalledTimes(1);
         });
-    })
+    });
 
     describe('.onMouseDragging()', () => {
         it('Should execute when the mouse is being dragged', async () => {
@@ -240,6 +253,120 @@ describe('EngineView', () => {
 
             expect(onMouseDragging).not.toHaveBeenCalled();
         });
+
+        it('Should propagate the modifier keys being pressed', async () => {
+            const onMouseDragging = jest.fn();
+            const onEngineReady = jest.fn();
+
+            const engineView = <EngineView onEngineViewReady={onEngineReady} onMouseDragging={onMouseDragging} />;
+            render(engineView);
+
+            const canvas = await screen.findByTestId('EngineView.canvas');
+
+            fireEvent.keyDown(window, { code: 'Space' });
+
+            fireEvent.mouseDown(canvas, { button: 0 });
+            fireEvent.mouseMove(canvas, { clientX: 100, clientY: 200 });
+            // second one is going to trigger dragging
+            fireEvent.mouseMove(canvas, { clientX: 102, clientY: 200 });
+
+            fireEvent.mouseUp(canvas, { button: 0 });
+
+            expect(onMouseDragging).toHaveBeenCalled();
+            expect(onMouseDragging).toHaveBeenCalledWith(expect.objectContaining({
+                modifiers: expect.objectContaining({
+                    space: true
+                })
+            }));
+        });
+    });
+
+    describe('grab cursor', () => {
+        it('Should show the grab mouse cursor if the space bar is pressed while hovering the element', async () => {
+            const onEngineReady = jest.fn();
+
+            const engineView = <EngineView onEngineViewReady={onEngineReady} />;
+            render(engineView);
+
+            const canvas = await screen.findByTestId('EngineView.canvas');
+            await hoverWithCSS(canvas);
+
+            fireEvent.keyDown(window, { code: 'Space' });
+            expect(canvas).toHaveStyle('cursor: grab');
+        });
+
+        it('Should stop showing the grab cursor when the space bar is released', async () => {
+            const onEngineReady = jest.fn();
+
+            const engineView = <EngineView onEngineViewReady={onEngineReady} />;
+            render(engineView);
+
+            const canvas = await screen.findByTestId('EngineView.canvas');
+            await hoverWithCSS(canvas);
+
+            fireEvent.keyDown(window, { code: 'Space' });
+
+            fireEvent.keyUp(window, { code: 'Space' });
+            expect(canvas).not.toHaveStyle('cursor: grab');
+        });
+
+        it('Should stop showing the grab cursor when the mouse stops hovering the element', async () => {
+            const onEngineReady = jest.fn();
+
+            const engineView = <EngineView onEngineViewReady={onEngineReady} />;
+            render(engineView);
+
+            const canvas = await screen.findByTestId('EngineView.canvas');
+
+            fireEvent.keyDown(window, { code: 'Space' });
+            await hoverWithCSS(canvas);
+
+            await leaveWithCSS(canvas);
+            expect(canvas).not.toHaveStyle('cursor: grab');
+        });
     })
 
-})
+    describe('grabbing cursor', () => {
+        it('Should show the grabbing cursor when the space bar is pressed during a mouse down', async () => {
+            const onEngineReady = jest.fn();
+
+            const engineView = <EngineView onEngineViewReady={onEngineReady} />;
+            render(engineView);
+
+            const canvas = await screen.findByTestId('EngineView.canvas');
+            fireEvent.mouseDown(canvas, { button: 0 });
+            fireEvent.keyDown(window, { code: 'Space' });
+
+            expect(canvas).toHaveStyle('cursor: grabbing');
+        });
+
+        it('Should show the grabbing cursor when the space bar is pressed during a mouse drag', async () => {
+            const onEngineReady = jest.fn();
+
+            const engineView = <EngineView onEngineViewReady={onEngineReady} />;
+            render(engineView);
+
+            const canvas = await screen.findByTestId('EngineView.canvas');
+            fireEvent.mouseDown(canvas, { button: 0 });
+            fireEvent.mouseMove(canvas, { clientX: 100, clientY: 200 });
+            fireEvent.keyDown(window, { code: 'Space' });
+
+            expect(canvas).toHaveStyle('cursor: grabbing');
+        });
+
+        it('Should stop showing the grabbing cursor when the space bar is released', async () => {
+            const onEngineReady = jest.fn();
+
+            const engineView = <EngineView onEngineViewReady={onEngineReady} />;
+            render(engineView);
+
+            const canvas = await screen.findByTestId('EngineView.canvas');
+            fireEvent.mouseDown(canvas, { button: 0 });
+            fireEvent.mouseMove(canvas, { clientX: 100, clientY: 200 });
+            fireEvent.keyDown(window, { code: 'Space' });
+
+            fireEvent.keyUp(window, { code: 'Space' });
+            expect(canvas).not.toHaveStyle('cursor: grabbing');
+        });
+    });
+});
