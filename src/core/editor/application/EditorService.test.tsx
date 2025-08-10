@@ -244,6 +244,20 @@ describe('EditorService', () => {
 
                 expect(contextualUiServiceDouble.currentSpawnPosition).toEqual(new Vec2(100, 200));
             });
+
+            it('Should account for the editor camera position when setting the origin pivot position', () => {
+                const resolution = { width: 800, height: 600 };
+                editorService.start(context, resolution);
+                editorService.editorCamera.getComponent<TransformComponent>('TransformComponent')!.position = new Vec2(50, 50);
+
+                editorService.handleMouseClick({
+                    targetX: 100,
+                    targetY: 200,
+                    button: 2
+                });
+
+                expect(contextualUiServiceDouble.currentSpawnPosition).toEqual(new Vec2(150, 250));
+            });
         });
     });
 
