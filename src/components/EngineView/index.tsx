@@ -45,7 +45,7 @@ export const EngineView = memo(({ onEngineViewReady, onClick, onMouseDragging, o
     const [isMouseDragging, setIsMouseDragging] = React.useState(false);
     const [lastMouseButton, setLastMouseButton] = React.useState(-1);
 
-    let isEngineInit = false;
+    let isEngineInit = useRef(false);
 
     const width = 1920;
     const height = 1080;
@@ -89,12 +89,13 @@ export const EngineView = memo(({ onEngineViewReady, onClick, onMouseDragging, o
     }
 
     useEffect(() => {
-        if (!!canvasRef.current && !isEngineInit) {
+        if (!!canvasRef.current && !isEngineInit.current) {
             onEngineViewReady({
                 context: canvasRef.current.getContext('2d') as CanvasRenderingContext2D,
                 resolution: { width, height }
             } as OnEngineViewReadyCBProps);
-            isEngineInit = true;
+
+            isEngineInit.current = true;
 
             canvasRef.current.addEventListener(`contextmenu`, (e) => {
                 if (onClick) {

@@ -8,11 +8,11 @@ import { withStrictMode } from './hooks';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
-    // withStrictMode(
-    <BrowserRouter>
-        <App />
-    </BrowserRouter>
-    // )
+    withStrictMode(
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
+    )
 );
 
 // If you want to start measuring performance in your app, pass a function

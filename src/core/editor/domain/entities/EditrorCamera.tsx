@@ -1,4 +1,4 @@
-import { BaseEntity, CameraComponent, GameObject, Type } from "sparkengineweb";
+import { CameraComponent, GameObject, Type } from "sparkengineweb";
 
 @Type('EditorCamera')
 export class EditorCamera extends GameObject {
