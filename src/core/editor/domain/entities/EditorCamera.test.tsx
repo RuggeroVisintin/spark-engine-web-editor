@@ -13,7 +13,7 @@ describe('core/debug/EditorCamera', () => {
         const cameraComponent = camera.getComponent<CameraComponent>('CameraComponent');
 
         expect(cameraComponent).toBeDefined();
-        expect(camera.transform.size).toEqual({ width: 1920, height: 1080 });
+        expect(cameraComponent?.transform.size).toEqual({ width: 1920, height: 1080 });
     });
 
     it('Should have the correct type', () => {
