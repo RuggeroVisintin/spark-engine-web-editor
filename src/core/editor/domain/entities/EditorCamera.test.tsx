@@ -1,4 +1,4 @@
-import { BaseEntity, typeOf } from 'sparkengineweb';
+import { BaseEntity, CameraComponent, typeOf } from 'sparkengineweb';
 import { EditorCamera } from './EditrorCamera';
 
 describe('core/debug/EditorCamera', () => {
@@ -10,7 +10,10 @@ describe('core/debug/EditorCamera', () => {
     it('Should have a camera component registered by default', () => {
         const camera = new EditorCamera();
 
-        expect(camera.getComponent('CameraComponent')).toBeDefined();
+        const cameraComponent = camera.getComponent<CameraComponent>('CameraComponent');
+
+        expect(cameraComponent).toBeDefined();
+        expect(cameraComponent?.transform.size).toEqual({ width: 1920, height: 1080 });
     });
 
     it('Should have the correct type', () => {

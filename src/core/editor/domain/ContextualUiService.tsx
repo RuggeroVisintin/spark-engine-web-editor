@@ -1,4 +1,4 @@
-import { IEntity, Rgb, Scene, Vec2 } from "sparkengineweb";
+import { CameraComponent, GameEngine, IEntity, isCollision, Rgb, Scene, TransformComponent, Vec2 } from "sparkengineweb";
 import { EntityOutline } from "./entities";
 import Pivot from "./entities/Pivot";
 import { EditorCamera } from "./entities/EditrorCamera";
@@ -41,6 +41,23 @@ export class ContextualUiService {
         this._currentEntityOutline.match(entity);
 
         this._currentEntityOriginPivot.transform.size = { width: 10, height: 10 };
+
+        const entityTransform = entity.getComponent<TransformComponent>("TransformComponent");
+        const cameraTransform = this._editorCamera.getComponent<CameraComponent>("CameraComponent")?.transform;
+
+        if (entityTransform && cameraTransform && !isCollision([
+            entityTransform.position.x,
+            entityTransform.position.y,
+            entityTransform.size.width,
+            entityTransform.size.height
+        ], [
+            cameraTransform.position.x,
+            cameraTransform.position.y,
+            cameraTransform.size.width,
+            cameraTransform.size.height
+        ])) {
+            cameraTransform.position = Vec2.from(entityTransform.position);
+        }
     }
 
     public loseFocus(): void {
