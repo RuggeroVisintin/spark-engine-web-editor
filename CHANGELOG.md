@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.13](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.12...sparkenginewebeditor-v0.0.13) (2025-08-12)
+
+
+### Features
+
+* **editor:** add editor camera movements ([#194](https://github.com/RuggeroVisintin/spark-engine-web-editor/issues/194)) ([4ed4a73](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/4ed4a732728ebdd71946e938c27208ecc7c729ed))
+* **editor:** make focused entity visible in screen when not in viewport ([811110a](https://github.com/RuggeroVisintin/spark-engine-web-editor/commit/811110a6b2e5381d3451075ffd7c4d69294085c5))
+
 ## [0.0.12](https://github.com/RuggeroVisintin/spark-engine-web-editor/compare/sparkenginewebeditor-v0.0.11...sparkenginewebeditor-v0.0.12) (2025-08-05)
 
 
