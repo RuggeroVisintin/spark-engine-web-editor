@@ -1,4 +1,4 @@
-import { CameraComponent, GameEngine, IEntity, isCollision, Rgb, Scene, TransformComponent, Vec2 } from "sparkengineweb";
+import { CameraComponent, GameEngine, IEntity, isCollision, Rgb, Scene, toTopLeftAABB, TransformComponent, Vec2 } from "sparkengineweb";
 import { EntityOutline } from "./entities";
 import Pivot from "./entities/Pivot";
 import { EditorCamera } from "./entities/EditrorCamera";
@@ -45,17 +45,17 @@ export class ContextualUiService {
         const entityTransform = entity.getComponent<TransformComponent>("TransformComponent");
         const cameraTransform = this._editorCamera.getComponent<CameraComponent>("CameraComponent")?.transform;
 
-        if (entityTransform && cameraTransform && !isCollision([
+        if (entityTransform && cameraTransform && !isCollision(toTopLeftAABB([
             entityTransform.position.x,
             entityTransform.position.y,
             entityTransform.size.width,
             entityTransform.size.height
-        ], [
+        ]), toTopLeftAABB([
             cameraTransform.position.x,
             cameraTransform.position.y,
             cameraTransform.size.width,
             cameraTransform.size.height
-        ])) {
+        ]))) {
             cameraTransform.position = Vec2.from(entityTransform.position);
         }
     }
