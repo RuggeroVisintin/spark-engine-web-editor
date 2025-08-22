@@ -1,5 +1,5 @@
 import { GameEngine, IEntity, ImageLoader, Scene, TransformComponent, Vec2, Rgb, ImageAsset, MaterialComponent, TriggerEntity, typeOf, SerializableCallback, CameraComponent, GameObject } from "sparkengineweb";
-import { MouseClickEvent, MouseDragEvent, Optional } from "../../common";
+import { MouseClickEvent, MouseDragEvent, MouseWheelEvent, Optional } from "../../common";
 import { Project } from "../../project/domain";
 import { ProjectRepository } from "../../project/domain";
 import { SceneRepository } from "../../scene";
@@ -140,11 +140,18 @@ export class EditorService {
             );
         } else if (event.button === 0 && this._currentEntity) {
             const transform = this._currentEntity.getComponent<TransformComponent>('TransformComponent');
-
             if (!transform) return;
 
-            this.updateCurrentEntityPosition(new Vec2(transform.position.x + event.deltaX, transform.position.y + event.deltaY));
+            const scale = this.editorCamera.camera.transform.scale;
+            const delta = new Vec2(event.deltaX / scale, event.deltaY / scale);
+
+            // TODO: there is still some weird glitch when zoooming out
+            this.updateCurrentEntityPosition(new Vec2(transform.position.x + delta.x, transform.position.y + delta.y));
         }
+    }
+
+    public handleMouseWheel(event: MouseWheelEvent): void {
+        this.contextualUiService.zoomBy(event.scrollY * 0.01);
     }
 
     public selectEntity(entity: IEntity): void {

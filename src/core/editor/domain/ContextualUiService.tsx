@@ -45,6 +45,7 @@ export class ContextualUiService {
         const entityTransform = entity.getComponent<TransformComponent>("TransformComponent");
         const cameraTransform = this._editorCamera.getComponent<CameraComponent>("CameraComponent")?.transform;
 
+        // TODO: should take current camera zoom into account
         if (entityTransform && cameraTransform && !isCollision(toTopLeftAABB([
             entityTransform.position.x,
             entityTransform.position.y,
@@ -57,6 +58,16 @@ export class ContextualUiService {
             cameraTransform.size.height
         ]))) {
             cameraTransform.position = Vec2.from(entityTransform.position);
+        }
+    }
+
+    public zoomBy(factor: number): void {
+        const previousScale = this._editorCamera.camera.transform.scale;
+
+        this._editorCamera.camera.transform.scale += factor;
+
+        if (this._editorCamera.camera.transform.scale < 0.1) {
+            this._editorCamera.camera.transform.scale = 0.1; // Prevent zooming out
         }
     }
 
