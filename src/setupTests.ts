@@ -35,6 +35,8 @@ global.createImageBitmap = jest.fn().mockResolvedValue({
     close: jest.fn(),
 });
 
+global.URL.createObjectURL = jest.fn().mockReturnValue('blob:http://localhost:3000/test-blob-url');
+
 beforeEach(() => {
     disableAllFeatures(); // Reset feature flags before each test
 });

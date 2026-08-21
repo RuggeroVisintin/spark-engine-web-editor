@@ -1,7 +1,8 @@
-import { BaseEntity, BoundingBoxComponent, GameObject, SoundComponent, TransformComponent } from "@sparkengine";
+import { BaseEntity, BoundingBoxComponent, create, GameObject, SoundComponent, TransformComponent } from "@sparkengine";
 import { EntityPropsPanel } from ".";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { WithMemoryRouter } from "../../hooks";
+import { getAllUnavailableComponents } from "../../core/common";
 
 const noOp = () => { };
 
@@ -113,9 +114,9 @@ describe('EntityPropsPanel', () => {
             expect(screen.queryByRole('button', { name: /Open Scripting/i })).not.toBeInTheDocument();
         });
 
-        it('Should not render unavailable components such as SoundComponent', () => {
+        it.each(getAllUnavailableComponents())('Should not render unavailable components', (componentType: string) => {
             const entity = new BaseEntity();
-            entity.addComponent(new SoundComponent({ filePath: 'assets/test.mp3' }));
+            entity.addComponent(create(componentType));
 
             renderEntityPropsPanel(entity);
 
