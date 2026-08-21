@@ -30,7 +30,7 @@ describe('FormInput', () => {
         it('Should load a SoundAsset from the file system when clicked', async () => { 
             setMockedFile('assets/test.mp3');
             
-            const receivedSound = await new Promise((resolve, reject) => {
+            const receivedSound = await new Promise((resolve) => {
                 const inputItem = <FormInput type="sound" data-testid="test-input" label="Sound" onChange={(sound: SoundAsset) => {
                     resolve(sound);
                 }} />;
@@ -39,7 +39,6 @@ describe('FormInput', () => {
 
                 screen.findByTestId('test-input.InputField').then((inputField) => {
                     inputField.click();
-                    reject('Sound input clicked, but no sound asset was returned');
                 });
             });
 
