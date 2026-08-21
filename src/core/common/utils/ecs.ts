@@ -2,13 +2,24 @@ import { allOf, IComponent, IEntity, typeOf, create } from "@sparkengine";
 import { isFeatureEnabled } from "../../featureFlags";
 
 function isComponentUnavaibleFromType(componentType: string): boolean {
-    return componentType === 'AnimationComponent' || (
-        componentType === 'SoundComponent'
-        && !isFeatureEnabled('SOUND_EDITING'));
+    return getAllUnavailableComponents().includes(componentType);
 }
 
 export function isComponentUnavaible(component: IComponent): boolean {
     return isComponentUnavaibleFromType(typeOf(component));
+}
+
+export function getAllUnavailableComponents() {
+    if (isFeatureEnabled('SOUND_EDITING')) {
+        return [
+            'AnimationComponent',
+        ]
+    } else {
+        return [
+            'AnimationComponent',
+            'SoundComponent',
+        ]
+    }
 }
 
 export function getAllAvailableComponents() {

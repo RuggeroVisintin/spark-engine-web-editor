@@ -15,14 +15,18 @@
  * ```
  */
 
+// Define available feature flags as a const array for type safety and runtime iteration
+export const ALL_FEATURE_FLAGS = [
+    'PREVIEW_MODE',
+    'SOUND_EDITING',
+] as const;
+
+// Derive the TypeScript type automatically from the array
+export type FeatureFlag = typeof ALL_FEATURE_FLAGS[number];
+
 // Define available feature flags as a const object for type safety
 // These will be replaced by Vite define plugin at build time
 declare const __FEATURE_FLAGS__: Record<string, boolean>;
-
-export type FeatureFlag =
-    | 'PREVIEW_MODE'
-    | 'SOUND_EDITING';
-
 
 const flagsStatus: Record<string, string | undefined> = {};
 
@@ -66,9 +70,7 @@ export function withFeature<T>(
  * Get all enabled feature flags (useful for debugging)
  */
 export function getEnabledFeatures(): FeatureFlag[] {
-    const flags: FeatureFlag[] = ['PREVIEW_MODE'];
-
-    return flags.filter(flag => isFeatureEnabled(flag));
+    return ALL_FEATURE_FLAGS.filter(flag => isFeatureEnabled(flag));
 }
 
 /**
@@ -83,4 +85,13 @@ export function enableFeature(Feature: FeatureFlag): void {
  */
 export function disableFeature(Feature: FeatureFlag): void {
     flagsStatus[`FEATURE_${Feature}`] = 'false';
+}
+
+/**
+ * Disable all feature flags (useful for resetting state in tests)
+ */
+export function disableAllFeatures(): void {
+    ALL_FEATURE_FLAGS.forEach(flag => {
+        disableFeature(flag);
+    });
 }
