@@ -2,7 +2,6 @@ import { MaterialComponent } from "@sparkengine";
 import { ImageRepository } from "../../assets";
 import { SceneRepository } from "../../scene";
 import { Project, ProjectRepository } from "../domain";
-import { WeakRef } from "../../common";
 
 export class SaveProjectUseCase {
     public constructor(
@@ -36,7 +35,7 @@ export class SaveProjectUseCase {
     private async copyAssets(project: Project): Promise<void> {
         await Promise.all(project.scenes.map(async (scene) => {
             await Promise.all(scene.entities.map(async (entity) => {
-                const material = entity.getComponent<MaterialComponent>('MaterialComponent')!;
+                const material = entity.getComponent<MaterialComponent>('MaterialComponent');
 
                 if (!material || !material.diffuseTexture || !material.diffuseTexturePath) {
                     return;
@@ -44,7 +43,7 @@ export class SaveProjectUseCase {
 
                 await this.imageRepository.save(material.diffuseTexture, {
                     path: material.diffuseTexturePath,
-                    accessScope: project.scopeRef as WeakRef<FileSystemDirectoryHandle>
+                    accessScope: project.scopeRef
                 });
             }))
         }))

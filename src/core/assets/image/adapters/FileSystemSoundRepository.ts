@@ -1,6 +1,6 @@
 import { SoundAsset, SoundLoader } from "@sparkengine";
 import { SoundRepository } from "../ports";
-import { FileSystemRepository, LocationParameters, WeakRef } from "../../../common";
+import { FileSystemRepository, FileSystemLocationParameters, WeakRef } from "../../../common";
 
 export class FileSystemSoundRepository extends FileSystemRepository implements SoundLoader, SoundRepository {
     constructor(private projectScope?: WeakRef<FileSystemDirectoryHandle>) {
@@ -26,21 +26,17 @@ export class FileSystemSoundRepository extends FileSystemRepository implements S
 
             fileHandle = await this.getTargetFileHandle({
                 path: src,
-                accessScope: this.projectScope!
+                accessScope: this.projectScope
             });
         }
 
-        const audio = new Audio(URL.createObjectURL(await fileHandle.getFile()));
-
-        Object.defineProperty(audio, 'src', {
-            get: () => src!, // When SoundComponent reads audio.src, it gets your virtual path
-            configurable: true
-        });
+        const file = await fileHandle.getFile();
+        const audio = new Audio(URL.createObjectURL(file));
 
         return new SoundAsset(audio);
     }
 
-    save(sound: SoundAsset, location: LocationParameters): Promise<void> {
+    save(sound: SoundAsset, location: FileSystemLocationParameters): Promise<void> {
         throw new Error("Method not implemented.");
     }
     changeScope(scopeRef: WeakRef): void {

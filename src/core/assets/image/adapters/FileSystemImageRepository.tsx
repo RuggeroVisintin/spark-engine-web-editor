@@ -1,6 +1,6 @@
 import { ImageAsset, ImageLoader } from "@sparkengine";
 import { bitmapToBlob, WeakRef } from "../../../common";
-import { FileSystemRepository, LocationParameters } from "../../../common";
+import { FileSystemRepository, FileSystemLocationParameters } from "../../../common";
 import { ImageRepository } from "../ports";
 
 export class FileSystemImageRepository extends FileSystemRepository implements ImageLoader, ImageRepository {
@@ -10,7 +10,7 @@ export class FileSystemImageRepository extends FileSystemRepository implements I
         super();
     }
 
-    public async save(image: ImageAsset, location: LocationParameters): Promise<void> {
+    public async save(image: ImageAsset, location: FileSystemLocationParameters): Promise<void> {
         const fileHandle = await this.getTargetFileHandle({
             path: location.path,
             accessScope: location.accessScope

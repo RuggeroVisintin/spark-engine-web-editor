@@ -1,7 +1,7 @@
 import { Scene } from "@sparkengine";
-import { RefConfigParams } from "../../../common";
+import { LocationParameters } from "../../../common";
 
 export interface SceneRepository {
-    read(refConfig?: RefConfigParams): Promise<Scene>;
-    save(sceneJson: Scene, refConfig?: RefConfigParams): Promise<void>;
+    read(refConfig?: LocationParameters): Promise<Scene>;
+    save(sceneJson: Scene, refConfig?: LocationParameters): Promise<void>;
 }

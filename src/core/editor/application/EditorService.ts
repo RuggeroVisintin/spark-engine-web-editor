@@ -1,4 +1,4 @@
-import { GameEngine, IEntity, ImageLoader, Scene, TransformComponent, Vec2, Rgb, ImageAsset, MaterialComponent, typeOf, SerializableCallback, toRounded, IComponent, create, Renderer } from "@sparkengine";
+import { GameEngine, IEntity, ImageLoader, Scene, TransformComponent, Vec2, Rgb, ImageAsset, MaterialComponent, typeOf, SerializableCallback, toRounded, IComponent, create, Renderer, SoundAsset } from "@sparkengine";
 import { MouseClickEvent, MouseDragEvent, MouseWheelEvent, Optional, toJsonString } from "../../common";
 import { Project } from "../../project/domain";
 import { ProjectRepository } from "../../project/domain";
@@ -219,6 +219,10 @@ export class EditorService {
             this.updateCurrentEntityMaterial({ [propertyName]: newValue });
         }
 
+        if (typeOf(component) === 'SoundComponent' && newValue !== undefined) {
+            this.updateCurrentEntitySoundComponent({ [propertyName]: newValue });
+        }
+
         (component as any)[propertyName] = newValue;
 
         if (typeOf(component) === 'TransformComponent') {
@@ -283,6 +287,11 @@ export class EditorService {
         this.stateRepository.update({
             currentEntity: this._currentEntity
         });
+    }
+
+    private updateCurrentEntitySoundComponent({ asset }: { asset?: SoundAsset }): void {
+        // TODO
+        console.log('Updating current entity sound component with asset:', asset);
     }
 
     private onScriptingEditorReadyEvent(e: ScriptingEditorReady): void {

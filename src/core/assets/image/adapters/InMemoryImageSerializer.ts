@@ -1,5 +1,5 @@
 import { ImageAsset, ImageLoader } from "@sparkengine";
-import { bitmapToBlob, LocationParameters, WeakRef } from "../../../common";
+import { bitmapToBlob, FileSystemLocationParameters, WeakRef } from "../../../common";
 import { ImageSerializer, SerializedImageAsset, SerializedImageAssetSnapshot } from "../ports/ImageSerializer";
 import { ImageRepository } from "../ports";
 
@@ -60,7 +60,7 @@ export class InMemoryImageSerializer implements ImageLoader, ImageSerializer, Im
         return Object.fromEntries(entries);
     }
 
-    public async save(image: ImageAsset, location: LocationParameters): Promise<void> {
+    public async save(image: ImageAsset, location: FileSystemLocationParameters): Promise<void> {
         this.images.set(location.path, await InMemoryImageAsset.fromImageAsset(image));
 
         if (this.imageRepository) {

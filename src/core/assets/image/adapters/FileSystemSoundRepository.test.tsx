@@ -17,7 +17,6 @@ describeClass(FileSystemSoundRepository, ({ describeMethod }) => {
             const result = await fileSystemSoundRepository.load('assets/test.mp3');
 
             expect(result).toBeInstanceOf(SoundAsset);
-            expect(result.media.src).toBe('assets/test.mp3');
         });
 
         it('Should open a file picker when no source path is given', async () => {

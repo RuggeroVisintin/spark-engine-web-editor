@@ -75,7 +75,7 @@ const valueToFormInput = (propertyName: string, value: ComponentProp, component:
                 data-testid={`EntityPropsPanel.${capitalize(propertyName)}`}
                 type="sound"
                 label={value ? 'Replace' : 'Add'}
-                onChange={(newSoundAsset: SoundAsset) => { console.log('New sound asset:', newSoundAsset); }}
+                onChange={(newSoundAsset: SoundAsset) => { onChange?.('asset', newSoundAsset) }}
             />
         </>
     } else if (Array.isArray(value) && isArrayOf(value, isAnimationFrame)) {
