@@ -546,6 +546,10 @@ describe('EditorService', () => {
 
             expect(contextualUiServiceDouble.lastFocusedEntity?.uuid).toEqual(entity.uuid);
         });
+
+        describe('When updating a SoundComponent', () => { 
+            
+        });
     });
 
     describe('on ScriptingEditorReady event', () => {
