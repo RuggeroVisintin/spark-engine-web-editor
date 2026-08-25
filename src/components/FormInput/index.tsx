@@ -83,9 +83,14 @@ export const FormInput = ({ label, onChange, defaultValue, "data-testid": dataTe
         return <FlexBox $direction="row" $fill $fillMethod="flex">
             {
                 label && <button data-testid={`${dataTestId}.InputField`} onClick={() => {
-                    soundLoader.load().then((sound: SoundAsset) => {
-                        onChange?.(sound);
-                    });
+                    soundLoader
+                        .load()
+                        .then((sound: SoundAsset) => {
+                            onChange?.(sound);
+                        })
+                        .catch((error) => { 
+                            console.error("Error loading sound:", error);
+                        });
                 }}>{label}</button>
             }
         </FlexBox>
