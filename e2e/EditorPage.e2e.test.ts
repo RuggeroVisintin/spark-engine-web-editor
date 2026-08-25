@@ -1,8 +1,8 @@
 
 import { allOf } from '@sparkengine'
-import { describeWithFeature } from './featureFlags';
+import { describeWithFeature, isFeatureEnabled } from './featureFlags';
 
-const UNAVAILABLE_COMPONENTS = new Set(['AnimationComponent', 'SoundComponent']);
+const UNAVAILABLE_COMPONENTS = new Set(['AnimationComponent', !isFeatureEnabled('SOUND_EDITING') ? 'SoundComponent' : '']);
 
 const AVAILABLE_COMPONENTS = Object.keys(allOf('Component'))
     .filter(component => !UNAVAILABLE_COMPONENTS.has(component))

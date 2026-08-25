@@ -2,8 +2,8 @@ import styled from "styled-components"
 import { BackgroundColor, FlexBox } from "../../primitives";
 import { WithDataTestId } from "../../core/common";
 import { v4 } from "uuid";
-import { FileSystemImageRepository } from "../../core/assets/image/adapters";
-import { ImageAsset } from "@sparkengine";
+import { FileSystemImageRepository, FileSystemSoundRepository } from "../../core/assets/image/adapters";
+import { ImageAsset, SoundAsset } from "@sparkengine";
 
 
 type InputValue = string | number | boolean;
@@ -38,11 +38,13 @@ const typesMap: Record<string, string> = {
     'number': 'number',
     'string': 'text',
     'image': 'file',
+    'sound': 'file',
     'color': 'color',
     'boolean': 'checkbox',
 }
 
 const imageLoader = new FileSystemImageRepository();
+const soundLoader = new FileSystemSoundRepository();
 
 export const FormInput = ({ label, onChange, defaultValue, "data-testid": dataTestId, type, options }: FormInputProps = {}) => {
     const id = v4();
@@ -74,6 +76,23 @@ export const FormInput = ({ label, onChange, defaultValue, "data-testid": dataTe
                 }}>{label}</button>
             }
 
+        </FlexBox>
+    }
+
+    if (type === 'sound') { 
+        return <FlexBox $direction="row" $fill $fillMethod="flex">
+            {
+                label && <button data-testid={`${dataTestId}.InputField`} onClick={() => {
+                    soundLoader
+                        .load()
+                        .then((sound: SoundAsset) => {
+                            onChange?.(sound);
+                        })
+                        .catch((error) => { 
+                            console.error("Error loading sound:", error);
+                        });
+                }}>{label}</button>
+            }
         </FlexBox>
     }
 

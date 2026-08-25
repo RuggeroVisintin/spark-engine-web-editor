@@ -15,6 +15,7 @@ expect.extend(eventBusMatchers as any);
 
 import { TextEncoder } from 'text-encoding';
 import { webcrypto } from 'crypto';
+import { disableAllFeatures } from './core/featureFlags';
 
 jest.disableAutomock();
 
@@ -32,6 +33,12 @@ global.createImageBitmap = jest.fn().mockResolvedValue({
     width: 100,
     height: 100,
     close: jest.fn(),
+});
+
+global.URL.createObjectURL = jest.fn().mockReturnValue('blob:http://localhost:3000/test-blob-url');
+
+beforeEach(() => {
+    disableAllFeatures(); // Reset feature flags before each test
 });
 
 // jest.mock('@sparkengine')

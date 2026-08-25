@@ -1,6 +1,6 @@
 import { ImageAsset } from "@sparkengine";
 import { ImageSerializer, SerializedImageAssetSnapshot } from "../../../../core/assets";
-import { LocationParameters } from "../../../../core/common";
+import { FileSystemLocationParameters } from "../../../../core/common";
 
 export class ImageSerializerTestDouble implements ImageSerializer {
     private snapshot: SerializedImageAssetSnapshot = {};

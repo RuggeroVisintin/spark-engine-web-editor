@@ -1,9 +1,9 @@
 import { Scene } from "@sparkengine";
 import { SceneRepository } from "../../domain";
-import { FileSystemRepository, LocationParameters, parseJsonString, toJsonString } from "../../../common";
+import { FileSystemRepository, FileSystemLocationParameters, parseJsonString, toJsonString } from "../../../common";
 
 export class FileSystemSceneRepository extends FileSystemRepository implements SceneRepository {
-    public async read(location?: LocationParameters): Promise<Scene> {
+    public async read(location?: FileSystemLocationParameters): Promise<Scene> {
         let fileHandle;
 
         if (location) {
@@ -25,7 +25,7 @@ export class FileSystemSceneRepository extends FileSystemRepository implements S
         return result;
     }
 
-    public async save(scene: Scene, location?: LocationParameters): Promise<void> {
+    public async save(scene: Scene, location?: FileSystemLocationParameters): Promise<void> {
         let fileHandle;
 
         if (location) {
