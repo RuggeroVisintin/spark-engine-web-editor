@@ -1,5 +1,5 @@
 import { SoundAsset } from "@sparkengine";
-import { createDirectoryHandleMock, setMockedFile } from "../../../../__mocks__/fs-api.mock";
+import { createDirectoryHandleMock, FileSystemWritableFileStreamMock, setMockedFile } from "../../../../__mocks__/fs-api.mock";
 import { WeakRef } from "../../../common";
 import { FileSystemSoundRepository } from "./FileSystemSoundRepository";
 
@@ -33,6 +33,27 @@ describeClass(FileSystemSoundRepository, ({ describeMethod }) => {
             await expect(async () => { await fileSystemSoundRepository.load('assets/test.mp3') })
                 .rejects
                 .toThrow('No project scope provided');
+        });
+    });
+
+    describeMethod('save', () => { 
+        const audioBlob = new Blob(['mock audio data'], { type: 'audio/mp3' });
+
+        beforeEach(() => { 
+            global.fetch = jest.fn().mockResolvedValue({
+                blob: async () => audioBlob
+            } as Response);
+        })
+
+        it('Should save a given SoundAsset to the given path within the project scope', async () => {
+            const asset = new SoundAsset(new Audio());
+
+            await fileSystemSoundRepository.save(asset, { path: 'assets/test.mp3', accessScope: new WeakRef(createDirectoryHandleMock()) });
+
+            expect(FileSystemWritableFileStreamMock.write).toHaveBeenCalledWith({
+                type: 'write',
+                data: audioBlob,
+            });
         });
     });
 });

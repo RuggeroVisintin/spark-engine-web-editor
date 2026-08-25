@@ -36,9 +36,24 @@ export class FileSystemSoundRepository extends FileSystemRepository implements S
         return new SoundAsset(audio);
     }
 
-    save(sound: SoundAsset, location: FileSystemLocationParameters): Promise<void> {
-        throw new Error("Method not implemented.");
+    public async save(sound: SoundAsset, location: FileSystemLocationParameters): Promise<void> {
+        const fileHandle = await this.getTargetFileHandle({
+            path: location.path,
+            accessScope: location.accessScope
+        }, true);
+
+        await fetch(sound.media.src)
+            .then(response => response.blob())
+            .then(async (blob) => {
+                const writable = await fileHandle.createWritable();
+                await writable.write({
+                    type: 'write',
+                    data: blob,
+                });
+                await writable.close();
+            });
     }
+
     changeScope(scopeRef: WeakRef): void {
         throw new Error("Method not implemented.");
     }
