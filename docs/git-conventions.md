@@ -37,6 +37,7 @@ The commit scope must adhere to the predefined allowlist defined in `commitlint.
 - `project`: Project management, configuration, and settings
 - `scene`: Scene graph, node hierarchy, and entity management
 - `scripting`: Script editor, scripting runtime, and bindings
+- `editor`: The engine WYSIWYG editor, scene management, and entity components panel
 
 #### Technical Scopes
 - `deps`: Production dependencies updates
