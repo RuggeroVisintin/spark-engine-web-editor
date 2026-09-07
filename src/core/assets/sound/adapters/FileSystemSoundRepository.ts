@@ -22,6 +22,8 @@ export class FileSystemSoundRepository extends FileSystemRepository implements S
                 }]
             });
         } else {
+            console.log('LoadSound', src);
+
             if (!this.projectScope) {
                 throw new Error('No project scope provided');
             }
