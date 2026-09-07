@@ -1,6 +1,6 @@
 import { SoundAsset, SoundLoader } from "@sparkengine";
-import { SoundRepository } from "../ports";
 import { FileSystemRepository, FileSystemLocationParameters, WeakRef } from "../../../common";
+import { SoundRepository } from "../ports";
 
 export class FileSystemSoundRepository extends FileSystemRepository implements SoundLoader, SoundRepository {
     private filesCache: Map<string, SoundAsset> = new Map();

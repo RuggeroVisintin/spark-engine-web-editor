@@ -1,4 +1,4 @@
-import { GameEngine, IEntity, ImageLoader, Scene, TransformComponent, Vec2, Rgb, ImageAsset, MaterialComponent, typeOf, SerializableCallback, toRounded, IComponent, create, Renderer, SoundAsset, SoundComponent } from "@sparkengine";
+import { GameEngine, IEntity, ImageLoader, Scene, TransformComponent, Vec2, Rgb, ImageAsset, MaterialComponent, typeOf, SerializableCallback, toRounded, IComponent, create, Renderer, SoundAsset, SoundComponent, SoundLoader } from "@sparkengine";
 import { MouseClickEvent, MouseDragEvent, MouseWheelEvent, Optional, toJsonString } from "../../common";
 import { Project } from "../../project/domain";
 import { ProjectRepository } from "../../project/domain";
@@ -58,6 +58,7 @@ export class EditorService {
         private readonly imageLoader: ImageLoader,
         private readonly imageRepository: ImageRepository,
         private readonly imageSerializer: ImageSerializer,
+        private readonly soundLoader: SoundLoader,
         private readonly projectRepository: ProjectRepository,
         private readonly sceneRepository: SceneRepository,
         private readonly objectPicking: ObjectPickingService,
@@ -374,6 +375,7 @@ export class EditorService {
                 height: resolution.height
             },
             imageLoader: this.imageLoader,
+            soundLoader: this.soundLoader,
             renderSystem: (renderer: Renderer, imageLoader: ImageLoader) => new EditorRenderSystem(renderer, imageLoader),
             additionalRenderSystems: () => [
                 this.objectPicking.getRenderSystem()

@@ -9,7 +9,7 @@ import { FileSystemProjectRepository } from "../core/project/infrastructure/adap
 import { FileSystemSceneRepository } from "../core/scene";
 import { ContextualUiService } from "../core/editor/domain/ContextualUiService";
 import { EventBusWithBrowserBroadcast, WeakRef } from "../core/common";
-import { InMemoryImageSerializer } from "../core/assets/image/adapters";
+import { FileSystemSoundRepository, InMemoryImageSerializer } from "../core/assets/image/adapters";
 import { useAppState } from "../hooks/useAppState";
 
 interface EditorServiceContextValue {
@@ -27,6 +27,8 @@ const createEditorService = (stateRepo: ReactStateRepository<EditorState>): Edit
     const sceneRepo = new FileSystemSceneRepository();
     const imageRepository = new FileSystemImageRepository(project.scopeRef as WeakRef<FileSystemDirectoryHandle>);
     const imageSerializer = new InMemoryImageSerializer(imageRepository, imageRepository);
+    const soundRepository = new FileSystemSoundRepository(project.scopeRef as WeakRef<FileSystemDirectoryHandle>);
+
     const objectPikcer = new ColorObjectPicker((...params) => new Renderer(...params), { width: 1920, height: 1080 }, imageRepository);
     const objectPickingService = new ObjectPickingService(objectPikcer);
     const contextualUiService = new ContextualUiService();
