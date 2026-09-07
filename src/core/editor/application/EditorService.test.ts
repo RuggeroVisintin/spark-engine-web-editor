@@ -1,6 +1,6 @@
 import { BoundingBoxComponent, CanvasDevice, DOMImageLoader, GameObject, IEntity, MaterialComponent, Renderer, RenderSystem, Rgb, Scene, SerializableCallback, SoundAsset, SoundComponent, StaticObject, TransformComponent, TriggerEntity, typeOf, Vec2 } from "@sparkengine";
 import { EditorService } from "./EditorService";
-import { FileSystemImageRepository, InMemoryImageSerializer } from "../../assets";
+import { FileSystemImageRepository, FileSystemSoundRepository, InMemoryImageSerializer } from "../../assets";
 import { ProjectRepository } from "../../project/domain";
 import { Project } from "../../project/domain";
 import { SceneRepositoryTestDouble } from "../../../__mocks__/core/scene/SceneRepositoryTestDouble";
@@ -77,6 +77,7 @@ describe('EditorService', () => {
     let editorService: EditorService;
     let imageLoader: FileSystemImageRepository;
     let imageSerializer: InMemoryImageSerializer;
+    let soundRepository: FileSystemSoundRepository;
     let context: CanvasRenderingContext2D;
     let projectRepositoryDouble: ProjectRepositoryTestDouble;
     let sceneRepository: SceneRepositoryTestDouble;
@@ -88,6 +89,7 @@ describe('EditorService', () => {
     beforeEach(() => {
         projectRepositoryDouble = new ProjectRepositoryTestDouble();
         sceneRepository = new SceneRepositoryTestDouble();
+        soundRepository = new FileSystemSoundRepository();
         context = new CanvasRenderingContext2D();
         imageLoader = new FileSystemImageRepository();
         imageSerializer = new InMemoryImageSerializer(imageLoader, imageLoader);
@@ -100,6 +102,7 @@ describe('EditorService', () => {
             imageSerializer,
             imageSerializer,
             imageSerializer,
+            soundRepository,
             projectRepositoryDouble,
             sceneRepository,
             objectPicking,

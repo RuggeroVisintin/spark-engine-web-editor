@@ -2,14 +2,13 @@ import { ReactNode, createContext, useContext, useEffect, useMemo, useState } fr
 import { ColorObjectPicker, ObjectPickingService, ReactStateRepository } from "../core/editor";
 import { EditorService } from "../core/editor/application";
 import { EditorState } from "../core/editor/application/EditorState";
-import { FileSystemImageRepository } from "../core/assets";
+import { FileSystemImageRepository, FileSystemSoundRepository, InMemoryImageSerializer } from "../core/assets";
 import { Renderer } from "@sparkengine";
 import { Project } from "../core/project/domain";
 import { FileSystemProjectRepository } from "../core/project/infrastructure/adapters";
 import { FileSystemSceneRepository } from "../core/scene";
 import { ContextualUiService } from "../core/editor/domain/ContextualUiService";
 import { EventBusWithBrowserBroadcast, WeakRef } from "../core/common";
-import { FileSystemSoundRepository, InMemoryImageSerializer } from "../core/assets/image/adapters";
 import { useAppState } from "../hooks/useAppState";
 
 interface EditorServiceContextValue {
@@ -39,6 +38,7 @@ const createEditorService = (stateRepo: ReactStateRepository<EditorState>): Edit
         imageSerializer,
         imageSerializer,
         imageSerializer,
+        soundRepository,
         projectRepo,
         sceneRepo,
         objectPickingService,
