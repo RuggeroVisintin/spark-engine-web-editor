@@ -3,6 +3,8 @@ import { SoundRepository } from "../ports";
 import { FileSystemRepository, FileSystemLocationParameters, WeakRef } from "../../../common";
 
 export class FileSystemSoundRepository extends FileSystemRepository implements SoundLoader, SoundRepository {
+    private filesCache: Map<string, SoundAsset> = new Map();
+
     constructor(private projectScope?: WeakRef<FileSystemDirectoryHandle>) {
         super();
     }
@@ -24,6 +26,10 @@ export class FileSystemSoundRepository extends FileSystemRepository implements S
                 throw new Error('No project scope provided');
             }
 
+            if (this.filesCache.has(src)) {
+                return this.filesCache.get(src)!;
+            }
+
             fileHandle = await this.getTargetFileHandle({
                 path: src,
                 accessScope: this.projectScope
@@ -31,9 +37,15 @@ export class FileSystemSoundRepository extends FileSystemRepository implements S
         }
 
         const file = await fileHandle.getFile();
-        const audio = new Audio(URL.createObjectURL(file));
+        const result = new SoundAsset(new Audio(URL.createObjectURL(file)));
 
-        return new SoundAsset(audio);
+        if (src) {
+            this.filesCache.set(src, result);
+        }
+
+        this.filesCache.set(`assets/${result.id}.mp3`, result);
+
+        return result;
     }
 
     public async save(sound: SoundAsset, location: FileSystemLocationParameters): Promise<void> {
@@ -54,8 +66,12 @@ export class FileSystemSoundRepository extends FileSystemRepository implements S
             });
     }
 
-    changeScope(scopeRef: WeakRef): void {
-        throw new Error("Method not implemented.");
+    changeScope(scopeRef: WeakRef<FileSystemDirectoryHandle>): void {
+        if (this.projectScope && this.projectScope.get() !== scopeRef.get()) {
+            this.filesCache.clear();
+        }
+
+        this.projectScope = scopeRef;
     }
 
 }

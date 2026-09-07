@@ -5,12 +5,15 @@ import { FileSystemSoundRepository } from "./FileSystemSoundRepository";
 
 describeClass(FileSystemSoundRepository, ({ describeMethod }) => { 
     let fileSystemSoundRepository: FileSystemSoundRepository;
+    let projectScope: WeakRef<FileSystemDirectoryHandle>;
     
-        beforeEach(() => {
-            fileSystemSoundRepository = new FileSystemSoundRepository(
-                new WeakRef(createDirectoryHandleMock())
-            );
-        });
+    beforeEach(() => {
+        projectScope = new WeakRef(createDirectoryHandleMock());
+
+        fileSystemSoundRepository = new FileSystemSoundRepository(
+            projectScope
+        );
+    });
     
     describeMethod('load', () => { 
         it('Should load a sound within the given project scope from the file system from the source path when given', async () => {
@@ -34,6 +37,24 @@ describeClass(FileSystemSoundRepository, ({ describeMethod }) => {
                 .rejects
                 .toThrow('No project scope provided');
         });
+
+        describe('Caching', () => { 
+            it('Should load the file from cache if it has been loaded before', async () => {
+                const firstLoad = await fileSystemSoundRepository.load('test/test.mp3');
+                const secondLoad = await fileSystemSoundRepository.load('test/test.mp3');
+
+                expect(firstLoad).toBe(secondLoad);
+            });
+
+            it('Should also cache the file for future loads from project assets directory', async () => {
+                const firstLoad = await fileSystemSoundRepository.load('test/test.mp3');
+                const secondLoad = await fileSystemSoundRepository.load(`assets/${firstLoad.id}.mp3`);
+
+                expect(firstLoad).toBe(secondLoad);
+            })
+        })
+        
+        
     });
 
     describeMethod('save', () => { 
@@ -54,6 +75,42 @@ describeClass(FileSystemSoundRepository, ({ describeMethod }) => {
                 type: 'write',
                 data: audioBlob,
             });
+        });
+    });
+
+    describeMethod('changeScope', () => { 
+        it('Should change the project scope', async () => {
+            fileSystemSoundRepository.changeScope(new WeakRef(createDirectoryHandleMock({
+                getFileHandle: jest.fn(() => { throw new Error('File not found') })
+            })));
+
+            await expect(async () => { await fileSystemSoundRepository.load('assets/test.mp3') })
+                .rejects
+                .toThrow('File not found');
+        });
+
+        it('Should clear the cache when chaning the project scope', async () => { 
+            const firstLoad = await fileSystemSoundRepository.load('test/test.mp3');
+
+            fileSystemSoundRepository.changeScope(new WeakRef(createDirectoryHandleMock()));
+
+            const secondLoad = await fileSystemSoundRepository.load('test/test.mp3');
+
+            expect(firstLoad).not.toBe(secondLoad);
+        });
+
+        it('Should carry over cached files if no project scope was preivously set', async () => {
+            const fileSystemSoundRepository = new FileSystemSoundRepository();
+
+            setMockedFile('test/test.mp3');
+
+            const firstLoad = await fileSystemSoundRepository.load();
+
+            fileSystemSoundRepository.changeScope(new WeakRef(createDirectoryHandleMock()));
+
+            const secondLoad = await fileSystemSoundRepository.load(`assets/${firstLoad.id}.mp3`);
+
+            expect(firstLoad).toBe(secondLoad);
         });
     });
 });
